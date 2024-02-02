@@ -150,6 +150,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Actionzone.cpp" />
+    <ClCompile Include="bathgimmick.cpp" />
     <ClCompile Include="camera.cpp" />
     <ClCompile Include="DebugModel.cpp" />
     <ClCompile Include="fade.cpp" />
@@ -187,6 +188,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Actionzone.h" />
+    <ClInclude Include="bathgimmick.h" />
     <ClInclude Include="camera.h" />
     <ClInclude Include="DebugModel.h" />
     <ClInclude Include="fade.h" />
