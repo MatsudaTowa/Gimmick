@@ -100,6 +100,7 @@ void UninitBathGimmick(void)
 //=============================================
 void UpdateBathGimmick(void)
 {
+	float Random = ((float)rand() / RAND_MAX) * -50.0f;
 	if (g_BathWater.bUse == true)
 	{
 		g_BathWater.nSteamSpawnCnt++;
@@ -107,9 +108,9 @@ void UpdateBathGimmick(void)
 		{
 			for (int nUseCnt = 0; nUseCnt < USE_STEAM; nUseCnt++)
 			{
-				SetSteam(g_BathWater.pos, D3DXVECTOR3(0.0f, STEAM_SPEED, 0.0f));
+				SetSteam(D3DXVECTOR3(g_BathWater.pos.x + Random, g_BathWater.pos.y, g_BathWater.pos.z+ Random), D3DXVECTOR3(0.0f, STEAM_SPEED, 0.0f));
 			}
-			g_BathWater.nSteamSpawnCnt = 0;;
+			g_BathWater.nSteamSpawnCnt = 0;
 		}
 	}
 }

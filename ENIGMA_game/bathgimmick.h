@@ -14,8 +14,8 @@
 //=============================================
 #define BATHWATER_WIDE	(30)
 #define BATHWATER_DEPTH	(60)
-#define SPAWN_STEAM		(30) //湯気が出るカウント
-#define USE_STEAM		(40) //一回のスポーンで湯気が出る数
+#define SPAWN_STEAM		(20) //湯気が出るカウント
+#define USE_STEAM		(20) //一回のスポーンで湯気が出る数
 
 //=============================================
 //お風呂のお湯の構想体の定義

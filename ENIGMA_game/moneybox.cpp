@@ -52,7 +52,6 @@ void InitMoneybox(void)
 	g_Moneybox.WhichPlayer = false; //false:1P,true2P
 
 	//í∏ì_ç¿ïWÇÃê›íË
-
 	pVtx[0].pos = D3DXVECTOR3(g_Moneybox.pos.x - SCREEN_WIDE/5.0f, g_Moneybox.pos.y - SCREEN_HEIGHT/5.0f, 0.0f);
 	pVtx[1].pos = D3DXVECTOR3(g_Moneybox.pos.x + SCREEN_WIDE/5.0f, g_Moneybox.pos.y - SCREEN_HEIGHT/5.0f, 0.0f);
 	pVtx[2].pos = D3DXVECTOR3(g_Moneybox.pos.x - SCREEN_WIDE/5.0f, g_Moneybox.pos.y + SCREEN_HEIGHT/5.0f, 0.0f);
