@@ -122,7 +122,7 @@ void InitGame(void)
 	InitSteam();
 
 	//デバッグ用
-	SetBathWater(D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), BATHWATER_WIDE, BATHWATER_DEPTH);
+	//SetBathWater(D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), BATHWATER_WIDE, BATHWATER_DEPTH);
 
 	InitPlayer();
 	InitPlayer_2P();

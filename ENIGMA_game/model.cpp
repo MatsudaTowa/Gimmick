@@ -10,6 +10,7 @@
 #include "camera.h"
 //#include "field.h"
 #include "shadow.h"
+#include "bathgimmick.h"
 
 //=============================================
 //マクロ定義
@@ -336,6 +337,14 @@ void SetModel(D3DXVECTOR3 pos, D3DXVECTOR3 rot, ModelType nType)
 			g_aModel[nCnt].pos = pos;
 			g_aModel[nCnt].rot = rot;
 			g_aModel[nCnt].nType = nType;
+
+			if (g_aModel[nCnt].nType == MODELTYPE_BATH)
+			{
+				SetBathWater(D3DXVECTOR3(g_aModel[nCnt].pos.x, g_aModel[nCnt].pos.y + 40.0f, g_aModel[nCnt].pos.z)
+					, D3DXVECTOR3(g_aModel[nCnt].rot.x,D3DX_PI * 0.5f,g_aModel[nCnt].rot.z)
+					, BATHWATER_WIDE
+					, BATHWATER_DEPTH);
+			}
 
 			g_aModel[nCnt].Minpos = D3DXVECTOR3(100000.0f, 1000000.0f, 100000.0f); //モデルの最小位置
 			g_aModel[nCnt].Maxpos = D3DXVECTOR3(-10000.0f, -1000000.0f, -100000.0f); //モデルの最大位置
