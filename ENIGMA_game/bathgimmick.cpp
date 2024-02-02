@@ -5,6 +5,7 @@
 //
 //=============================================
 #include "bathgimmick.h"
+#include "steam.h"
 #include "model.h"
 
 //=============================================
@@ -33,8 +34,9 @@ void InitBathGimmick(void)
 	);
 
 	//‚¨“’‚Ì‰ŠúÝ’è
-	g_BathWater.pos = D3DXVECTOR3(0.0f, 10.0f, 0.0f);
+	g_BathWater.pos = D3DXVECTOR3(0.0f, 30.0f, 0.0f);
 	g_BathWater.rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+	g_BathWater.nSteamSpawnCnt = 0;
 	g_BathWater.fWide = BATHWATER_WIDE;
 	g_BathWater.fDepth = BATHWATER_DEPTH;
 	g_BathWater.bUse = false;
@@ -98,6 +100,18 @@ void UninitBathGimmick(void)
 //=============================================
 void UpdateBathGimmick(void)
 {
+	if (g_BathWater.bUse == true)
+	{
+		g_BathWater.nSteamSpawnCnt++;
+		if (g_BathWater.nSteamSpawnCnt >= SPAWN_STEAM)
+		{
+			for (int nUseCnt = 0; nUseCnt < USE_STEAM; nUseCnt++)
+			{
+				SetSteam(g_BathWater.pos, D3DXVECTOR3(0.0f, STEAM_SPEED, 0.0f));
+			}
+			g_BathWater.nSteamSpawnCnt = 0;;
+		}
+	}
 }
 
 //=============================================

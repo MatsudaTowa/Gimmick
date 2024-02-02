@@ -180,6 +180,7 @@
     <ClCompile Include="sky.cpp" />
     <ClCompile Include="sound.cpp" />
     <ClCompile Include="speechbubble.cpp" />
+    <ClCompile Include="steam.cpp" />
     <ClCompile Include="text.cpp" />
     <ClCompile Include="title.cpp" />
     <ClCompile Include="transfergate.cpp" />
@@ -218,6 +219,7 @@
     <ClInclude Include="sky.h" />
     <ClInclude Include="sound.h" />
     <ClInclude Include="speechbubble.h" />
+    <ClInclude Include="steam.h" />
     <ClInclude Include="text.h" />
     <ClInclude Include="title.h" />
     <ClInclude Include="transfergate.h" />

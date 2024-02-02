@@ -231,6 +231,9 @@
     <ClCompile Include="bathgimmick.cpp">
       <Filter>ソース ファイル\--++|    GAME   |++--\BathGimmick</Filter>
     </ClCompile>
+    <ClCompile Include="steam.cpp">
+      <Filter>ソース ファイル\--++|    GAME   |++--\BathGimmick</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="input.h">
@@ -339,6 +342,9 @@
       <Filter>ソース ファイル\--++|    GAME   |++--\//3D_Model//</Filter>
     </ClInclude>
     <ClInclude Include="bathgimmick.h">
+      <Filter>ソース ファイル\--++|    GAME   |++--\BathGimmick</Filter>
+    </ClInclude>
+    <ClInclude Include="steam.h">
       <Filter>ソース ファイル\--++|    GAME   |++--\BathGimmick</Filter>
     </ClInclude>
   </ItemGroup>

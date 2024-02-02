@@ -14,6 +14,8 @@
 //=============================================
 #define BATHWATER_WIDE	(30)
 #define BATHWATER_DEPTH	(60)
+#define SPAWN_STEAM		(30) //湯気が出るカウント
+#define USE_STEAM		(40) //一回のスポーンで湯気が出る数
 
 //=============================================
 //お風呂のお湯の構想体の定義
@@ -22,6 +24,7 @@ typedef struct
 {
 	D3DXVECTOR3 pos;
 	D3DXVECTOR3 rot;
+	int nSteamSpawnCnt; //湯気がスポーンするまでカウントする
 	float fWide;
 	float fDepth;
 	bool bUse;

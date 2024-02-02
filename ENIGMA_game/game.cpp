@@ -19,6 +19,7 @@
 #include "moneybox.h"
 #include "moneyboxdigit.h"
 #include "bathgimmick.h"
+#include "steam.h"
 #include "password.h"
 
 #include "shadow.h"
@@ -118,6 +119,7 @@ void InitGame(void)
 	InitMoneyboxDigit();
 	InitPassword();
 	InitBathGimmick();
+	InitSteam();
 
 	//デバッグ用
 	SetBathWater(D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), BATHWATER_WIDE, BATHWATER_DEPTH);
@@ -252,6 +254,7 @@ void UninitGame(void)
 	UninitMoneyboxDigit();
 	UninitPassword();
 	UninitBathGimmick();
+	UninitSteam();
 
 
 	UninitSky();
@@ -417,6 +420,8 @@ void UpdateGame(void)
 			}
 		}
 		UpdateBathGimmick();
+		UpdateSteam();
+
 
 		UpdateTransferGate();
 		UpdateActionZone();
@@ -486,6 +491,7 @@ void DrawGame(void)
 
 		}
 		DrawBathGimmick();
+		DrawSteam();
 		DrawModel();
 		DrawWall();
 		DrawPlayer();
