@@ -16,6 +16,7 @@ LPDIRECT3DTEXTURE9 g_pTextureBathGimmick = NULL; //テクスチャポインタ
 //D3DXVECTOR3 g_movefield; //移動量
 D3DXMATRIX	g_mtxWorldBathGimmick;
 BathWater g_BathWater;
+bool g_bChange; //前後スポーン切り替え
 
 //=============================================
 //初期化
@@ -40,6 +41,8 @@ void InitBathGimmick(void)
 	g_BathWater.fWide = BATHWATER_WIDE;
 	g_BathWater.fDepth = BATHWATER_DEPTH;
 	g_BathWater.bUse = false;
+
+	g_bChange = false;
 
 	pDevice->CreateVertexBuffer(sizeof(VERTEX_3D) * 4, D3DUSAGE_WRITEONLY, FVF_VERTEX_3D, D3DPOOL_MANAGED, &g_pVtxBuffBathGimmick, NULL);
 
@@ -100,7 +103,15 @@ void UninitBathGimmick(void)
 //=============================================
 void UpdateBathGimmick(void)
 {
-	float Random = ((float)rand() / RAND_MAX) * -50.0f;
+	float Random;
+	if (g_bChange == true)
+	{
+		Random = ((float)rand() / RAND_MAX) * 30.0f;
+	}
+	if (g_bChange == false)
+	{
+		 Random = ((float)rand() / RAND_MAX) * -30.0f;
+	}
 	if (g_BathWater.bUse == true)
 	{
 		g_BathWater.nSteamSpawnCnt++;
@@ -108,9 +119,10 @@ void UpdateBathGimmick(void)
 		{
 			for (int nUseCnt = 0; nUseCnt < USE_STEAM; nUseCnt++)
 			{
-				SetSteam(D3DXVECTOR3(g_BathWater.pos.x + Random, g_BathWater.pos.y, g_BathWater.pos.z+ Random), D3DXVECTOR3(0.0f, STEAM_SPEED, 0.0f));
+				SetSteam(D3DXVECTOR3(g_BathWater.pos.x + Random, g_BathWater.pos.y, g_BathWater.pos.z + Random), D3DXVECTOR3(0.0f, STEAM_SPEED, 0.0f));
 			}
 			g_BathWater.nSteamSpawnCnt = 0;
+			g_bChange = g_bChange ? false : true;
 		}
 	}
 }
