@@ -40,6 +40,10 @@ MODEL_2P g_Model_2P;//モデル全体
 //追尾注視点
 View2 g_View_2P[2];
 
+
+int g_Cnt2 = 0;//テスト。
+
+
 //=============================
 //モデルの初期化処理
 //=============================
@@ -272,7 +276,7 @@ void UpdatePlayer_2P(void)
 	{
 		if (pItem[ItemCnt].bUse == true)
 		{
-			BoxCollisionItem(PlayerMin_2P, PlayerMax_2P, pItem[ItemCnt].pos, 1, ItemCnt);
+			BoxCollisionItem(PlayerMin_2P, PlayerMax_2P, pItem[ItemCnt].pos, 2, ItemCnt);
 		}
 	}
 
@@ -782,10 +786,12 @@ void InPutKeyboardPlayer_2P(void)
 
 		g_Player_2P.move.x = sinf(Angle - pCamera[1].rot.y - (1.0f * D3DX_PI)) * nMoveSpeed;//三角関数利用して移動の長さを代入
 		g_Player_2P.move.z = cosf(Angle - pCamera[1].rot.y - (1.0f * D3DX_PI)) * nMoveSpeed;//三角関数利用して移動の長さを代入
-	}
 
 	//変換
-	ConversionPlayerRot2_2P(g_Player_2P.fRotDest + D3DX_PI, 0);//D3DX_PIは角度補正
+		ConversionPlayerRot2_2P(g_Player_2P.fRotDest + D3DX_PI, 0);//D3DX_PIは角度補正
+	}
+
+
 }
 //=============================
 //キーボード/コントローラー入力反映処理(移動)
@@ -990,6 +996,24 @@ void InputKeyAttack_2P(void)
 	{
 		g_Player_2P.bAction = true;
 	}
+
+	if (GetJoypadTrigger(JOYKEY_Y, 1) == true)
+	{
+		// int を ModelType にキャストして代入
+		//g_MapObject_Escape[g_ModelCnt].nType = static_cast<ModelType>(Escape);
+		ITEMTYPE itemtype;
+		itemtype = static_cast<ITEMTYPE>(g_Cnt2);
+
+		SetItem(D3DXVECTOR3(g_Player_2P.pos.x, g_Player_2P.pos.y + 150.0f, g_Player_2P.pos.z), g_Player_2P.rot, itemtype);
+
+		g_Cnt2++;
+		if (g_Cnt2 > ITEMTYPE_MAX - 1)
+		{
+			g_Cnt2 = 0;
+		}
+
+
+	}
 }
 //=============================
 //キーボード/コントローラー入力検知処理
@@ -1031,19 +1055,19 @@ int CheckInputMove2_2P(void)
 
 		//ここおそらくだめ
 
-		if (GetkeyboardPress(DIK_A) == true || GetJoypadPress(JOYKEY_LEFT , 1) == true || joykeystate.Gamepad.sThumbLX <= -(XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE - 6000 * 0.5f))
+		if (GetkeyboardPress(DIK_A) == true || joykeystate.Gamepad.sThumbLX <= -(XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE - 6000 * 0.5f))
 		{//Aがおされた(左)
 			return 0;
 		}
-		else if (GetkeyboardPress(DIK_D) == true || GetJoypadPress(JOYKEY_RIGHT , 1) == true || joykeystate.Gamepad.sThumbLX >= (XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE - 6000 * 0.5f))
+		else if (GetkeyboardPress(DIK_D) == true  || joykeystate.Gamepad.sThumbLX >= (XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE - 6000 * 0.5f))
 		{//Dがおされた(右)
 			return 0;
 		}
-		else if (GetkeyboardPress(DIK_W) == true || GetJoypadPress(JOYKEY_UP , 1) == true || joykeystate.Gamepad.sThumbLY >= (XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE - 6000 * 0.5f))
+		else if (GetkeyboardPress(DIK_W) == true || joykeystate.Gamepad.sThumbLY >= (XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE - 6000 * 0.5f))
 		{//Wがおされた(上)
 			return 0;
 		}
-		else if (GetkeyboardPress(DIK_S) == true || GetJoypadPress(JOYKEY_DOWN , 1) == true || joykeystate.Gamepad.sThumbLY <= -(XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE - 6000 * 0.5f))
+		else if (GetkeyboardPress(DIK_S) == true  || joykeystate.Gamepad.sThumbLY <= -(XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE - 6000 * 0.5f))
 		{//Sがおされた(下)
 			return 0;
 		}

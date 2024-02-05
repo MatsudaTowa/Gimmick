@@ -15,15 +15,21 @@
 
 #include "item.h"
 
-#define MAXITEMUI	(32)
+#define ITEMTEXUINUM	(7)//テクスチャ最大数
+#define MAXITEMUI	(64)//最大数
 
-#define ITEMUISIZE	(30.0f)
+#define ITEMUISIZE	(30.0f)//サイズ
+
+#define MAXGETITEM	(3)//アイテム最大所持数
+
+#define ITEMMOVESPEED_UI	(10.0f)
 
 typedef enum
 {
 	ITEM_UI_TYPE_FRAME = 0,//枠
 	ITEM_UI_TYPE_POINTER, //ポインター
 	ITEM_UI_TYPE_MAINBODY,//本体
+	ITEM_UI_TYPE_MAX
 
 }ITEM_UI_TYPE;
 
@@ -34,6 +40,13 @@ typedef struct
 {
 	D3DXVECTOR3 pos;	//位置
 	ITEM_UI_TYPE UItype;//UIのタイプ
+	ITEMTYPE nItemType;//アイテムの種類
+	
+	int PosNum;//アイテム本体の時限定、座標位置番号を格納、その他は-1
+
+
+	int PlayerNum;//プレイヤー番号1/2
+
 	bool bUse;
 
 }ITEM_UI;
@@ -53,9 +66,19 @@ void DrawItem_UI(void);
 
 
 
-void SetItem_UI(D3DXVECTOR3 pos, ITEM_UI_TYPE ItemUIType);
+void SetItem_UI(D3DXVECTOR3 pos, ITEM_UI_TYPE ItemUIType, ITEMTYPE ItemType,int PosNum,int PlayerNum);
 
 
 
+
+
+//アイテム減数処理
+//void ItemRedProces_1P(void);
+
+//アイテム取得できるか処理
+void GetItem(int ItemIndex,int PlayerNum);
+
+//コントローラー入力反映処理(アイテムUI)
+void InPutControllerITEM_UI(int PlayerNum);
 
 #endif // _ITEM_H_

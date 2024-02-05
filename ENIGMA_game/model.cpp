@@ -338,10 +338,11 @@ void SetModel(D3DXVECTOR3 pos, D3DXVECTOR3 rot, ModelType nType)
 			g_aModel[nCnt].rot = rot;
 			g_aModel[nCnt].nType = nType;
 
+
 			if (g_aModel[nCnt].nType == MODELTYPE_BATH)
 			{
 				SetBathWater(D3DXVECTOR3(g_aModel[nCnt].pos.x, g_aModel[nCnt].pos.y + 40.0f, g_aModel[nCnt].pos.z)
-					, D3DXVECTOR3(g_aModel[nCnt].rot.x,D3DX_PI * 0.5f,g_aModel[nCnt].rot.z)
+					, D3DXVECTOR3(g_aModel[nCnt].rot.x, D3DX_PI * 0.5f, g_aModel[nCnt].rot.z)
 					, BATHWATER_WIDE
 					, BATHWATER_DEPTH);
 			}

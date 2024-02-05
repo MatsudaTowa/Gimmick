@@ -74,6 +74,8 @@ typedef struct
 
 	bool bRetentionl;//‘Ø—¯‚µ‚Ä‚é‚©
 
+	int nStayGetCnt;//æ“¾‰Â”\‚Ü‚Å‚Ì‘Ò‹@
+	bool bGetNO;//æ“¾‚Å‚«‚é‚©
 
 	bool bUse;
 }ITEM;
@@ -97,12 +99,13 @@ void DrawItem(void);
 
 ITEM* GetItem(void);
 
-ITEMCNT* GetItemCnt_1P(void);
-ITEMCNT* GetItemCnt_2P(void);
+//ITEMCNT* GetItemCnt_1P(void);
+//ITEMCNT* GetItemCnt_2P(void);
 
 //İ’è
 void SetItem(D3DXVECTOR3 Pos, D3DXVECTOR3 Rot, ITEMTYPE Type);
 
-
+//İ’è2
+void SetItem2(D3DXVECTOR3 Pos, D3DXVECTOR3 Rot, ITEMTYPE Type,int NoGetCnt);
 
 #endif // _ITEM_H_

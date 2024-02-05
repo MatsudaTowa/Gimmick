@@ -282,7 +282,10 @@ void UpdatePlayer(void)
 	{
 		if (pItem[ItemCnt].bUse == true)
 		{
-			BoxCollisionItem(PlayerMin, PlayerMax, pItem[ItemCnt].pos, 1, ItemCnt);
+			if (pItem[ItemCnt].bGetNO == false)
+			{
+				BoxCollisionItem(PlayerMin, PlayerMax, pItem[ItemCnt].pos, 1, ItemCnt);
+			}
 		}
 	}
 
@@ -320,12 +323,9 @@ void UpdatePlayer(void)
 			{
 				D3DXVECTOR3 ModelMin = D3DXVECTOR3(pMapObject[i].pos + pMapObject[i].Minpos);
 				D3DXVECTOR3 ModelMax = D3DXVECTOR3(pMapObject[i].pos + pMapObject[i].Maxpos);
-				if (pMapObject[i].nType == MODELTYPE_BATH)
-				{
-					if (GetJoypadTrigger(JOYKEY_X, 0) == true)
-					{//お風呂のギミック作動
-						RunWater(0);
-					}
+				if (GetJoypadTrigger(JOYKEY_X, 0) == true)
+				{//お風呂のギミック作動
+					RunWater(0);
 				}
 				//プレイヤー同士当たり判定
 				BoxCollisionPlayer(PlayerMin, PlayerMax, ModelMin, ModelMax, 1);
@@ -861,32 +861,28 @@ void InPutKeyboardPlayer(void)
 	float Zdate = 0.0f;
 
 	//キーボード
-	if (GetkeyboardPress(DIK_A) == true || GetJoypadPress(JOYKEY_LEFT, 0) == true)
+	if (GetkeyboardPress(DIK_A) == true )
 	{//Aがおされた(左)
 		Xdate =
 			1;
 		MoveNow = true;
 	}
-	else if (GetkeyboardPress(DIK_D) == true || GetJoypadPress(JOYKEY_RIGHT, 0) == true)
+	else if (GetkeyboardPress(DIK_D) == true )
 	{//Dがおされた(右)
 		Xdate = -1;
 		MoveNow = true;
 	}
 
-	if (GetkeyboardPress(DIK_W) == true || GetJoypadPress(JOYKEY_UP, 0) == true)
+	if (GetkeyboardPress(DIK_W) == true )
 	{//Wがおされた(上)
 		Zdate = -1.0f;
 		MoveNow = true;
 	}
-	else if (GetkeyboardPress(DIK_S) == true || GetJoypadPress(JOYKEY_DOWN, 0) == true)
+	else if (GetkeyboardPress(DIK_S) == true )
 	{//Sがおされた(下)
 		Zdate = 1.0f;
 		MoveNow = true;
 	}
-
-	
-
-
 	//移動する状態の時
 	if (MoveNow == true)
 	{
@@ -965,24 +961,24 @@ void InPutControllerPlayer(void)
 	float Zdate = 0.0f;
 
 	//キーボード
-	if (GetkeyboardPress(DIK_A) == true || GetJoypadPress(JOYKEY_LEFT, 0) == true)
+	if (GetkeyboardPress(DIK_A) == true )
 	{//Aがおされた(左)
 		Xdate = 
 			1;
 		MoveNow = true;
 	}
-	else if (GetkeyboardPress(DIK_D) == true || GetJoypadPress(JOYKEY_RIGHT, 0) == true)
+	else if (GetkeyboardPress(DIK_D) == true )
 	{//Dがおされた(右)
 		Xdate = -1;
 		MoveNow = true;
 	}
 
-	if (GetkeyboardPress(DIK_W) == true || GetJoypadPress(JOYKEY_UP, 0) == true)
+	if (GetkeyboardPress(DIK_W) == true )
 	{//Wがおされた(上)
 		 Zdate = -1.0f;
 		 MoveNow = true;
 	}
-	else if (GetkeyboardPress(DIK_S) == true || GetJoypadPress(JOYKEY_DOWN, 0) == true)
+	else if (GetkeyboardPress(DIK_S) == true)
 	{//Sがおされた(下)
 		 Zdate = 1.0f;
 		 MoveNow = true;
@@ -1068,10 +1064,11 @@ void InPutControllerPlayer(void)
 		{
 			g_Player.move += EscapeMove * (Split / 1.9f);
 		}
+		//モデル角変換
+		ConversionPlayerRot2(g_Player.fRotDest + D3DX_PI, 0);//D3DX_PIは角度補正	
 	}
 
-	//モデル角変換
-	ConversionPlayerRot2(g_Player.fRotDest + D3DX_PI, 0);//D3DX_PIは角度補正	
+
 }
 //=============================
 //攻撃キー入力処理

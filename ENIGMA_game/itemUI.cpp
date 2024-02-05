@@ -7,22 +7,36 @@
 #include "item.h"
 #include "itemUI.h"
 #include "game.h"
+#include "particle.h"
+#include "input.h"
+#include "player.h"
+#include "camera.h"
+#include "player2.h"
 
 
 //グローバル変数
-LPDIRECT3DTEXTURE9 g_pTextureItem_UI[2] = {};//テクスチャへのポインタ
+LPDIRECT3DTEXTURE9 g_pTextureItem_UI[ITEMTEXUINUM] = {};//テクスチャへのポインタ
 LPDIRECT3DVERTEXBUFFER9 g_pVtxBuffItem_UI = NULL;//頂点バッファへのポリゴン
-
 
 ITEM_UI g_ItemUI[MAXITEMUI];
 
+int g_ItemNum = 0;//アイテム所持数
+int g_PointNum = 0;//ポインターの位置番号
+
+int g_ItemNum2 = 0;//アイテム所持数
+int g_PointNum2 = 0;//ポインターの位置番号
 
 //=============================
 //アイテムUIの初期化処理
 //=============================
 void InitItem_UI(void)
 {
-	
+	g_ItemNum = 0;
+	g_PointNum = 0;
+
+	g_ItemNum2 = 0;
+	g_PointNum2 = 0;
+
 
 	LPDIRECT3DDEVICE9 pDevice;	//デバイスへのポインタ
 
@@ -32,15 +46,24 @@ void InitItem_UI(void)
 	int nCntItem_UI;
 
 	//テクスチャの読み込み
-	D3DXCreateTextureFromFile(pDevice, "data\\TEXTURE\\frame.png", &g_pTextureItem_UI[0]);//--------書き換え済み
-	D3DXCreateTextureFromFile(pDevice, "data\\TEXTURE\\frameselect.png", &g_pTextureItem_UI[1]);//--------書き換え済み
+	D3DXCreateTextureFromFile(pDevice, "data\\TEXTURE\\frame.png", &g_pTextureItem_UI[0]);//枠
+	D3DXCreateTextureFromFile(pDevice, "data\\TEXTURE\\frameselect.png", &g_pTextureItem_UI[1]);//ポインター
 
+	D3DXCreateTextureFromFile(pDevice, "data\\TEXTURE\\item000.png", &g_pTextureItem_UI[2]);//御札
+	D3DXCreateTextureFromFile(pDevice, "data\\TEXTURE\\item001.png", &g_pTextureItem_UI[3]);//回復
+	D3DXCreateTextureFromFile(pDevice, "data\\TEXTURE\\item002.png", &g_pTextureItem_UI[4]);//鍵だし
+	D3DXCreateTextureFromFile(pDevice, "data\\TEXTURE\\item003.png", &g_pTextureItem_UI[5]);//身代わり
+	D3DXCreateTextureFromFile(pDevice, "data\\TEXTURE\\item004.png", &g_pTextureItem_UI[6]);//式神
 
 	
 	//アイテムUIの情報の初期化(いわゆる初期地点)
 	for (nCntItem_UI = 0; nCntItem_UI < MAXITEMUI; nCntItem_UI++)
 	{
 		g_ItemUI[nCntItem_UI].pos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+		g_ItemUI[nCntItem_UI].nItemType = ITEMTYPE_MAX;
+		g_ItemUI[nCntItem_UI].UItype = ITEM_UI_TYPE_MAX;
+		g_ItemUI[nCntItem_UI].PlayerNum = -1;
+		g_ItemUI[nCntItem_UI].PosNum = -1;
 		g_ItemUI[nCntItem_UI].bUse = false;//使用していない状態にする
 	}
 
@@ -84,16 +107,21 @@ void InitItem_UI(void)
 	g_pVtxBuffItem_UI->Unlock();
 
 	//表示場所の設定
-	for (int SetCnt = 0; SetCnt <= ITEMTYPE_MAX; SetCnt++)
+	for (int SetCnt = 0; SetCnt < MAXGETITEM; SetCnt++)
 	{
-		SetItem_UI(D3DXVECTOR3(ITEMUISIZE + 10.0f + (ITEMUISIZE*2.1f * SetCnt), 460.0f, 0),ITEM_UI_TYPE_FRAME);
+		SetItem_UI(D3DXVECTOR3(ITEMUISIZE + 10.0f + (ITEMUISIZE*2.1f * SetCnt), 460.0f, 0),ITEM_UI_TYPE_FRAME,ITEMTYPE_MAX,-1,1);//枠
 	}
 
-	SetItem_UI(D3DXVECTOR3(ITEMUISIZE + 10.0f, 460.0f, 0), ITEM_UI_TYPE_POINTER);
+	SetItem_UI(D3DXVECTOR3(ITEMUISIZE + 10.0f, 460.0f, 0), ITEM_UI_TYPE_POINTER,ITEMTYPE_MAX,-1,1);//ポインター初期位置
 
 
+	//表示場所の設定
+	for (int SetCnt = 0; SetCnt < MAXGETITEM; SetCnt++)
+	{
+		SetItem_UI(D3DXVECTOR3(ITEMUISIZE + 640.0f + (ITEMUISIZE * 2.1f * SetCnt), 460.0f, 0), ITEM_UI_TYPE_FRAME, ITEMTYPE_MAX, -1, 2);//枠
+	}
 
-
+	SetItem_UI(D3DXVECTOR3(ITEMUISIZE + 640.0f, 460.0f, 0), ITEM_UI_TYPE_POINTER, ITEMTYPE_MAX, -1, 2);//ポインター初期位置
 
 }
 //=============================
@@ -101,10 +129,8 @@ void InitItem_UI(void)
 //=============================
 void UninitItem_UI(void)
 {
-	for (int i = 0; i < 2; i++)
+	for (int i = 0; i < ITEMTEXUINUM; i++)
 	{
-
-
 		//テクスチャの破棄
 		if (g_pTextureItem_UI[i] != NULL)
 		{
@@ -124,18 +150,146 @@ void UninitItem_UI(void)
 //=============================
 void UpdateItem_UI(void)
 {
-	//VERTEX_2D* pVtx;//頂点情報のポインタ
+	VERTEX_2D* pVtx;//頂点情報のポインタ
 
-	////頂点バッファをロックし、頂点情報へのポインタを取得
-	//g_pVtxBuffItem_UI->Lock(0, 0, (void**)&pVtx, 0);
+	//頂点バッファをロックし、頂点情報へのポインタを取得
+	g_pVtxBuffItem_UI->Lock(0, 0, (void**)&pVtx, 0);
 
-	//for (int nCntItem_UI = 0; nCntItem_UI < ITEMTYPE_MAX; nCntItem_UI++)
-	//{
-	//
-	//	pVtx += 4;//頂点のポインタを4つ分進める
-	//}
-	////頂点バッファをアンロックする
-	//g_pVtxBuffItem_UI->Unlock();
+	for (int i = 0; i < 2; i++)
+	{//ここだけIndex(1が0,2が1)
+		InPutControllerITEM_UI(i);//入力
+	}
+
+	for (int nCntItem_UI = 0; nCntItem_UI < MAXITEMUI; nCntItem_UI++)
+	{
+		bool ESC1 = false;
+		bool ESC2 = false;
+
+		if (g_ItemUI[nCntItem_UI].bUse == true)
+		{//アイテムUIが使用されている
+
+			if (g_ItemUI[nCntItem_UI].PlayerNum == 1)
+			{//プレイヤー1
+				//---------------------------------------------------------------------------アイテム順序
+				if (g_ItemUI[nCntItem_UI].UItype == ITEM_UI_TYPE_MAINBODY)
+				{//本体のとき
+
+					if (g_ItemUI[nCntItem_UI].PosNum == 2)
+					{
+						for (int nCnt2 = 0; nCnt2 < MAXITEMUI; nCnt2++)
+						{
+							if (g_ItemUI[nCnt2].UItype == ITEM_UI_TYPE_MAINBODY)
+							{//本体のとき
+								if (g_ItemUI[nCnt2].PosNum == 1)
+								{
+									ESC1 = true;
+								}
+							}
+						}
+
+						if (ESC1 == false)
+						{
+							g_ItemUI[nCntItem_UI].PosNum = 1;
+							g_ItemUI[nCntItem_UI].pos = D3DXVECTOR3(ITEMUISIZE + 10.0f + (ITEMUISIZE * 2.1f * 1), 460.0f, 0);
+						}
+
+					}
+
+					if (g_ItemUI[nCntItem_UI].PosNum == 1)
+					{
+						for (int nCnt3 = 0; nCnt3 < MAXITEMUI; nCnt3++)
+						{
+							if (g_ItemUI[nCnt3].UItype == ITEM_UI_TYPE_MAINBODY)
+							{//本体のとき
+								if (g_ItemUI[nCnt3].PosNum == 0)
+								{
+									ESC2 = true;
+								}
+							}
+						}
+						if (ESC2 == false)
+						{
+							g_ItemUI[nCntItem_UI].PosNum = 0;
+							g_ItemUI[nCntItem_UI].pos = D3DXVECTOR3(ITEMUISIZE + 10.0f + (ITEMUISIZE * 2.1f * 0), 460.0f, 0);
+						}
+
+					}
+				}
+				//---------------------------------------------------------------------------アイテム順序
+
+				if (g_ItemUI[nCntItem_UI].UItype == ITEM_UI_TYPE_POINTER)
+				{//ポインターのとき
+					g_ItemUI[nCntItem_UI].pos = D3DXVECTOR3(ITEMUISIZE + 10.0f + (ITEMUISIZE * 2.1f * g_PointNum), 460.0f, 0);
+
+				}
+			}
+			else if (g_ItemUI[nCntItem_UI].PlayerNum == 2)
+			{//プレイヤー2
+				//---------------------------------------------------------------------------アイテム順序
+				if (g_ItemUI[nCntItem_UI].UItype == ITEM_UI_TYPE_MAINBODY)
+				{//本体のとき
+
+					if (g_ItemUI[nCntItem_UI].PosNum == 2)
+					{
+						for (int nCnt2 = 0; nCnt2 < MAXITEMUI; nCnt2++)
+						{
+							if (g_ItemUI[nCnt2].UItype == ITEM_UI_TYPE_MAINBODY)
+							{//本体のとき
+								if (g_ItemUI[nCnt2].PosNum == 1)
+								{
+									ESC1 = true;
+								}
+							}
+						}
+
+						if (ESC1 == false)
+						{
+							g_ItemUI[nCntItem_UI].PosNum = 1;
+							g_ItemUI[nCntItem_UI].pos = D3DXVECTOR3(ITEMUISIZE + 640.0f + (ITEMUISIZE * 2.1f * 1), 460.0f, 0);
+						}
+
+					}
+
+					if (g_ItemUI[nCntItem_UI].PosNum == 1)
+					{
+						for (int nCnt3 = 0; nCnt3 < MAXITEMUI; nCnt3++)
+						{
+							if (g_ItemUI[nCnt3].UItype == ITEM_UI_TYPE_MAINBODY)
+							{//本体のとき
+								if (g_ItemUI[nCnt3].PosNum == 0)
+								{
+									ESC2 = true;
+								}
+							}
+						}
+						if (ESC2 == false)
+						{
+							g_ItemUI[nCntItem_UI].PosNum = 0;
+							g_ItemUI[nCntItem_UI].pos = D3DXVECTOR3(ITEMUISIZE + 640.0f + (ITEMUISIZE * 2.1f * 0), 460.0f, 0);
+						}
+
+					}
+				}
+				//---------------------------------------------------------------------------アイテム順序
+
+				if (g_ItemUI[nCntItem_UI].UItype == ITEM_UI_TYPE_POINTER)
+				{//ポインターのとき
+					g_ItemUI[nCntItem_UI].pos = D3DXVECTOR3(ITEMUISIZE + 640.0f + (ITEMUISIZE * 2.1f * g_PointNum2), 460.0f, 0);
+
+				}
+			}
+		}
+
+		//頂点座標の更新-----------------------------------
+		pVtx[0].pos = D3DXVECTOR3(g_ItemUI[nCntItem_UI].pos.x - ITEMUISIZE, g_ItemUI[nCntItem_UI].pos.y - ITEMUISIZE, 0.0f);
+		pVtx[1].pos = D3DXVECTOR3(g_ItemUI[nCntItem_UI].pos.x + ITEMUISIZE, g_ItemUI[nCntItem_UI].pos.y - ITEMUISIZE, 0.0f);
+		pVtx[2].pos = D3DXVECTOR3(g_ItemUI[nCntItem_UI].pos.x - ITEMUISIZE, g_ItemUI[nCntItem_UI].pos.y + ITEMUISIZE, 0.0f);
+		pVtx[3].pos = D3DXVECTOR3(g_ItemUI[nCntItem_UI].pos.x + ITEMUISIZE, g_ItemUI[nCntItem_UI].pos.y + ITEMUISIZE, 0.0f);
+
+		pVtx += 4;//頂点のポインタを4つ分進める
+	}
+	//頂点バッファをアンロックする
+	g_pVtxBuffItem_UI->Unlock();
 }
 //=============================
 //アイテムUIの描画処理
@@ -157,14 +311,24 @@ void DrawItem_UI(void)
 	{
 		if (g_ItemUI[nCntItem_UI].bUse == true)
 		{//アイテムUIが使用されている
-			
+			if (g_ItemUI[nCntItem_UI].UItype == ITEM_UI_TYPE_FRAME|| g_ItemUI[nCntItem_UI].UItype == ITEM_UI_TYPE_POINTER)
+			{//枠かポインターの時
+
 			//列挙をintに
-			int EscapeNum = static_cast<int>(g_ItemUI[nCntItem_UI].UItype);
+				int EscapeNum = static_cast<int>(g_ItemUI[nCntItem_UI].UItype);
 
-			//テクスチャの設定
-			pDevice->SetTexture(0, g_pTextureItem_UI[EscapeNum]);//---------書き換え済み
+				//テクスチャの設定
+				pDevice->SetTexture(0, g_pTextureItem_UI[EscapeNum]);//---------書き換え済み
+			}
+			else if (g_ItemUI[nCntItem_UI].UItype == ITEM_UI_TYPE_MAINBODY)
+			{//アイテム自体
+				
+					//列挙をintに
+					int EscapeNum2 = static_cast<int>(g_ItemUI[nCntItem_UI].nItemType);
 
-
+					//テクスチャの設定
+					pDevice->SetTexture(0, g_pTextureItem_UI[EscapeNum2 + 2]);//---------書き換え済み
+			}
 					//ポリゴンの描画
 			pDevice->DrawPrimitive(D3DPT_TRIANGLESTRIP,//プリミティブの種類
 				nCntItem_UI * 4,//描画する最初の頂点インデックス
@@ -175,7 +339,7 @@ void DrawItem_UI(void)
 //=============================
 //アイテムUIの設定処理
 //=============================
-void SetItem_UI(D3DXVECTOR3 pos, ITEM_UI_TYPE ItemUIType)
+void SetItem_UI(D3DXVECTOR3 pos, ITEM_UI_TYPE ItemUIType, ITEMTYPE ItemType, int PosNum, int PlayerNum)
 {//他のところでも呼ぶ可能性があるのでこのままのほうが便利
 
 	VERTEX_2D* pVtx;//頂点情報のポインタ
@@ -191,7 +355,9 @@ void SetItem_UI(D3DXVECTOR3 pos, ITEM_UI_TYPE ItemUIType)
 
 			g_ItemUI[nCntItem_UI].pos = pos;
 			g_ItemUI[nCntItem_UI].UItype = ItemUIType;
-
+			g_ItemUI[nCntItem_UI].nItemType = ItemType;
+			g_ItemUI[nCntItem_UI].PosNum = PosNum;
+			g_ItemUI[nCntItem_UI].PlayerNum = PlayerNum;
 
 			//頂点座標の更新-----------------------------------
 			pVtx[0].pos = D3DXVECTOR3(g_ItemUI[nCntItem_UI].pos.x - ITEMUISIZE, g_ItemUI[nCntItem_UI].pos.y - ITEMUISIZE, 0.0f);
@@ -213,4 +379,311 @@ void SetItem_UI(D3DXVECTOR3 pos, ITEM_UI_TYPE ItemUIType)
 	}
 	//頂点バッファをアンロックする
 	g_pVtxBuffItem_UI->Unlock();
+}
+
+//=============================
+//アイテム取得できるか処理
+//=============================
+void GetItem(int ItemIndex,int PlayerNum)
+{
+	ITEM* pItem;
+	pItem = GetItem();
+	if (PlayerNum == 1)
+	{
+		if (g_ItemNum < MAXGETITEM)
+		{//最大数に達していない
+
+			SetItem_UI(D3DXVECTOR3(ITEMUISIZE + 10.0f + (ITEMUISIZE * 2.1f * g_ItemNum), 460.0f, 0), ITEM_UI_TYPE_MAINBODY, pItem[ItemIndex].ItemType, g_ItemNum, 1);//アイテム
+			pItem[ItemIndex].bUse = false;
+
+			g_ItemNum++;
+
+			if (pItem[ItemIndex].ItemType == ITEMTYPE_OHUDA)//御札
+			{
+				SetParticle(pItem[ItemIndex].pos, 30.0f, 42, PARTICLETYPE_ITEM, D3DXCOLOR(1.0f, 0.0f, 0.0f, 0.35f));
+			}
+			else if (pItem[ItemIndex].ItemType == ITEMTYPE_KAIHUKU)//回復アイテム
+			{
+				SetParticle(pItem[ItemIndex].pos, 30.0f, 42, PARTICLETYPE_ITEM, D3DXCOLOR(0.0f, 1.0f, 0.0f, 0.35f));
+			}
+			else if (pItem[ItemIndex].ItemType == ITEMTYPE_EMA)//絵馬(鍵だし??)
+			{
+				SetParticle(pItem[ItemIndex].pos, 30.0f, 42, PARTICLETYPE_ITEM, D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.35f));
+			}
+			else if (pItem[ItemIndex].ItemType == ITEMTYPE_WARANINGYO)//身代わり人形
+			{
+				SetParticle(pItem[ItemIndex].pos, 30.0f, 42, PARTICLETYPE_ITEM, D3DXCOLOR(1.0f, 0.0f, 1.0f, 0.35f));
+			}
+			else if (pItem[ItemIndex].ItemType == ITEMTYPE_SIKIGAMI)//式神
+			{
+				SetParticle(pItem[ItemIndex].pos, 30.0f, 42, PARTICLETYPE_ITEM, D3DXCOLOR(1.0f, 1.0f, 0.0f, 0.35f));
+			}
+
+		}
+		else
+		{
+
+			//取得できない演出
+			if (pItem[ItemIndex].ItemType == ITEMTYPE_OHUDA)//御札
+			{
+				SetParticle(pItem[ItemIndex].pos, 40.0f, 12, PARTICLETYPE_ITEM, D3DXCOLOR(0.0f, 1.0f, 1.0f, 0.55f));
+			}
+			else if (pItem[ItemIndex].ItemType == ITEMTYPE_KAIHUKU)//回復アイテム
+			{
+				SetParticle(pItem[ItemIndex].pos, 40.0f, 12, PARTICLETYPE_ITEM, D3DXCOLOR(0.0f, 1.0f, 1.0f, 0.55f));
+			}
+			else if (pItem[ItemIndex].ItemType == ITEMTYPE_EMA)//絵馬(鍵だし??)
+			{
+				SetParticle(pItem[ItemIndex].pos, 40.0f, 12, PARTICLETYPE_ITEM, D3DXCOLOR(0.0f, 1.0f, 1.0f, 0.55f));
+			}
+			else if (pItem[ItemIndex].ItemType == ITEMTYPE_WARANINGYO)//身代わり人形
+			{
+				SetParticle(pItem[ItemIndex].pos, 40.0f, 12, PARTICLETYPE_ITEM, D3DXCOLOR(0.0f, 1.0f, 1.0f, 0.55f));
+			}
+			else if (pItem[ItemIndex].ItemType == ITEMTYPE_SIKIGAMI)//式神
+			{
+				SetParticle(pItem[ItemIndex].pos, 40.0f, 12, PARTICLETYPE_ITEM, D3DXCOLOR(0.0f, 1.0f, 1.0f, 0.55f));
+			}
+		}
+	}
+	else if (PlayerNum == 2)
+	{
+		if (g_ItemNum2 < MAXGETITEM)
+		{//最大数に達していない
+
+			SetItem_UI(D3DXVECTOR3(ITEMUISIZE + 640.0f + (ITEMUISIZE * 2.1f * g_ItemNum2), 460.0f, 0), ITEM_UI_TYPE_MAINBODY, pItem[ItemIndex].ItemType, g_ItemNum2, 2);//アイテム
+			pItem[ItemIndex].bUse = false;
+
+			g_ItemNum2++;
+
+			if (pItem[ItemIndex].ItemType == ITEMTYPE_OHUDA)//御札
+			{
+				SetParticle(pItem[ItemIndex].pos, 30.0f, 42, PARTICLETYPE_ITEM, D3DXCOLOR(1.0f, 0.0f, 0.0f, 0.35f));
+			}
+			else if (pItem[ItemIndex].ItemType == ITEMTYPE_KAIHUKU)//回復アイテム
+			{
+				SetParticle(pItem[ItemIndex].pos, 30.0f, 42, PARTICLETYPE_ITEM, D3DXCOLOR(0.0f, 1.0f, 0.0f, 0.35f));
+			}
+			else if (pItem[ItemIndex].ItemType == ITEMTYPE_EMA)//絵馬(鍵だし??)
+			{
+				SetParticle(pItem[ItemIndex].pos, 30.0f, 42, PARTICLETYPE_ITEM, D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.35f));
+			}
+			else if (pItem[ItemIndex].ItemType == ITEMTYPE_WARANINGYO)//身代わり人形
+			{
+				SetParticle(pItem[ItemIndex].pos, 30.0f, 42, PARTICLETYPE_ITEM, D3DXCOLOR(1.0f, 0.0f, 1.0f, 0.35f));
+			}
+			else if (pItem[ItemIndex].ItemType == ITEMTYPE_SIKIGAMI)//式神
+			{
+				SetParticle(pItem[ItemIndex].pos, 30.0f, 42, PARTICLETYPE_ITEM, D3DXCOLOR(1.0f, 1.0f, 0.0f, 0.35f));
+			}
+
+		}
+		else
+		{
+
+			//取得できない演出
+			if (pItem[ItemIndex].ItemType == ITEMTYPE_OHUDA)//御札
+			{
+				SetParticle(pItem[ItemIndex].pos, 40.0f, 12, PARTICLETYPE_ITEM, D3DXCOLOR(0.0f, 1.0f, 1.0f, 0.55f));
+			}
+			else if (pItem[ItemIndex].ItemType == ITEMTYPE_KAIHUKU)//回復アイテム
+			{
+				SetParticle(pItem[ItemIndex].pos, 40.0f, 12, PARTICLETYPE_ITEM, D3DXCOLOR(0.0f, 1.0f, 1.0f, 0.55f));
+			}
+			else if (pItem[ItemIndex].ItemType == ITEMTYPE_EMA)//絵馬(鍵だし??)
+			{
+				SetParticle(pItem[ItemIndex].pos, 40.0f, 12, PARTICLETYPE_ITEM, D3DXCOLOR(0.0f, 1.0f, 1.0f, 0.55f));
+			}
+			else if (pItem[ItemIndex].ItemType == ITEMTYPE_WARANINGYO)//身代わり人形
+			{
+				SetParticle(pItem[ItemIndex].pos, 40.0f, 12, PARTICLETYPE_ITEM, D3DXCOLOR(0.0f, 1.0f, 1.0f, 0.55f));
+			}
+			else if (pItem[ItemIndex].ItemType == ITEMTYPE_SIKIGAMI)//式神
+			{
+				SetParticle(pItem[ItemIndex].pos, 40.0f, 12, PARTICLETYPE_ITEM, D3DXCOLOR(0.0f, 1.0f, 1.0f, 0.55f));
+			}
+		}
+	}
+}
+
+
+
+
+
+
+//=============================
+//コントローラー入力反映処理(アイテムUI)
+//=============================
+void InPutControllerITEM_UI(int PlayerNum)
+{
+	XINPUT_STATE joykeystate;
+
+	//ショイパットの状態を取得
+	DWORD dwResult = XInputGetState(PlayerNum, &joykeystate);
+
+	//カーソル操作
+	if (GetJoypadTrigger(JOYKEY_LEFT, PlayerNum) == true)
+	{//Aがおされた(左)
+
+		if (PlayerNum == 0)
+		{
+			if (g_PointNum > 0)
+			{//通常
+				g_PointNum--;
+			}
+			else
+			{//上に戻る
+				g_PointNum = MAXGETITEM - 1;
+			}
+		}
+		else if (PlayerNum == 1)
+		{
+			if (g_PointNum2 > 0)
+			{//通常
+				g_PointNum2--;
+			}
+			else
+			{//上に戻る
+				g_PointNum2 = MAXGETITEM - 1;
+			}
+		}
+
+	}
+	else if (GetJoypadTrigger(JOYKEY_RIGHT, PlayerNum) == true)
+	{//Dがおされた(右)
+		if (PlayerNum == 0)
+		{
+			if (g_PointNum < MAXGETITEM - 1)
+			{//通常
+				g_PointNum++;
+			}
+			else
+			{//下に戻る
+				g_PointNum = 0;
+			}
+		}
+		else if (PlayerNum == 1)
+		{
+			if (g_PointNum2 < MAXGETITEM - 1)
+			{//通常
+				g_PointNum2++;
+			}
+			else
+			{//下に戻る
+				g_PointNum2 = 0;
+			}
+		}
+	}
+
+	//アイテムドロップ
+	if(GetJoypadTrigger(JOYKEY_UP, PlayerNum) == true)
+	{//Wがおされた(上)
+		Camera* pCamera;
+		pCamera = GetCamera();
+
+		Player* pPlayer;
+		pPlayer = GetPlayer();
+
+		for (int nCntItem_UI = 0; nCntItem_UI < MAXITEMUI; nCntItem_UI++)
+		{
+			if (g_ItemUI[nCntItem_UI].UItype == ITEM_UI_TYPE_MAINBODY)
+			{//UI本体
+				if (g_ItemUI[nCntItem_UI].PosNum == g_PointNum)
+				{//位置一致
+					View* pViewMtx = GetView();
+					View2* pViewMtx2 = GetView_2P();
+
+					D3DXVECTOR3 EscMove;
+					D3DXVECTOR3 EscPos2;
+					if (PlayerNum == 0)
+					{
+						 EscPos2 = D3DXVECTOR3(pViewMtx[1].ViewPosMtx._41, pViewMtx[1].ViewPosMtx._42, pViewMtx[1].ViewPosMtx._43);
+					}
+					else if (PlayerNum == 1)
+					{
+						EscPos2 = D3DXVECTOR3(pViewMtx2[1].ViewPosMtx._41, pViewMtx2[1].ViewPosMtx._42, pViewMtx2[1].ViewPosMtx._43);
+
+					}
+
+					float Xdate = 0.0f;
+					float Zdate = 0.0f;
+
+					Zdate = -1.0f;
+
+
+					float Angle = atan2f(Xdate, Zdate);//これが方角
+
+
+					//------これはWW
+
+					EscMove.x = sinf(Angle - pCamera[PlayerNum].rot.y - (1.0f * D3DX_PI))* ITEMMOVESPEED_UI;//三角関数利用して移動の長さを代入
+					EscMove.z = cosf(Angle - pCamera[PlayerNum].rot.y - (1.0f * D3DX_PI))* ITEMMOVESPEED_UI;//三角関数利用して移動の長さを代入
+					EscMove.y = 2.0f;
+
+					SetItem2(EscPos2, EscMove, g_ItemUI[nCntItem_UI].nItemType, 15);
+
+					g_ItemUI[nCntItem_UI].PosNum = -1;//一応リセット
+					g_ItemUI[nCntItem_UI].bUse = false;
+					
+					if (PlayerNum == 0)
+					{
+						g_ItemNum--;
+					}
+					else if (PlayerNum == 1)
+					{
+						g_ItemNum2--;
+					}
+
+					break;
+				}
+			}
+		}
+
+
+	}
+	
+	//アイテム使用
+	if (GetJoypadTrigger(JOYKEY_DOWN, PlayerNum) == true)
+	{//Sがおされた(下)
+		
+		for (int nCntItem_UI = 0; nCntItem_UI < MAXITEMUI; nCntItem_UI++)
+		{
+			if (g_ItemUI[nCntItem_UI].UItype == ITEM_UI_TYPE_MAINBODY)
+			{//UI本体
+				if (PlayerNum == 0)
+				{
+			
+					if (g_ItemUI[nCntItem_UI].PosNum == g_PointNum)
+					{//位置一致
+						g_ItemUI[nCntItem_UI].PosNum = -1;//一応リセット
+						g_ItemUI[nCntItem_UI].bUse = false;
+
+						g_ItemNum--;
+
+						break;
+					}
+				}
+				else if (PlayerNum == 1)
+				{
+					
+					if (g_ItemUI[nCntItem_UI].PosNum == g_PointNum2)
+					{//位置一致
+						g_ItemUI[nCntItem_UI].PosNum = -1;//一応リセット
+						g_ItemUI[nCntItem_UI].bUse = false;
+
+						g_ItemNum2--;
+
+						break;
+					}
+				}
+			}
+		}
+
+
+		
+	}
+
+
+
+	
 }

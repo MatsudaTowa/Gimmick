@@ -8,7 +8,7 @@
 #include "item.h"
 //#include "sound.h"
 #include "input.h"
-#include "shadow.h"
+//#include "shadow.h"
 #include "player.h"
 #include "particle.h"
 
@@ -25,10 +25,10 @@ LPDIRECT3DTEXTURE9 g_pTextureItem[ITEMTYPE_MAX] = {};       //テクスチャへのポイ
 
 
 ITEM g_Item[NUMITEM];//制作中　構造体
-
-ITEMCNT g_ItemCnt_1P[ITEMTYPE_MAX];//アイテムカウンター
-
-ITEMCNT g_ItemCnt_2P[ITEMTYPE_MAX];//アイテムカウンター
+//
+//ITEMCNT g_ItemCnt_1P[ITEMTYPE_MAX];//アイテムカウンター
+//
+//ITEMCNT g_ItemCnt_2P[ITEMTYPE_MAX];//アイテムカウンター
 
 int g_nldShadow4 = -1;
 
@@ -37,12 +37,12 @@ int g_nldShadow4 = -1;
 //=============================
 void InitItem(void)
 {
-	//アイテムカウンター
-	for (int n = 0; n < ITEMTYPE_MAX; n++)
-	{
-		g_ItemCnt_1P[n].ItemCnt = 0;
-		g_ItemCnt_2P[n].ItemCnt = 0;
-	}
+	////アイテムカウンター
+	//for (int n = 0; n < ITEMTYPE_MAX; n++)
+	//{
+	//	g_ItemCnt_1P[n].ItemCnt = 0;
+	//	g_ItemCnt_2P[n].ItemCnt = 0;
+	//}
 
 	LPDIRECT3DDEVICE9 pDevice = GetDevice();
 
@@ -67,7 +67,8 @@ void InitItem(void)
 		//g_Item[nItem].
 
 		g_Item[nItem].pos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);//位置
-		//g_Item[nItem].oldPos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+		g_Item[nItem].bGetNO = false;
+		g_Item[nItem].nStayGetCnt = 0;
 		//g_Item[nItem].rotItem = D3DXVECTOR3(0.0f, 0.0f, 0.0f);	//向き
 
 		//g_Item[nItem].mtxWorldItem= D3DXMATRIX(0.0f,0.0f,0.0f);//ワールドマトリックス
@@ -151,6 +152,19 @@ void UpdateItem(void)
 	{
 		if (g_Item[nItem].bUse == true)
 		{
+			if (g_Item[nItem].bGetNO == true)
+			{
+				if (g_Item[nItem].nStayGetCnt > 0)
+				{
+					g_Item[nItem].nStayGetCnt--;
+				}
+
+				if (g_Item[nItem].nStayGetCnt <= 0)
+				{
+					g_Item[nItem].bGetNO = false;
+				}
+			}
+
 
 			//g_Item[nItem].oldPos = g_Item[nItem].pos;
 			//位置を更新
@@ -254,7 +268,7 @@ void UpdateItem(void)
 
 
 
-			SetPositionShadow(g_Item[nItem].nShadowNum, g_Item[nItem].pos, SHADOWSIZE_ITEM);
+			//SetPositionShadow(g_Item[nItem].nShadowNum, g_Item[nItem].pos, SHADOWSIZE_ITEM);
 
 			//--------------------------------寿命
 			//g_Item[nItem].nLife--;
@@ -389,28 +403,26 @@ ITEM* GetItem(void)
 	return &g_Item[0];
 }
 
-//=============================
-//アイテムカウントの取得処理
-//=============================
-ITEMCNT* GetItemCnt_1P(void)
-{
-	return &g_ItemCnt_1P[0];
-}
-//=============================
-//アイテムカウントの取得処理
-//=============================
-ITEMCNT* GetItemCnt_2P(void)
-{
-	return &g_ItemCnt_2P[0];
-}
+////=============================
+////アイテムカウントの取得処理
+////=============================
+//ITEMCNT* GetItemCnt_1P(void)
+//{
+//	return &g_ItemCnt_1P[0];
+//}
+////=============================
+////アイテムカウントの取得処理
+////=============================
+//ITEMCNT* GetItemCnt_2P(void)
+//{
+//	return &g_ItemCnt_2P[0];
+//}
 
 //=============================
 //アイテムの設定処理
 //=============================
 void SetItem(D3DXVECTOR3 Pos, D3DXVECTOR3 Rot, ITEMTYPE Type)
 {
-	
-
 	VERTEX_3D* pVtx;//頂点情報へのポインタ
 
 	//頂点バッファをロックし、頂点情報へのポインタを取得
@@ -421,20 +433,8 @@ void SetItem(D3DXVECTOR3 Pos, D3DXVECTOR3 Rot, ITEMTYPE Type)
 		if (g_Item[nItem].bUse == false)
 		{
 
-			//影設定
-			g_Item[nItem].nShadowNum = SetShadow();
-
 			g_Item[nItem].pos = Pos;//位置
 
-
-				//pPlayer2->ItemShotFrame = MAXSHOTFRAME;
-				//VibrationLeft(35535);
-				//VibrationRight(35535);
-
-				//SE
-				//PlaySound(SOUND_LABEL_SE_SHOT);
-
-				
 			g_Item[nItem].move = Rot;
 			g_Item[nItem].move *= ITEMMOVESPEED_LOCK;
 				
@@ -449,34 +449,40 @@ void SetItem(D3DXVECTOR3 Pos, D3DXVECTOR3 Rot, ITEMTYPE Type)
 	//頂点バッファのアンロック
 	g_pVtxBuffItem->Unlock();
 }
-////=============================
-//// 予測交差点を計算する関数
-////=============================
-//D3DXVECTOR3 PredictIntersection(ITEM bullet, Enemy enemy)
-//{
-//	//計算ズレをあえて制作
-//	//乱数を生成
-//
-//	int random = ((rand() % 20) - 10);//(25~-25)までの乱数
-//
-//	float random2 = random * 0.1f;//
-//
-//	//誤差を入れる
-//	D3DXVECTOR3 randomPosError = D3DXVECTOR3(random2, random2 * -1.0f, random2);
-//
-//	// 自弾と敵(誤差も)の相対位置ベクトル
-//	D3DXVECTOR3 relativePos = bullet.pos - (enemy.pos + randomPosError);
-//
-//	// 自弾と敵の相対速度ベクトル
-//	D3DXVECTOR3 relativeVel = bullet.move - enemy.move;
-//
-//	// 自弾と敵の最短交差時間
-//	float timeToIntersection = -D3DXVec3Dot(&relativePos, &relativeVel) / D3DXVec3LengthSq(&relativeVel);
-//
-//	// 敵の予測位置（交差点）を計算
-//	D3DXVECTOR3 predictedIntersection = (enemy.pos + randomPosError) + enemy.move * timeToIntersection;
-//
-//	return predictedIntersection;
-//}
 
 
+//=============================
+//アイテムの取得制限付き設定処理
+//=============================
+void SetItem2(D3DXVECTOR3 Pos, D3DXVECTOR3 Rot, ITEMTYPE Type, int NoGetCnt)
+{
+	VERTEX_3D* pVtx;//頂点情報へのポインタ
+
+	//頂点バッファをロックし、頂点情報へのポインタを取得
+	g_pVtxBuffItem->Lock(0, 0, (void**)&pVtx, 0);
+
+	for (int nItem = 0; nItem < NUMITEM; nItem++)
+	{
+		if (g_Item[nItem].bUse == false)
+		{
+
+			g_Item[nItem].pos = Pos;//位置
+
+			g_Item[nItem].move = Rot;
+			g_Item[nItem].move *= ITEMMOVESPEED_LOCK;
+
+			// 幅、高さ後ほど
+			g_Item[nItem].ItemType = Type;
+			g_Item[nItem].bUse = true;
+			g_Item[nItem].bGetNO = true;
+			g_Item[nItem].nStayGetCnt = NoGetCnt;
+
+
+
+			break;
+		}
+		pVtx += 4;
+	}
+	//頂点バッファのアンロック
+	g_pVtxBuffItem->Unlock();
+}

@@ -118,8 +118,8 @@
     <Filter Include="ソース ファイル\--++|    GAME   |++--\MoneyboxGimmick">
       <UniqueIdentifier>{e2c53ea8-1ea1-48ed-ab67-4f6ace037e53}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ソース ファイル\--++|    GAME   |++--\BathGimmick">
-      <UniqueIdentifier>{e2d6c787-38bf-4efa-ae52-b89e06d62c67}</UniqueIdentifier>
+    <Filter Include="ソース ファイル\--++|    GAME   |++--\//GAME_SYSTEM//\BathGimmick">
+      <UniqueIdentifier>{3db95dfe-61cc-4abf-ad8f-f8c9fec2750d}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -229,10 +229,10 @@
       <Filter>ソース ファイル\--++|    GAME   |++--\//3D_Model//</Filter>
     </ClCompile>
     <ClCompile Include="bathgimmick.cpp">
-      <Filter>ソース ファイル\--++|    GAME   |++--\BathGimmick</Filter>
+      <Filter>ソース ファイル\--++|    GAME   |++--\//GAME_SYSTEM//\BathGimmick</Filter>
     </ClCompile>
     <ClCompile Include="steam.cpp">
-      <Filter>ソース ファイル\--++|    GAME   |++--\BathGimmick</Filter>
+      <Filter>ソース ファイル\--++|    GAME   |++--\//GAME_SYSTEM//\BathGimmick</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -326,9 +326,6 @@
     <ClInclude Include="particle.h">
       <Filter>ソース ファイル\--++|    GAME   |++--\//GAME_SYSTEM//\%2aPARTICLE%2a</Filter>
     </ClInclude>
-    <ClInclude Include="itemUI.h">
-      <Filter>ソース ファイル\--++|    GAME   |++--\//ITEM//\Item_UI_1P</Filter>
-    </ClInclude>
     <ClInclude Include="moneybox.h">
       <Filter>ソース ファイル\--++|    GAME   |++--\MoneyboxGimmick</Filter>
     </ClInclude>
@@ -341,11 +338,14 @@
     <ClInclude Include="model.h">
       <Filter>ソース ファイル\--++|    GAME   |++--\//3D_Model//</Filter>
     </ClInclude>
+    <ClInclude Include="itemUI.h">
+      <Filter>ソース ファイル\--++|    GAME   |++--\//ITEM//\Item_UI_1P</Filter>
+    </ClInclude>
     <ClInclude Include="bathgimmick.h">
-      <Filter>ソース ファイル\--++|    GAME   |++--\BathGimmick</Filter>
+      <Filter>ソース ファイル\--++|    GAME   |++--\//GAME_SYSTEM//\BathGimmick</Filter>
     </ClInclude>
     <ClInclude Include="steam.h">
-      <Filter>ソース ファイル\--++|    GAME   |++--\BathGimmick</Filter>
+      <Filter>ソース ファイル\--++|    GAME   |++--\//GAME_SYSTEM//\BathGimmick</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

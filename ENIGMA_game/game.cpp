@@ -121,9 +121,6 @@ void InitGame(void)
 	InitBathGimmick();
 	InitSteam();
 
-	//デバッグ用
-	//SetBathWater(D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), BATHWATER_WIDE, BATHWATER_DEPTH);
-
 	InitPlayer();
 	InitPlayer_2P();
 
@@ -255,7 +252,6 @@ void UninitGame(void)
 	UninitPassword();
 	UninitBathGimmick();
 	UninitSteam();
-
 
 	UninitSky();
 
@@ -419,9 +415,9 @@ void UpdateGame(void)
 				UpdatePassword();
 			}
 		}
+
 		UpdateBathGimmick();
 		UpdateSteam();
-
 
 		UpdateTransferGate();
 		UpdateActionZone();
@@ -1833,6 +1829,7 @@ void SphereCollisionZone(D3DXVECTOR3 PlayerPos, int PlayerIndex, int ZoneIndex)
 		}
 
 
+
 		//各要素を二乗して入れる
 		float squaredLength = diff.x * diff.x + diff.y * diff.y + diff.z * diff.z;
 
@@ -1909,10 +1906,6 @@ void BoxCollisionItem(D3DXVECTOR3 PlayerMin, D3DXVECTOR3 PlayerMax, D3DXVECTOR3 
 	ITEM* pItem;
 	pItem = GetItem();
 
-	ITEMCNT* pItemCnt_1P;
-	pItemCnt_1P = GetItemCnt_1P();
-	ITEMCNT* pItemCnt_2P;
-	pItemCnt_2P = GetItemCnt_2P();
 
 
 	bool bGet = false;
@@ -1925,28 +1918,6 @@ void BoxCollisionItem(D3DXVECTOR3 PlayerMin, D3DXVECTOR3 PlayerMax, D3DXVECTOR3 
 			{
 				bGet = true;
 
-
-
-				if (pItem[ItemIndex].ItemType == ITEMTYPE_OHUDA)//御札
-				{
-					SetParticle(pItem[ItemIndex].pos, 30.0f, 42, PARTICLETYPE_ITEM, D3DXCOLOR(1.0f, 0.0f, 0.0f, 0.35f));
-				}
-				else if (pItem[ItemIndex].ItemType == ITEMTYPE_KAIHUKU)//回復アイテム
-				{
-					SetParticle(pItem[ItemIndex].pos, 30.0f, 42, PARTICLETYPE_ITEM, D3DXCOLOR(0.0f, 1.0f, 0.0f, 0.35f));
-				}
-				else if (pItem[ItemIndex].ItemType == ITEMTYPE_EMA)//絵馬(鍵だし??)
-				{
-					SetParticle(pItem[ItemIndex].pos, 30.0f, 42, PARTICLETYPE_ITEM, D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.35f));
-				}
-				else if (pItem[ItemIndex].ItemType == ITEMTYPE_WARANINGYO)//身代わり人形
-				{
-					SetParticle(pItem[ItemIndex].pos, 30.0f, 42, PARTICLETYPE_ITEM, D3DXCOLOR(1.0f, 0.0f, 1.0f, 0.35f));
-				}
-				else if (pItem[ItemIndex].ItemType == ITEMTYPE_SIKIGAMI)//式神
-				{
-					SetParticle(pItem[ItemIndex].pos, 30.0f, 42, PARTICLETYPE_ITEM, D3DXCOLOR(1.0f, 1.0f, 0.0f, 0.35f));
-				}
 			}
 		}
 	}
@@ -1954,12 +1925,11 @@ void BoxCollisionItem(D3DXVECTOR3 PlayerMin, D3DXVECTOR3 PlayerMax, D3DXVECTOR3 
 	//1Pのとき
 	if (PlayerIndex == 1)
 	{
-		Player* pPlayer;
-		pPlayer = GetPlayer();
+		//Player* pPlayer;
+		//pPlayer = GetPlayer();
 		if (bGet == true)
 		{
-			pItemCnt_1P[pItem[ItemIndex].ItemType].ItemCnt++;
-			pItem[ItemIndex].bUse = false;
+			GetItem(ItemIndex,1);
 		}
 	}
 	else if (PlayerIndex == 2)
@@ -1968,8 +1938,9 @@ void BoxCollisionItem(D3DXVECTOR3 PlayerMin, D3DXVECTOR3 PlayerMax, D3DXVECTOR3 
 		pPlayer2 = GetPlayer_2P();
 		if (bGet == true)
 		{
-			pItemCnt_2P[pItem[ItemIndex].ItemType].ItemCnt++;
-			pItem[ItemIndex].bUse = false;
+			GetItem(ItemIndex, 2);
+	//		pItemCnt_2P[pItem[ItemIndex].ItemType].ItemCnt++;
+	//		pItem[ItemIndex].bUse = false;
 		}
 	}
 }
