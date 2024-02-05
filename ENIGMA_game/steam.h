@@ -36,6 +36,6 @@ void InitSteam(void);
 void UninitSteam(void);
 void UpdateSteam(void);
 void DrawSteam(void);
-
 void SetSteam(D3DXVECTOR3 pos, D3DXVECTOR3 move);
+void OffSteam(void);
 #endif // _STEAM_H_ //’è‹`‚³‚ê‚Ä‚È‚©‚Á‚½‚ç

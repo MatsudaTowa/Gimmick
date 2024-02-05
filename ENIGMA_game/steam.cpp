@@ -217,3 +217,14 @@ void SetSteam(D3DXVECTOR3 pos, D3DXVECTOR3 move)
 		}
 	}
 }
+
+void OffSteam(void)
+{
+	for (int nCnt = 0; nCnt < MAX_STEAM; nCnt++)
+	{
+		if (g_aSteam[nCnt].bUse == true)
+		{
+			g_aSteam[nCnt].bUse = false;
+		}
+	}
+}

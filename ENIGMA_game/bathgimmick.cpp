@@ -41,6 +41,7 @@ void InitBathGimmick(void)
 	g_BathWater.fWide = BATHWATER_WIDE;
 	g_BathWater.fDepth = BATHWATER_DEPTH;
 	g_BathWater.bUse = false;
+	g_BathWater.bRun = false;
 
 	g_bChange = false;
 
@@ -108,10 +109,12 @@ void UpdateBathGimmick(void)
 	{
 		Random = ((float)rand() / RAND_MAX) * 30.0f;
 	}
+
 	if (g_bChange == false)
 	{
 		 Random = ((float)rand() / RAND_MAX) * -30.0f;
 	}
+
 	if (g_BathWater.bUse == true)
 	{
 		g_BathWater.nSteamSpawnCnt++;
@@ -123,6 +126,23 @@ void UpdateBathGimmick(void)
 			}
 			g_BathWater.nSteamSpawnCnt = 0;
 			g_bChange = g_bChange ? false : true;
+		}
+	}
+
+	if (g_BathWater.bRun == true)
+	{//お湯の座標を下げる
+		if (g_BathWater.bUse == true)
+		{
+			if (g_BathWater.pos.y >= 0)
+			{
+				g_BathWater.pos.y -= RUNWATER_SPEED;
+			}
+			else
+			{
+				g_BathWater.bUse = false;
+				//湯気をオフに
+				OffSteam();
+			}
 		}
 	}
 }
@@ -181,6 +201,18 @@ void SetBathWater(D3DXVECTOR3 pos, D3DXVECTOR3 rot , float fWide, float fDepth)
 		g_BathWater.fWide = fWide;
 		g_BathWater.fDepth = fDepth;
 		g_BathWater.bUse = true;
+		g_BathWater.bRun = false;
+	}
+}
+
+//=============================================
+//お湯を流す
+//=============================================
+void RunWater(int nPlayer)
+{
+	if (g_BathWater.bUse == true)
+	{
+		g_BathWater.bRun = true;
 	}
 }
 
