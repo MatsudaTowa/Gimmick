@@ -139,70 +139,70 @@ void UpdateActionZone(void)
 //=============================
 void DrawActionZone(void)
 {
-    LPDIRECT3DDEVICE9 pDevice = GetDevice();
+    //LPDIRECT3DDEVICE9 pDevice = GetDevice();
 
-    D3DXMATRIX mtxRot, mtxTrans;//計算用マトリックス
+    //D3DXMATRIX mtxRot, mtxTrans;//計算用マトリックス
 
-    D3DMATERIAL9 matDef;//現在のマテリアル保存用(一時退避)
+    //D3DMATERIAL9 matDef;//現在のマテリアル保存用(一時退避)
 
-    D3DXMATERIAL* pMat;//マテリアルデータへのポインタ
+    //D3DXMATERIAL* pMat;//マテリアルデータへのポインタ
 
-    for (int nCntZone = 0; nCntZone < MAXZONE; nCntZone++)
-    {
-        if (g_ActionZone[nCntZone].bUse == true)
-        {
-            if (g_ActionZone[nCntZone].bDrawOk == true)
-            {
-                //ワールドマトリックスの初期化
-                D3DXMatrixIdentity(&g_ActionZone[nCntZone].mtxWorld);
+    //for (int nCntZone = 0; nCntZone < MAXZONE; nCntZone++)
+    //{
+    //    if (g_ActionZone[nCntZone].bUse == true)
+    //    {
+    //        if (g_ActionZone[nCntZone].bDrawOk == true)
+    //        {
+    //            //ワールドマトリックスの初期化
+    //            D3DXMatrixIdentity(&g_ActionZone[nCntZone].mtxWorld);
 
-                // モデルのサイズを変更
-                D3DXMatrixScaling(&g_ActionZone[nCntZone].mtxWorld, g_ActionZone[nCntZone].SizeMag.x, g_ActionZone[nCntZone].SizeMag.y, g_ActionZone[nCntZone].SizeMag.z);
+    //            // モデルのサイズを変更
+    //            D3DXMatrixScaling(&g_ActionZone[nCntZone].mtxWorld, g_ActionZone[nCntZone].SizeMag.x, g_ActionZone[nCntZone].SizeMag.y, g_ActionZone[nCntZone].SizeMag.z);
 
-                ////向きを反映
-                //D3DXMatrixRotationYawPitchRoll(&mtxRot, g_Player.rot.y, g_Player.rot.x, g_Player.rot.z);
+    //            ////向きを反映
+    //            //D3DXMatrixRotationYawPitchRoll(&mtxRot, g_Player.rot.y, g_Player.rot.x, g_Player.rot.z);
 
-                //D3DXMatrixMultiply(&g_Player.mtxWorld, &g_Player.mtxWorld, &mtxRot);
+    //            //D3DXMatrixMultiply(&g_Player.mtxWorld, &g_Player.mtxWorld, &mtxRot);
 
-                //位置を反映
-                D3DXMatrixTranslation(&mtxTrans, g_ActionZone[nCntZone].pos.x, g_ActionZone[nCntZone].pos.y, g_ActionZone[nCntZone].pos.z);
+    //            //位置を反映
+    //            D3DXMatrixTranslation(&mtxTrans, g_ActionZone[nCntZone].pos.x, g_ActionZone[nCntZone].pos.y, g_ActionZone[nCntZone].pos.z);
 
-                D3DXMatrixMultiply(&g_ActionZone[nCntZone].mtxWorld, &g_ActionZone[nCntZone].mtxWorld, &mtxTrans);
+    //            D3DXMatrixMultiply(&g_ActionZone[nCntZone].mtxWorld, &g_ActionZone[nCntZone].mtxWorld, &mtxTrans);
 
-                //ワールドマトリックスの設定
-                pDevice->SetTransform(D3DTS_WORLD, &g_ActionZone[nCntZone].mtxWorld);
+    //            //ワールドマトリックスの設定
+    //            pDevice->SetTransform(D3DTS_WORLD, &g_ActionZone[nCntZone].mtxWorld);
 
-                //現在のマテリアルを取得
-                pDevice->GetMaterial(&matDef);
+    //            //現在のマテリアルを取得
+    //            pDevice->GetMaterial(&matDef);
 
-                //マテリアルデータへのポインタを取得
-                pMat = (D3DXMATERIAL*)g_pBuffMatZone[nCntZone]->GetBufferPointer();
+    //            //マテリアルデータへのポインタを取得
+    //            pMat = (D3DXMATERIAL*)g_pBuffMatZone[nCntZone]->GetBufferPointer();
 
-                for (int nCntMat = 0; nCntMat < (int)g_dwNumMatZone; nCntMat++)
-                {
-                    //マテリアルの設定
-                    pDevice->SetMaterial(&pMat[nCntMat].MatD3D);
+    //            for (int nCntMat = 0; nCntMat < (int)g_dwNumMatZone; nCntMat++)
+    //            {
+    //                //マテリアルの設定
+    //                pDevice->SetMaterial(&pMat[nCntMat].MatD3D);
 
-                    //テクスチャの設定
-                    pDevice->SetTexture(0, NULL);//今回は設定しない
+    //                //テクスチャの設定
+    //                pDevice->SetTexture(0, NULL);//今回は設定しない
 
-                    //モデル(パーツ)の描画
-                    g_pMeshZone[nCntMat]->DrawSubset(nCntMat);
+    //                //モデル(パーツ)の描画
+    //                g_pMeshZone[nCntMat]->DrawSubset(nCntMat);
 
-                    //保存してたマテリアルを戻す
-                    pDevice->SetMaterial(&matDef);
+    //                //保存してたマテリアルを戻す
+    //                pDevice->SetMaterial(&matDef);
 
 
-                    // マテリアルの設定
-                    pDevice->SetMaterial(&pMat[nCntMat].MatD3D);
+    //                // マテリアルの設定
+    //                pDevice->SetMaterial(&pMat[nCntMat].MatD3D);
 
-                    // ディフューズカラーを変更（例: 赤い色）
-                    pMat[nCntMat].MatD3D.Diffuse = D3DXCOLOR(g_ActionZone[nCntZone].ZoneColor.r * g_ActionZone[nCntZone].SizeMag.x, g_ActionZone[nCntZone].ZoneColor.g * g_ActionZone[nCntZone].SizeMag.x, g_ActionZone[nCntZone].ZoneColor.b * g_ActionZone[nCntZone].SizeMag.x, g_ActionZone[nCntZone].ZoneColor.a);
+    //                // ディフューズカラーを変更（例: 赤い色）
+    //                pMat[nCntMat].MatD3D.Diffuse = D3DXCOLOR(g_ActionZone[nCntZone].ZoneColor.r * g_ActionZone[nCntZone].SizeMag.x, g_ActionZone[nCntZone].ZoneColor.g * g_ActionZone[nCntZone].SizeMag.x, g_ActionZone[nCntZone].ZoneColor.b * g_ActionZone[nCntZone].SizeMag.x, g_ActionZone[nCntZone].ZoneColor.a);
 
-                }
-            }
-        }
-    }
+    //            }
+    //        }
+    //    }
+    //}
 
 }
 //=============================

@@ -100,9 +100,6 @@
     <Filter Include="ソース ファイル\--++|    GAME   |++--\//Stage%28Arrangements%29//\WALL">
       <UniqueIdentifier>{6c0bd580-d924-41ef-8085-ae2f44d016bf}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ソース ファイル\--++|    GAME   |++--\//3D_Model//\DEBUGMODEL">
-      <UniqueIdentifier>{709e84b6-2d6c-4f78-96f5-91e241509d71}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ソース ファイル\%2aMODEL_SET_SAVE_LODE%2a">
       <UniqueIdentifier>{96eded80-0e67-4263-8be3-6667fd50ce16}</UniqueIdentifier>
     </Filter>
@@ -120,6 +117,9 @@
     </Filter>
     <Filter Include="ソース ファイル\--++|    GAME   |++--\//GAME_SYSTEM//\BathGimmick">
       <UniqueIdentifier>{3db95dfe-61cc-4abf-ad8f-f8c9fec2750d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\--++|    GAME   |++--\//3D_Model//\PLAYER-1\DEBUGMODEL">
+      <UniqueIdentifier>{709e84b6-2d6c-4f78-96f5-91e241509d71}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -202,7 +202,7 @@
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="DebugModel.cpp">
-      <Filter>ソース ファイル\--++|    GAME   |++--\//3D_Model//\DEBUGMODEL</Filter>
+      <Filter>ソース ファイル\--++|    GAME   |++--\//3D_Model//\PLAYER-1\DEBUGMODEL</Filter>
     </ClCompile>
     <ClCompile Include="Model_Set_Save_Lode.cpp">
       <Filter>ソース ファイル\%2aMODEL_SET_SAVE_LODE%2a</Filter>
@@ -315,7 +315,7 @@
       <Filter>ソース ファイル\+||||-ALL_SYSTEM-||||+\TEXT</Filter>
     </ClInclude>
     <ClInclude Include="DebugModel.h">
-      <Filter>ソース ファイル\--++|    GAME   |++--\//3D_Model//\DEBUGMODEL</Filter>
+      <Filter>ソース ファイル\--++|    GAME   |++--\//3D_Model//\PLAYER-1\DEBUGMODEL</Filter>
     </ClInclude>
     <ClInclude Include="Model_Set_Save_Lode.h">
       <Filter>ソース ファイル\%2aMODEL_SET_SAVE_LODE%2a</Filter>
