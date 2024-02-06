@@ -11,7 +11,7 @@
 #include "game.h"
 
 
-#define MAX_LINE	(1200)
+#define MAX_LINE	(4000)
 
 
 

@@ -31,7 +31,7 @@
 typedef enum
 {
 	ACTION_TYPE_A = 0,
-	ACTION_TYPE_BATH ,
+	ACTION_TYPE_BATH, //お風呂ギミック
 	ACTION_TYPE_MAX,//--進行方向に転移
 }ACTIONTYPE;
 

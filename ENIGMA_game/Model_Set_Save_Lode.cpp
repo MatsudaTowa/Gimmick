@@ -54,7 +54,7 @@ void NewSet_Debug_Model(void)
 	//+ここに新規で置くモデルの関数を置く。セーブ後はリセットすべし
 	
 	//水回り//
-	//SetModel(D3DXVECTOR3(3000.0f, 0.0f, 50.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), MODELTYPE_DOOR);
+	SetModel(D3DXVECTOR3(3000.0f, 0.0f, 50.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), MODELTYPE_DOOR);
 	SetModel(D3DXVECTOR3(3000.0f, 100.0f, -1500.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), MODELTYPE_CUBE);
 	SetModel(D3DXVECTOR3(3000.0f, 100.0f, -1450.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), MODELTYPE_DOOR);
 	SetModel(D3DXVECTOR3(2800.0f, 100.0f, -1700.0f), D3DXVECTOR3(0.0f, D3DX_PI * -0.5, 0.0f), MODELTYPE_SOFA);
@@ -88,7 +88,7 @@ void Model_DebugLoad(void)
 
 	char aString[MAX_WORD];	//読み込む最大文字数
 
-	int nEscapeCntModel = 0;
+//	int nEscapeCntModel = 0;
 
 	pFile = fopen("data\\ARRANGEMENTS_MODEL\\ModelSet.txt", "r");
 

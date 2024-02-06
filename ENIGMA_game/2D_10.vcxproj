@@ -185,7 +185,7 @@
     <ClCompile Include="title.cpp" />
     <ClCompile Include="transfergate.cpp" />
     <ClCompile Include="Tutorial.cpp" />
-    <ClCompile Include="wall.cpp" />
+    <ClCompile Include="stage.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Actionzone.h" />
@@ -224,7 +224,7 @@
     <ClInclude Include="title.h" />
     <ClInclude Include="transfergate.h" />
     <ClInclude Include="Tutorial.h" />
-    <ClInclude Include="wall.h" />
+    <ClInclude Include="stage.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

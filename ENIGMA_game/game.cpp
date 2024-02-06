@@ -12,7 +12,7 @@
 
 #include "camera.h"
 #include "light.h"
-#include "wall.h"
+#include "stage.h"
 #include "model.h"
 #include "player.h"
 #include "player2.h"
@@ -45,35 +45,35 @@
 #include <stdio.h>//ヘッダーファイルをインクルード
 #include <string.h>//文字列を扱う変数
 
-//グローバル変数
-LPDIRECT3DTEXTURE9 g_pTextureGame = NULL;//テクスチャへのポインタ
-LPDIRECT3DVERTEXBUFFER9 g_pVtxBuffGame = NULL;//頂点バッファへのポリゴン
-ModelInfo g_aModelInfo[MAX_MODEL];
-WallInfo g_aWallInfo[MAX_WALL];
-FieldInfo g_aFieldInfo[MAX_FIELD];
-int g_nUseModel; //モデルの使用数読み込み
-int g_nUseWall; //壁の使用数読み込み
-int g_nUseField; //床の使用数読み込み
+	//グローバル変数
+	LPDIRECT3DTEXTURE9 g_pTextureGame = NULL;//テクスチャへのポインタ
+	LPDIRECT3DVERTEXBUFFER9 g_pVtxBuffGame = NULL;//頂点バッファへのポリゴン
+	ModelInfo g_aModelInfo[MAX_MODEL];
+	WallInfo g_aWallInfo[MAX_WALL];
+	FieldInfo g_aFieldInfo[MAX_FIELD];
+	int g_nUseModel; //モデルの使用数読み込み
+	int g_nUseWall; //壁の使用数読み込み
+	int g_nUseField; //床の使用数読み込み
 
-//制限時間代入
-int g_EndFlame = 600;	//-----limittime.hのマクロも変える
+	//制限時間代入
+	int g_EndFlame = 600;	//-----limittime.hのマクロも変える
 
-int g_nLoopCnt = 0;
-
-
-
-
-int g_EndGameFrame = GAME_END_DELAY;//ゲーム終了まで3秒
-
-bool g_bPause = false;
-bool g_ClearFlag = false;
-bool g_MoneyboxPlayer = false; //どっちのプレイヤーが操作してるか false:1P,true2P
-bool g_bClearMoneybox = false;
+	int g_nLoopCnt = 0;
 
 
 
-//ゲームループを一度でもしたか
-bool GameLoopSave = false;
+
+	int g_EndGameFrame = GAME_END_DELAY;//ゲーム終了まで3秒
+
+	bool g_bPause = false;
+	bool g_ClearFlag = false;
+	bool g_MoneyboxPlayer = false; //どっちのプレイヤーが操作してるか false:1P,true2P
+	bool g_bClearMoneybox = false;
+
+
+
+	//ゲームループを一度でもしたか
+	bool GameLoopSave = false;
 
 //=============================
 //ゲーム画面の初期化処理
@@ -111,7 +111,7 @@ void InitGame(void)
 
 	InitModel();
 	LoadModel();
-	InitWall();
+	InitStage();
 
 
 	InitShadow();
@@ -243,7 +243,7 @@ void UninitGame(void)
 	UninitLight();
 	UninitCamera();
 	UninitModel();
-	UninitWall();
+	UninitStage();
 	UninitPlayer();
 	UninitPlayer_2P();
 	UninitShadow();
@@ -293,6 +293,9 @@ void UpdateGame(void)
 
 	Player_2P* pPlayer2;
 	pPlayer2 = GetPlayer_2P();
+
+	bool bPlayer1inOK = false;
+	bool bPlayer2inOK = false;
 
 	if (GetkeyboardTrigger(DIK_P) == true)
 	{//Pキー(ポーズ)が押された
@@ -386,24 +389,36 @@ void UpdateGame(void)
 		UpdateLight();
 		UpdateCamera();
 		UpdateModel();
-		UpdateWall();
+		UpdateStage();
 
 		UpdateMeshField();
 
 		
 		UpdateItem();
-		UpdateItem_UI();
+
+
 
 		//--------------------プレイヤー
 		if (pPlayer->bMoneyBoxGimmick != true)
 		{//ギミックを操作していたらプレイヤーを止める(仮) ※ギミック中用のモーション出来たらそれに切り替え
 			UpdatePlayer();
+			bPlayer1inOK = true;
 		}
 		if (pPlayer2->bMoneyBoxGimmick != true)
 		{//ギミックを操作していたらプレイヤーを止める(仮) ※ギミック中用のモーション出来たらそれに切り替え
 			UpdatePlayer_2P();
+			bPlayer2inOK = true;
 		}
 		//--------------------
+
+
+
+		UpdateItem_UI(bPlayer1inOK, bPlayer2inOK);//入力受付可能かどうか
+
+
+
+
+
 
 		if ((pPlayer->bMoneyBoxGimmick == true || pPlayer2->bMoneyBoxGimmick == true))
 		{
@@ -489,7 +504,7 @@ void DrawGame(void)
 		DrawBathGimmick();
 		DrawSteam();
 		DrawModel();
-		DrawWall();
+		DrawStage();
 		DrawPlayer();
 		DrawPlayer_2P();
 

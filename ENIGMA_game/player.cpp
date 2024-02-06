@@ -347,35 +347,6 @@ void UpdatePlayer(void)
 	}
 
 
-
-
-
-
-	////ÉâÉCÉìÇÃà íu
-
-	//// è„â∫ÇÃï”
-	//SetLine(D3DXVECTOR3(PlayerMin.x, PlayerMax.y, PlayerMin.z), D3DXVECTOR3(PlayerMax.x, PlayerMax.y, PlayerMin.z), D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f));
-	//SetLine(D3DXVECTOR3(PlayerMin.x, PlayerMin.y, PlayerMin.z), D3DXVECTOR3(PlayerMax.x, PlayerMin.y, PlayerMin.z), D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f));
-
-	//SetLine(D3DXVECTOR3(PlayerMin.x, PlayerMax.y, PlayerMax.z), D3DXVECTOR3(PlayerMax.x, PlayerMax.y, PlayerMax.z), D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f));
-	//SetLine(D3DXVECTOR3(PlayerMin.x, PlayerMin.y, PlayerMax.z), D3DXVECTOR3(PlayerMax.x, PlayerMin.y, PlayerMax.z), D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f));
-
-	//// ë§ñ ÇÃï”
-	//SetLine(D3DXVECTOR3(PlayerMin.x, PlayerMin.y, PlayerMin.z), D3DXVECTOR3(PlayerMin.x, PlayerMax.y, PlayerMin.z), D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f));
-	//SetLine(D3DXVECTOR3(PlayerMax.x, PlayerMin.y, PlayerMin.z), D3DXVECTOR3(PlayerMax.x, PlayerMax.y, PlayerMin.z), D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f));
-
-	//SetLine(D3DXVECTOR3(PlayerMin.x, PlayerMin.y, PlayerMax.z), D3DXVECTOR3(PlayerMin.x, PlayerMax.y, PlayerMax.z), D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f));
-	//SetLine(D3DXVECTOR3(PlayerMax.x, PlayerMin.y, PlayerMax.z), D3DXVECTOR3(PlayerMax.x, PlayerMax.y, PlayerMax.z), D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f));
-
-
-	//// ÇªÇÃëºÇÃï”
-	//SetLine(D3DXVECTOR3(PlayerMin.x, PlayerMin.y, PlayerMin.z), D3DXVECTOR3(PlayerMin.x, PlayerMin.y, PlayerMax.z), D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f));
-	//SetLine(D3DXVECTOR3(PlayerMax.x, PlayerMax.y, PlayerMin.z), D3DXVECTOR3(PlayerMax.x, PlayerMax.y, PlayerMax.z), D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f));
-
-	//SetLine(D3DXVECTOR3(PlayerMin.x, PlayerMax.y, PlayerMin.z), D3DXVECTOR3(PlayerMin.x, PlayerMax.y, PlayerMax.z), D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f));
-	//SetLine(D3DXVECTOR3(PlayerMax.x, PlayerMin.y, PlayerMin.z), D3DXVECTOR3(PlayerMax.x, PlayerMin.y, PlayerMax.z), D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f));
-
-
 	////--------------------------------------------------------------------------------------------------------------------------------------------------//ìñÇΩÇËîªíËÇ±Ç±Ç‹Ç≈
 
 	if (g_Player.pos.y <= 0.0f)
@@ -397,7 +368,6 @@ void UpdatePlayer(void)
 		g_Player.move.y += (0.0f - g_Player.move.y) * DAMPING_RATIO;
 		g_Player.move.z += (0.0f - g_Player.move.z) * DAMPING_RATIO;
 	}
-
 
 	//èdóÕ
 	if (g_Player.pos.y > 0.0f)

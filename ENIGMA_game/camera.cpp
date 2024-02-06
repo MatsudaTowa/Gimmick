@@ -242,7 +242,7 @@ void UpdateCamera(void)
 
 
 
-			 float EscapeLength = g_camera[nCnt].CameraLength;
+//			 float EscapeLength = g_camera[nCnt].CameraLength;
 
 			 //--------------------------------ŽŽŒ±
 			 //TRANSFERGATE* pTransferGate;

@@ -46,6 +46,9 @@
     <Filter Include="ソース ファイル\--++|    GAME   |++--\//3D_Model//">
       <UniqueIdentifier>{a2123433-989d-40c2-adb8-61baa85c4eec}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\--++|    GAME   |++--\//3D_Model//\PLAYER-1">
+      <UniqueIdentifier>{7d1f04f6-cbb4-40a7-ba0d-037cbf5097eb}</UniqueIdentifier>
+    </Filter>
     <Filter Include="ソース ファイル\--++|    GAME   |++--\//3D_Model//\PLAYER-2">
       <UniqueIdentifier>{80627433-13ca-4a0d-8986-2a59e19b7802}</UniqueIdentifier>
     </Filter>
@@ -118,9 +121,6 @@
     <Filter Include="ソース ファイル\--++|    GAME   |++--\//GAME_SYSTEM//\BathGimmick">
       <UniqueIdentifier>{3db95dfe-61cc-4abf-ad8f-f8c9fec2750d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ソース ファイル\--++|    GAME   |++--\//3D_Model//\DEBUGMODEL\PLAYER-1">
-      <UniqueIdentifier>{7d1f04f6-cbb4-40a7-ba0d-037cbf5097eb}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="input.cpp">
@@ -153,7 +153,7 @@
     <ClCompile Include="light.cpp">
       <Filter>ソース ファイル\--++|    GAME   |++--\//GAME_SYSTEM//\LIGHT</Filter>
     </ClCompile>
-    <ClCompile Include="wall.cpp">
+    <ClCompile Include="stage.cpp">
       <Filter>ソース ファイル\--++|    GAME   |++--\//Stage%28Arrangements%29//\WALL</Filter>
     </ClCompile>
     <ClCompile Include="shadow.cpp">
@@ -169,7 +169,7 @@
       <Filter>ソース ファイル\--++|    GAME   |++--\//GAME_SYSTEM//\LINE</Filter>
     </ClCompile>
     <ClCompile Include="player.cpp">
-      <Filter>ソース ファイル\--++|    GAME   |++--\//3D_Model//\DEBUGMODEL\PLAYER-1</Filter>
+      <Filter>ソース ファイル\--++|    GAME   |++--\//3D_Model//\PLAYER-1</Filter>
     </ClCompile>
     <ClCompile Include="player2.cpp">
       <Filter>ソース ファイル\--++|    GAME   |++--\//3D_Model//\PLAYER-2</Filter>
@@ -272,7 +272,7 @@
     <ClInclude Include="light.h">
       <Filter>ソース ファイル\--++|    GAME   |++--\//GAME_SYSTEM//\LIGHT</Filter>
     </ClInclude>
-    <ClInclude Include="wall.h">
+    <ClInclude Include="stage.h">
       <Filter>ソース ファイル\--++|    GAME   |++--\//Stage%28Arrangements%29//\WALL</Filter>
     </ClInclude>
     <ClInclude Include="shadow.h">
@@ -288,7 +288,7 @@
       <Filter>ソース ファイル\--++|    GAME   |++--\//GAME_SYSTEM//\LINE</Filter>
     </ClInclude>
     <ClInclude Include="player.h">
-      <Filter>ソース ファイル\--++|    GAME   |++--\//3D_Model//\DEBUGMODEL\PLAYER-1</Filter>
+      <Filter>ソース ファイル\--++|    GAME   |++--\//3D_Model//\PLAYER-1</Filter>
     </ClInclude>
     <ClInclude Include="player2.h">
       <Filter>ソース ファイル\--++|    GAME   |++--\//3D_Model//\PLAYER-2</Filter>

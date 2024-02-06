@@ -16,9 +16,9 @@
 #include "item.h"
 
 #define ITEMTEXUINUM	(7)//テクスチャ最大数
-#define MAXITEMUI	(64)//最大数
+#define MAXITEMUI	(74)//最大数
 
-#define ITEMUISIZE	(30.0f)//サイズ
+#define ITEMUISIZE	(32.0f)//サイズ
 
 #define MAXGETITEM	(3)//アイテム最大所持数
 
@@ -61,7 +61,7 @@ typedef struct
 
 void InitItem_UI(void);
 void UninitItem_UI(void);
-void UpdateItem_UI(void);
+void UpdateItem_UI(bool Player1InputOK, bool Player2InputOK);
 void DrawItem_UI(void);
 
 

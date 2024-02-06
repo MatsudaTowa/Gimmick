@@ -15,7 +15,8 @@ NowTime g_Nowtime;//現在の残り時間を格納
 D3DXVECTOR3 g_posLimitTime;//タイムリミットの位置
 
 //タイムリミットの値を宣言
-int g_nLimitTimeScore=0;//タイムリミットの値（グローバルで現在のタイムリミット合算値を格納）
+int g_nLimitTimeScore = 0;//タイムリミットの値（グローバルで現在のタイムリミット合算値を格納）
+
 //タイムリミットの値を宣言
 int g_nLimitTime=0;
 //Looopカウント
@@ -212,7 +213,7 @@ void SetUpLimitTime(D3DXVECTOR3 pos, int nLimitTime)
 
 	nLimitTime = g_nLimitTimeScore;//一時避難
 
-	for (int nCntLimitTime = 0; nCntLimitTime < LIMITTIME_NUM; nCntLimitTime++)//桁をばらして各行の数値を代入//-------------------初期値算出にaddの数値加算処理も入ってる
+	for (nCntLimitTime = 0; nCntLimitTime < LIMITTIME_NUM; nCntLimitTime++)//桁をばらして各行の数値を代入//-------------------初期値算出にaddの数値加算処理も入ってる
 	{
 		nESCdata = g_nLimitTimeScore % 10;//剰余算でのあまり(一番下の値を取得)
 		g_nLimitTimeScore /= 10;//本体を10で割り入れる(一番下の値消す)
