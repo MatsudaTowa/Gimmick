@@ -323,10 +323,7 @@ void UpdatePlayer(void)
 			{
 				D3DXVECTOR3 ModelMin = D3DXVECTOR3(pMapObject[i].pos + pMapObject[i].Minpos);
 				D3DXVECTOR3 ModelMax = D3DXVECTOR3(pMapObject[i].pos + pMapObject[i].Maxpos);
-				if (GetJoypadTrigger(JOYKEY_X, 0) == true)
-				{//お風呂のギミック作動
-					RunWater(0);
-				}
+
 				//プレイヤー同士当たり判定
 				BoxCollisionPlayer(PlayerMin, PlayerMax, ModelMin, ModelMax, 1);
 			}

@@ -24,7 +24,6 @@ DWORD g_dwNumMatDebugModel = 0;//マテリアルの数
 
 DEBUGMODEL g_DebugModel[MAXDEBUGMODEL];
 
-
 //生きてるモデル数
 int g_NUM_Model = -1;
 

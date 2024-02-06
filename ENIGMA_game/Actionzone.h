@@ -31,6 +31,7 @@
 typedef enum
 {
 	ACTION_TYPE_A = 0,
+	ACTION_TYPE_BATH ,
 	ACTION_TYPE_MAX,//--is•ûŒü‚É“]ˆÚ
 }ACTIONTYPE;
 

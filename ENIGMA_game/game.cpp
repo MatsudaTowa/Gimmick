@@ -45,35 +45,35 @@
 #include <stdio.h>//ヘッダーファイルをインクルード
 #include <string.h>//文字列を扱う変数
 
-	//グローバル変数
-	LPDIRECT3DTEXTURE9 g_pTextureGame = NULL;//テクスチャへのポインタ
-	LPDIRECT3DVERTEXBUFFER9 g_pVtxBuffGame = NULL;//頂点バッファへのポリゴン
-	ModelInfo g_aModelInfo[MAX_MODEL];
-	WallInfo g_aWallInfo[MAX_WALL];
-	FieldInfo g_aFieldInfo[MAX_FIELD];
-	int g_nUseModel; //モデルの使用数読み込み
-	int g_nUseWall; //壁の使用数読み込み
-	int g_nUseField; //床の使用数読み込み
+//グローバル変数
+LPDIRECT3DTEXTURE9 g_pTextureGame = NULL;//テクスチャへのポインタ
+LPDIRECT3DVERTEXBUFFER9 g_pVtxBuffGame = NULL;//頂点バッファへのポリゴン
+ModelInfo g_aModelInfo[MAX_MODEL];
+WallInfo g_aWallInfo[MAX_WALL];
+FieldInfo g_aFieldInfo[MAX_FIELD];
+int g_nUseModel; //モデルの使用数読み込み
+int g_nUseWall; //壁の使用数読み込み
+int g_nUseField; //床の使用数読み込み
 
-	//制限時間代入
-	int g_EndFlame = 600;	//-----limittime.hのマクロも変える
+//制限時間代入
+int g_EndFlame = 600;	//-----limittime.hのマクロも変える
 
-	int g_nLoopCnt = 0;
-
-
-
-
-	int g_EndGameFrame = GAME_END_DELAY;//ゲーム終了まで3秒
-
-	bool g_bPause = false;
-	bool g_ClearFlag = false;
-	bool g_MoneyboxPlayer = false; //どっちのプレイヤーが操作してるか false:1P,true2P
-	bool g_bClearMoneybox = false;
+int g_nLoopCnt = 0;
 
 
 
-	//ゲームループを一度でもしたか
-	bool GameLoopSave = false;
+
+int g_EndGameFrame = GAME_END_DELAY;//ゲーム終了まで3秒
+
+bool g_bPause = false;
+bool g_ClearFlag = false;
+bool g_MoneyboxPlayer = false; //どっちのプレイヤーが操作してるか false:1P,true2P
+bool g_bClearMoneybox = false;
+
+
+
+//ゲームループを一度でもしたか
+bool GameLoopSave = false;
 
 //=============================
 //ゲーム画面の初期化処理
@@ -1875,6 +1875,13 @@ void SphereCollisionZone(D3DXVECTOR3 PlayerPos, int PlayerIndex, int ZoneIndex)
 			{//
 
 			}
+			if (pActionZone[ZoneIndex].ActionType == ACTION_TYPE_BATH && bIn == true)
+			{//お風呂のギミック（1P）
+				if (GetJoypadTrigger(JOYKEY_X, 0) == true)
+				{//お風呂のギミック作動
+					RunWater(0);
+				}
+			}
 		}
 	}
 	else if (PlayerIndex == 1)
@@ -1891,6 +1898,13 @@ void SphereCollisionZone(D3DXVECTOR3 PlayerPos, int PlayerIndex, int ZoneIndex)
 			if (pActionZone[ZoneIndex].ActionType == ACTION_TYPE_MAX)
 			{//
 
+			}
+			if (pActionZone[ZoneIndex].ActionType == ACTION_TYPE_BATH && bIn == true)
+			{//お風呂のギミック（1P）
+				if (GetJoypadTrigger(JOYKEY_X, 1) == true)
+				{//お風呂のギミック作動
+					RunWater(1);
+				}
 			}
 		}
 	}

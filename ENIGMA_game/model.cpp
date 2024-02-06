@@ -11,6 +11,7 @@
 //#include "field.h"
 #include "shadow.h"
 #include "bathgimmick.h"
+#include "Actionzone.h"
 
 //=============================================
 //マクロ定義
@@ -18,6 +19,7 @@
 #define DAMPING_COEFFICIENT	(0.2f) //抵抗力
 #define MAX_MODEL	(256) //モデルの最大数 
 #define MODEL_SHADOW_RADIUS	(40.0f)
+#define BATH_ACTIONZONE_RADIUS	(120.0f) //お風呂のギミック判定
 
 //=============================================
 //グローバル変数
@@ -345,6 +347,7 @@ void SetModel(D3DXVECTOR3 pos, D3DXVECTOR3 rot, ModelType nType)
 					, D3DXVECTOR3(g_aModel[nCnt].rot.x, D3DX_PI * 0.5f, g_aModel[nCnt].rot.z)
 					, BATHWATER_WIDE
 					, BATHWATER_DEPTH);
+				SetActionZone(g_aModel[nCnt].pos, BATH_ACTIONZONE_RADIUS, ACTION_TYPE_BATH, D3DXCOLOR(1.0f, 1.0f, 0.0f, 0.7f));
 			}
 
 			g_aModel[nCnt].Minpos = D3DXVECTOR3(100000.0f, 1000000.0f, 100000.0f); //モデルの最小位置
