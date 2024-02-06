@@ -1897,6 +1897,23 @@ void SphereCollisionZone(D3DXVECTOR3 PlayerPos, int PlayerIndex, int ZoneIndex)
 					RunWater(0);
 				}
 			}
+			if (pActionZone[ZoneIndex].ActionType == ACTION_TYPE_BUTTON_1 && bIn == true)
+			{
+				if (GetJoypadTrigger(JOYKEY_X, 0) == true)
+				{//お風呂のギミック作動
+					//ボタン1起動
+					SetSteam(pActionZone[ZoneIndex].pos, D3DXVECTOR3(0.0f, 20.0f, 0.0f));
+
+				}
+			}
+			if (pActionZone[ZoneIndex].ActionType == ACTION_TYPE_BUTTON_2 && bIn == true)
+			{
+				if (GetJoypadTrigger(JOYKEY_X, 0) == true)
+				{//お風呂のギミック作動
+					//ボタン2起動
+					SetSteam(pActionZone[ZoneIndex].pos, D3DXVECTOR3(0.0f, 20.0f, 0.0f));
+				}
+			}
 		}
 	}
 	else if (PlayerIndex == 1)
@@ -1915,10 +1932,26 @@ void SphereCollisionZone(D3DXVECTOR3 PlayerPos, int PlayerIndex, int ZoneIndex)
 
 			}
 			if (pActionZone[ZoneIndex].ActionType == ACTION_TYPE_BATH && bIn == true)
-			{//お風呂のギミック（1P）
+			{//お風呂のギミック（2P）
 				if (GetJoypadTrigger(JOYKEY_X, 1) == true)
 				{//お風呂のギミック作動
 					RunWater(1);
+				}
+			}
+			if (pActionZone[ZoneIndex].ActionType == ACTION_TYPE_BUTTON_1 && bIn == true)
+			{
+				if (GetJoypadTrigger(JOYKEY_X, 1) == true)
+				{
+					//ボタン1起動
+					SetSteam(pActionZone[ZoneIndex].pos, D3DXVECTOR3(0.0f,20.0f,0.0f));
+				}
+			}
+			if (pActionZone[ZoneIndex].ActionType == ACTION_TYPE_BUTTON_2 && bIn == true)
+			{
+				if (GetJoypadTrigger(JOYKEY_X, 1) == true)
+				{
+					//ボタン2起動
+					SetSteam(pActionZone[ZoneIndex].pos, D3DXVECTOR3(0.0f, 20.0f, 0.0f));
 				}
 			}
 		}

@@ -161,8 +161,8 @@ void ControlMoneybox1P(void)
 
 	if (g_bMissTake == true)
 	{
-		VibrationLeft(40000);
-		VibrationRight(40000);
+		VibrationLeft(30000);
+		VibrationRight(30000);
 		g_nVibrationCnt++;
 		if (g_nVibrationCnt > 30)
 		{
