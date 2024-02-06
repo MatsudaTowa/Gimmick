@@ -352,13 +352,13 @@ void SetModel(D3DXVECTOR3 pos, D3DXVECTOR3 rot, ModelType nType)
 			}
 			if (g_aModel[nCnt].nType == MODELTYPE_GARAGE)
 			{
-				SetActionZone(D3DXVECTOR3(g_aModel[nCnt].pos.x + 300.0f,g_aModel[nCnt].pos.y,g_aModel[nCnt].pos.z)
+				SetActionZone(D3DXVECTOR3(g_aModel[nCnt].pos.x + 300.0f,g_aModel[nCnt].pos.y - 5.0f,g_aModel[nCnt].pos.z)
 					, BUTTON_ACTIONZONE_RADIUS
-					, ACTION_TYPE_BUTTON_1P
+					, ACTION_TYPE_BUTTON_1
 					, D3DXCOLOR(1.0f, 0.0f, 1.0f, 0.7f));
-				SetActionZone(D3DXVECTOR3(g_aModel[nCnt].pos.x - 300.0f, g_aModel[nCnt].pos.y, g_aModel[nCnt].pos.z)
+				SetActionZone(D3DXVECTOR3(g_aModel[nCnt].pos.x - 300.0f, g_aModel[nCnt].pos.y - 5.0f, g_aModel[nCnt].pos.z)
 					, BUTTON_ACTIONZONE_RADIUS
-					, ACTION_TYPE_BUTTON_2P
+					, ACTION_TYPE_BUTTON_2
 					, D3DXCOLOR(0.0f, 1.0f, 1.0f, 0.7f));
 			}
 
