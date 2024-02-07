@@ -1900,7 +1900,7 @@ void SphereCollisionZone(D3DXVECTOR3 PlayerPos, int PlayerIndex, int ZoneIndex)
 			if (pActionZone[ZoneIndex].ActionType == ACTION_TYPE_BUTTON_1 && bIn == true)
 			{
 				if (GetJoypadTrigger(JOYKEY_X, 0) == true)
-				{//お風呂のギミック作動
+				{//地下室のギミック作動
 					//ボタン1起動
 					SetSteam(pActionZone[ZoneIndex].pos, D3DXVECTOR3(0.0f, 20.0f, 0.0f));
 
@@ -1909,9 +1909,17 @@ void SphereCollisionZone(D3DXVECTOR3 PlayerPos, int PlayerIndex, int ZoneIndex)
 			if (pActionZone[ZoneIndex].ActionType == ACTION_TYPE_BUTTON_2 && bIn == true)
 			{
 				if (GetJoypadTrigger(JOYKEY_X, 0) == true)
-				{//お風呂のギミック作動
+				{//地下室のギミック作動
 					//ボタン2起動
 					SetSteam(pActionZone[ZoneIndex].pos, D3DXVECTOR3(0.0f, 20.0f, 0.0f));
+				}
+			}
+			if (pActionZone[ZoneIndex].ActionType == ACTION_TYPE_TOILET && bIn == true)
+			{
+				if (GetJoypadTrigger(JOYKEY_X, 0) == true)
+				{//地下室のギミック作動
+					//ボタン2起動
+					SetItem(pActionZone[ZoneIndex].pos, D3DXVECTOR3(0.0f, 0.0f, 0.0f), ITEMTYPE_SIKIGAMI);
 				}
 			}
 		}
