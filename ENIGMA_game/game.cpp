@@ -1964,6 +1964,16 @@ void SphereCollisionZone(D3DXVECTOR3 PlayerPos, int PlayerIndex, int ZoneIndex)
 					SetSteam(pActionZone[ZoneIndex].pos, D3DXVECTOR3(0.0f, 20.0f, 0.0f));
 				}
 			}
+			if (pActionZone[ZoneIndex].ActionType == ACTION_TYPE_TOILET && bIn == true)
+			{
+				if (GetJoypadTrigger(JOYKEY_X, 1) == true)
+				{//トイレのギミック作動
+					//アイテムスポーン起動
+					SetItem(D3DXVECTOR3(pActionZone[ZoneIndex].pos.x - 70.0f, pActionZone[ZoneIndex].pos.y, pActionZone[ZoneIndex].pos.z)
+						, D3DXVECTOR3(0.0f, 0.0f, 0.0f)
+						, ITEMTYPE_SIKIGAMI);
+				}
+			}
 		}
 	}
 }
