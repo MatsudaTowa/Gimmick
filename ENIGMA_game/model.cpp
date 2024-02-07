@@ -20,7 +20,8 @@
 #define MAX_MODEL	(256) //モデルの最大数 
 #define MODEL_SHADOW_RADIUS	(40.0f)
 #define BATH_ACTIONZONE_RADIUS	(120.0f) //お風呂のギミック判定
-#define BUTTON_ACTIONZONE_RADIUS	(60.0f) //お風呂のギミック判定
+#define BUTTON_ACTIONZONE_RADIUS	(60.0f) //地下室のギミック判定
+#define TOILET_ACTIONZONE_RADIUS	(80.0f) //トイレのギミック判定
 
 //=============================================
 //グローバル変数
@@ -361,6 +362,14 @@ void SetModel(D3DXVECTOR3 pos, D3DXVECTOR3 rot, ModelType nType)
 					, ACTION_TYPE_BUTTON_2
 					, D3DXCOLOR(0.0f, 1.0f, 1.0f, 0.7f));
 			}
+			if (g_aModel[nCnt].nType == MODELTYPE_TOILET)
+			{
+				SetActionZone(D3DXVECTOR3(g_aModel[nCnt].pos.x, g_aModel[nCnt].pos.y, g_aModel[nCnt].pos.z)
+					, TOILET_ACTIONZONE_RADIUS
+					, ACTION_TYPE_TOILET
+					, D3DXCOLOR(0.0f, 0.0f, 1.0f, 0.7f));
+			}
+
 
 
 			g_aModel[nCnt].Minpos = D3DXVECTOR3(100000.0f, 1000000.0f, 100000.0f); //モデルの最小位置

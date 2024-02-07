@@ -34,6 +34,7 @@ typedef enum
 	ACTION_TYPE_BATH, //お風呂ギミック
 	ACTION_TYPE_BUTTON_1, //ガレージボタンギミック(1)
 	ACTION_TYPE_BUTTON_2, //ガレージボタンギミック(2)
+	ACTION_TYPE_TOILET, //トイレギミック(仮でアイテムスポーン)
 	ACTION_TYPE_MAX,//--進行方向に転移
 }ACTIONTYPE;
 
