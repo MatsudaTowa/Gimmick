@@ -94,9 +94,6 @@
     <Filter Include="ソース ファイル\--++|    GAME   |++--\//Stage%28Arrangements%29//\SPEECH BUBBLE">
       <UniqueIdentifier>{c65b9626-4c64-4b5b-a190-5590bde21151}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ソース ファイル\+||||-ALL_SYSTEM-||||+\TEXT">
-      <UniqueIdentifier>{a0ad713f-c288-4405-8b77-3a048038cabe}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ソース ファイル\--++|    GAME   |++--\//Stage%28Arrangements%29//\WALL">
       <UniqueIdentifier>{6c0bd580-d924-41ef-8085-ae2f44d016bf}</UniqueIdentifier>
     </Filter>
@@ -120,6 +117,9 @@
     </Filter>
     <Filter Include="ソース ファイル\--++|    GAME   |++--\//3D_Model//\PLAYER-1\DEBUGMODEL">
       <UniqueIdentifier>{709e84b6-2d6c-4f78-96f5-91e241509d71}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\--++|    GAME   |++--\TEXT">
+      <UniqueIdentifier>{a0ad713f-c288-4405-8b77-3a048038cabe}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -196,7 +196,7 @@
       <Filter>ソース ファイル\--++|    GAME   |++--\//Stage%28Arrangements%29//\SPEECH BUBBLE</Filter>
     </ClCompile>
     <ClCompile Include="text.cpp">
-      <Filter>ソース ファイル\+||||-ALL_SYSTEM-||||+\TEXT</Filter>
+      <Filter>ソース ファイル\--++|    GAME   |++--\TEXT</Filter>
     </ClCompile>
     <ClCompile Include="main.cpp">
       <Filter>ソース ファイル</Filter>
@@ -312,7 +312,7 @@
       <Filter>ソース ファイル\--++|    GAME   |++--\//Stage%28Arrangements%29//\SPEECH BUBBLE</Filter>
     </ClInclude>
     <ClInclude Include="text.h">
-      <Filter>ソース ファイル\+||||-ALL_SYSTEM-||||+\TEXT</Filter>
+      <Filter>ソース ファイル\--++|    GAME   |++--\TEXT</Filter>
     </ClInclude>
     <ClInclude Include="DebugModel.h">
       <Filter>ソース ファイル\--++|    GAME   |++--\//3D_Model//\PLAYER-1\DEBUGMODEL</Filter>
