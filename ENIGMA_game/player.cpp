@@ -1016,7 +1016,8 @@ void InPutControllerPlayer(void)
 			BoostMove = 1.0f;
 		}
 		else if (Sneak == true)
-		{
+		{//スニーク時減速
+			//モーションも変える
 			BoostMove = 0.5f;
 		}
 		float Angle2 = atan2f(-joykeystate.Gamepad.sThumbLX, -joykeystate.Gamepad.sThumbLY);//これが方角

@@ -38,7 +38,7 @@ void InitPause(void)
 	g_Pause = PAUSE_MENU_CONTINUE;
 
 	//テクスチャの読み込み
-	D3DXCreateTextureFromFile(pDevice, "data\\TEXTURE\\Pause100.png", &g_pTexturePause[0]);//--------書き換え済み//とりあえず
+	D3DXCreateTextureFromFile(pDevice, "data\\TEXTURE\\pause.png", &g_pTexturePause[0]);//--------書き換え済み//とりあえず
 	D3DXCreateTextureFromFile(pDevice, "data\\TEXTURE\\Pause000.png", &g_pTexturePause[1]);//--------書き換え済み
 	D3DXCreateTextureFromFile(pDevice, "data\\TEXTURE\\Pause001.png", &g_pTexturePause[2]);//--------書き換え済み
 	D3DXCreateTextureFromFile(pDevice, "data\\TEXTURE\\Pause002.png", &g_pTexturePause[3]);//--------書き換え済み
@@ -163,26 +163,36 @@ void UpdatePause(void)
 
 	for (nCountPause = 0; nCountPause < NUM_PAUSEUI; nCountPause++)
 	{
-
-		//頂点カラーの設定--全体
-		pVtx[0].col = D3DCOLOR_RGBA(255, 55, 55, 100);
-		pVtx[1].col = D3DCOLOR_RGBA(255, 55, 55, 100);
-		pVtx[2].col = D3DCOLOR_RGBA(255, 55, 55, 100);
-		pVtx[3].col = D3DCOLOR_RGBA(255, 55, 55, 100);
+		//if (nCountPause == 0)
+		//{
+			//頂点カラーの設定--全体
+			pVtx[0].col = D3DCOLOR_RGBA(255, 255, 255, 240);
+			pVtx[1].col = D3DCOLOR_RGBA(255, 255, 255, 240);
+			pVtx[2].col = D3DCOLOR_RGBA(255, 255, 255, 240);
+			pVtx[3].col = D3DCOLOR_RGBA(255, 255, 255, 240);
+		//}
+		//else
+		//{
+		//	//頂点カラーの設定--全体
+		//	pVtx[0].col = D3DCOLOR_RGBA(255, 255, 255, 100);
+		//	pVtx[1].col = D3DCOLOR_RGBA(255, 255, 255, 100);
+		//	pVtx[2].col = D3DCOLOR_RGBA(255, 255, 255, 100);
+		//	pVtx[3].col = D3DCOLOR_RGBA(255, 255, 255, 100);
+		//}
 
 		if (nCountPause == 0)
 		{
 			g_aPause[nCountPause].pos = D3DXVECTOR3(SCREEN_WIDE / 2, SCREEN_HEIGHT / 2, 0.0f);
 
 			//頂点座標の設定
-			pVtx[0].pos = D3DXVECTOR3(g_aPause[nCountPause].pos.x - (MAX_WIDE* 1.2f), g_aPause[nCountPause].pos.y - (MAX_H * 5.0f), 0.0f);
-			pVtx[1].pos = D3DXVECTOR3(g_aPause[nCountPause].pos.x +( MAX_WIDE* 1.2f), g_aPause[nCountPause].pos.y - (MAX_H * 5.0f), 0.0f);
-			pVtx[2].pos = D3DXVECTOR3(g_aPause[nCountPause].pos.x - (MAX_WIDE* 1.2f), g_aPause[nCountPause].pos.y + (MAX_H * 5.0f), 0.0f);
-			pVtx[3].pos = D3DXVECTOR3(g_aPause[nCountPause].pos.x + (MAX_WIDE* 1.2f), g_aPause[nCountPause].pos.y + (MAX_H * 5.0f), 0.0f);
+			pVtx[0].pos = D3DXVECTOR3(g_aPause[nCountPause].pos.x - (SCREEN_WIDE / 2), g_aPause[nCountPause].pos.y - (SCREEN_HEIGHT / 2), 0.0f);
+			pVtx[1].pos = D3DXVECTOR3(g_aPause[nCountPause].pos.x + (SCREEN_WIDE / 2), g_aPause[nCountPause].pos.y - (SCREEN_HEIGHT / 2), 0.0f);
+			pVtx[2].pos = D3DXVECTOR3(g_aPause[nCountPause].pos.x - (SCREEN_WIDE / 2), g_aPause[nCountPause].pos.y + (SCREEN_HEIGHT / 2), 0.0f);
+			pVtx[3].pos = D3DXVECTOR3(g_aPause[nCountPause].pos.x + (SCREEN_WIDE / 2), g_aPause[nCountPause].pos.y + (SCREEN_HEIGHT / 2), 0.0f);
 		}
 		else if (nCountPause == PAUSE_MENU_CONTINUE)
 		{
-			g_aPause[nCountPause].pos = D3DXVECTOR3(SCREEN_WIDE / 2, SCREEN_HEIGHT / 3, 0.0f);
+			g_aPause[nCountPause].pos = D3DXVECTOR3(SCREEN_WIDE / 2, SCREEN_HEIGHT / 3.5f, 0.0f);
 
 			//頂点座標の設定
 			pVtx[0].pos = D3DXVECTOR3(g_aPause[nCountPause].pos.x - (MAX_WIDE * 1), g_aPause[nCountPause].pos.y - (MAX_H * 1), 0.0f);
@@ -192,7 +202,7 @@ void UpdatePause(void)
 		}
 		else if (nCountPause == PAUSE_MENU_RETRY)
 		{
-			g_aPause[nCountPause].pos = D3DXVECTOR3(SCREEN_WIDE / 2, SCREEN_HEIGHT / 2, 0.0f);
+			g_aPause[nCountPause].pos = D3DXVECTOR3(SCREEN_WIDE / 2, SCREEN_HEIGHT / 2.4f, 0.0f);
 
 			//頂点座標の設定
 			pVtx[0].pos = D3DXVECTOR3(g_aPause[nCountPause].pos.x - (MAX_WIDE * 1), g_aPause[nCountPause].pos.y - (MAX_H * 1), 0.0f);
@@ -202,7 +212,7 @@ void UpdatePause(void)
 		}
 		else if (nCountPause == PAUSE_MENU_QUIT)
 		{
-			g_aPause[nCountPause].pos = D3DXVECTOR3(SCREEN_WIDE / 2, SCREEN_HEIGHT / 1.5, 0.0f);
+			g_aPause[nCountPause].pos = D3DXVECTOR3(SCREEN_WIDE / 2, SCREEN_HEIGHT / 1.8f, 0.0f);
 
 			//頂点座標の設定
 			pVtx[0].pos = D3DXVECTOR3(g_aPause[nCountPause].pos.x - (MAX_WIDE * 1), g_aPause[nCountPause].pos.y - (MAX_H * 1), 0.0f);
@@ -214,10 +224,10 @@ void UpdatePause(void)
 		if (nCountPause == g_Pause)
 		{//対象のとき
 			//頂点カラーの設定
-			pVtx[0].col = D3DCOLOR_RGBA(255, 255, 55, 255);
-			pVtx[1].col = D3DCOLOR_RGBA(255, 255, 55, 255);
-			pVtx[2].col = D3DCOLOR_RGBA(255, 255, 55, 255);
-			pVtx[3].col = D3DCOLOR_RGBA(255, 255, 55, 255);
+			pVtx[0].col = D3DCOLOR_RGBA(255, 55, 255, 255);
+			pVtx[1].col = D3DCOLOR_RGBA(255, 55, 255, 255);
+			pVtx[2].col = D3DCOLOR_RGBA(255, 55, 255, 255);
+			pVtx[3].col = D3DCOLOR_RGBA(255, 55, 255, 255);
 		}
 
 		//決定キー(ENTER)が押されたかどうか
