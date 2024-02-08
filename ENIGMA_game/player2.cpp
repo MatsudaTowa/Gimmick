@@ -861,6 +861,8 @@ void InPutControllerPlayer_2P(void)
 
 	bool NomalMove = false;//通常入力かどうか
 
+	bool Sneak = false; //スニークしてるかどうか
+
 	//分割率
 	float  Split = 1.6f;
 
@@ -914,6 +916,12 @@ void InPutControllerPlayer_2P(void)
 
 	//Controller
 	//--------------------------------------------------------------------------------------
+
+	if (joykeystate.Gamepad.bLeftTrigger > XINPUT_GAMEPAD_TRIGGER_THRESHOLD)
+	{
+		Sneak = true;
+	}
+
 	if (joykeystate.Gamepad.sThumbLX <= -(XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE - 6000))
 	{//Aがおされた(左)
 //		Xdate = -1;
@@ -957,7 +965,17 @@ void InPutControllerPlayer_2P(void)
 	else
 	{//Controller
 		g_Player_2P.NowMotionDOWN = MOTIONTYPE_2P_MOVE;
-		float BoostMove = 1;
+		float BoostMove;
+
+		if (Sneak == false)
+		{
+			BoostMove = 1.0f;
+		}
+		else if (Sneak == true)
+		{//スニーク時減速
+			//モーションも変える
+			BoostMove = 0.5f;
+		}
 
 		float Angle2 = atan2f(-joykeystate.Gamepad.sThumbLX, -joykeystate.Gamepad.sThumbLY);//これが方角
 
