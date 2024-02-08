@@ -22,6 +22,7 @@
 #include <string.h>//文字列を扱う変数
 #include "game.h"
 #include "item.h"
+#include "stage.h"
 
 
 
@@ -45,7 +46,7 @@ View g_View[2];
 int g_Cnt = 0;//テスト。
 
 
-
+bool g_test = false;
 
 //=============================
 //モデルの初期化処理
@@ -117,6 +118,7 @@ void InitPlayer(void)
 	g_Player.bAction = false;
 	g_Player.BrendCnt = 0;
 	g_Player.EscapeMotion = MOTIONTYPE_1P_BREND;
+	g_Player.bTransparent = false;
 
 	//-------------------------------------------------モデル系
 	g_Model.nMaxMotionCnt = 0;
@@ -211,13 +213,14 @@ void UpdatePlayer(void)
 	g_Player.JumpNow = false;
 	g_Player.bLandingNow = false;
 	g_Player.bAction = false;
+	g_test = false;
 
 	//---------------------------------------------------------------------------------------------------------ここで腰を相手に向ける
-	bool calculated = false;//腰傾けたか
+//	bool calculated = false;//腰傾けたか
 
 	//腰の角度
-	float minYAngle = -0.5f; // 下側の角度の限界
-	float maxYAngle = 0.5f;  // 上側の角度の限界
+//	float minYAngle = -0.5f; // 下側の角度の限界
+//	float maxYAngle = 0.5f;  // 上側の角度の限界
 
 	//-----------------------------------------------------------------------------------入力ここから
 	if (CheckInputMove2() == -1)
@@ -330,6 +333,32 @@ void UpdatePlayer(void)
 		}
 	}
 
+	//----------------------------------------------------------------------------壁、床接触
+	STAGE* pStage;
+	pStage = GetStage();
+	for (int nWall = 0; nWall < NUMSTAGE; nWall++)
+	{
+		if (pStage[nWall].bUse == true)
+		{
+			if (pStage[nWall].bCollision == true)
+			{
+				D3DXVECTOR3 StageMin = D3DXVECTOR3(pStage[nWall].posStage + pStage[nWall].MinPos);
+				D3DXVECTOR3 StageMax = D3DXVECTOR3(pStage[nWall].posStage + pStage[nWall].MaxPos);
+
+				//プレイヤー同士当たり判定
+				BoxCollisionPlayer(PlayerMin, PlayerMax, StageMin, StageMax, 1);
+			}
+		}
+	}
+
+
+
+
+
+
+
+
+
 
 
 	//行動エリア/-----------------------------------------------------------------------------------------------------------------------------------------
@@ -341,10 +370,39 @@ void UpdatePlayer(void)
 		if (pActionZone[nCntZone].bUse == true)
 		{
 			
-			SphereCollisionZone(g_Player.pos, 0, nCntZone);
+			SphereCollisionZone(g_Player.pos, 1, nCntZone);
 			//	break;
 		}
 	}
+
+
+
+
+
+
+	////ラインの位置
+
+	//// 上下の辺
+	//SetLine(D3DXVECTOR3(PlayerMin.x, PlayerMax.y, PlayerMin.z), D3DXVECTOR3(PlayerMax.x, PlayerMax.y, PlayerMin.z), D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f));
+	//SetLine(D3DXVECTOR3(PlayerMin.x, PlayerMin.y, PlayerMin.z), D3DXVECTOR3(PlayerMax.x, PlayerMin.y, PlayerMin.z), D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f));
+
+	//SetLine(D3DXVECTOR3(PlayerMin.x, PlayerMax.y, PlayerMax.z), D3DXVECTOR3(PlayerMax.x, PlayerMax.y, PlayerMax.z), D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f));
+	//SetLine(D3DXVECTOR3(PlayerMin.x, PlayerMin.y, PlayerMax.z), D3DXVECTOR3(PlayerMax.x, PlayerMin.y, PlayerMax.z), D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f));
+
+	//// 側面の辺
+	//SetLine(D3DXVECTOR3(PlayerMin.x, PlayerMin.y, PlayerMin.z), D3DXVECTOR3(PlayerMin.x, PlayerMax.y, PlayerMin.z), D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f));
+	//SetLine(D3DXVECTOR3(PlayerMax.x, PlayerMin.y, PlayerMin.z), D3DXVECTOR3(PlayerMax.x, PlayerMax.y, PlayerMin.z), D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f));
+
+	//SetLine(D3DXVECTOR3(PlayerMin.x, PlayerMin.y, PlayerMax.z), D3DXVECTOR3(PlayerMin.x, PlayerMax.y, PlayerMax.z), D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f));
+	//SetLine(D3DXVECTOR3(PlayerMax.x, PlayerMin.y, PlayerMax.z), D3DXVECTOR3(PlayerMax.x, PlayerMax.y, PlayerMax.z), D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f));
+
+
+	//// その他の辺
+	//SetLine(D3DXVECTOR3(PlayerMin.x, PlayerMin.y, PlayerMin.z), D3DXVECTOR3(PlayerMin.x, PlayerMin.y, PlayerMax.z), D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f));
+	//SetLine(D3DXVECTOR3(PlayerMax.x, PlayerMax.y, PlayerMin.z), D3DXVECTOR3(PlayerMax.x, PlayerMax.y, PlayerMax.z), D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f));
+
+	//SetLine(D3DXVECTOR3(PlayerMin.x, PlayerMax.y, PlayerMin.z), D3DXVECTOR3(PlayerMin.x, PlayerMax.y, PlayerMax.z), D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f));
+	//SetLine(D3DXVECTOR3(PlayerMax.x, PlayerMin.y, PlayerMin.z), D3DXVECTOR3(PlayerMax.x, PlayerMin.y, PlayerMax.z), D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f));
 
 
 	////--------------------------------------------------------------------------------------------------------------------------------------------------//当たり判定ここまで
@@ -368,6 +426,7 @@ void UpdatePlayer(void)
 		g_Player.move.y += (0.0f - g_Player.move.y) * DAMPING_RATIO;
 		g_Player.move.z += (0.0f - g_Player.move.z) * DAMPING_RATIO;
 	}
+
 
 	//重力
 	if (g_Player.pos.y > 0.0f)
@@ -591,7 +650,7 @@ void UpdatePlayer(void)
 //=============================
 //モデルの描画処理
 //=============================
-void DrawPlayer(void)
+void DrawPlayer(int CameraLoopNum)
 {
 
 	if (g_Player.bUse == true)
@@ -689,15 +748,38 @@ void DrawPlayer(void)
 			//現在のマテリアルを取得
 			pDevice->GetMaterial(&matDef);
 
-
 			//マテリアルデータへのポインタを取得
-
 			pMat = (D3DXMATERIAL*)g_pBuffMatModel[nCnt]->GetBufferPointer();
 
 			for (int nCntMat = 0; nCntMat < (int)dwNumMatModel[nCnt]; nCntMat++)
 			{
-				//マテリアルの設定
-				pDevice->SetMaterial(&pMat[nCntMat].MatD3D);
+
+				//------------------------カラーチェンジ
+				if (g_test == true)
+				{
+						// マテリアルの設定
+						D3DMATERIAL9 matTemp = pMat[nCntMat].MatD3D;
+						matTemp.Diffuse = D3DXCOLOR(1.0f, 0.1f, 0.1f, 0.8f);
+						//matTemp.Diffuse.a = 0.5f;  // 透過度を設定（0.0fで完全透明、1.0fで不透明）
+						pDevice->SetMaterial(&matTemp);
+				}
+				else
+				{
+						//マテリアルの設定
+						pDevice->SetMaterial(&pMat[nCntMat].MatD3D);
+				}
+
+				if (CameraLoopNum != 2)
+				{//0カメ
+					if (g_Player.bTransparent == true)
+					{//透過
+						// マテリアルの設定
+						D3DMATERIAL9 matTemp = pMat[nCntMat].MatD3D;
+						//matTemp.Diffuse = D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.2f);
+						matTemp.Diffuse.a = 0.2f;  // 透過度を設定（0.0fで完全透明、1.0fで不透明）
+						pDevice->SetMaterial(&matTemp);
+					}
+				}
 
 				//テクスチャの設定
 				pDevice->SetTexture(0, NULL);//今回は設定しない
@@ -710,80 +792,8 @@ void DrawPlayer(void)
 			}
 		}
 
-
-
-
-		////--------------------------------------注視点--test
-		//Camera* pCamera;
-		//pCamera = GetCamera();
-
-		//D3DXMATRIX EscapeMtx;
-		////ワールドマトリックスの初期化
-		//D3DXMatrixIdentity(&EscapeMtx);
-
-		////位置を反映
-		//D3DXMatrixTranslation(&mtxTrans, g_Player.pos.x, g_Player.pos.y, g_Player.pos.z);
-
-		//D3DXMatrixMultiply(&EscapeMtx, &EscapeMtx, &mtxTrans);
-
-		//for (int i = 0; i < 2; i++)
-		//{
-		//	g_View[i].ViewRot.y = -pCamera->rot.y;
-
-		//	//ワールドマトリックスの初期化
-		//	D3DXMatrixIdentity(&g_View[i].ViewPosMtx);
-
-		//	//向きを反映
-		//	D3DXMatrixRotationYawPitchRoll(&mtxRot, g_View[i].ViewRot.y, g_View[i].ViewRot.x, g_View[i].ViewRot.z);
-
-		//	D3DXMatrixMultiply(&g_View[i].ViewPosMtx, &g_View[i].ViewPosMtx, &mtxRot);
-
-		//	//位置を反映
-		//	D3DXMatrixTranslation(&mtxTrans, g_View[i].ViewPos.x, g_View[i].ViewPos.y, g_View[i].ViewPos.z);
-
-		//	D3DXMatrixMultiply(&g_View[i].ViewPosMtx, &g_View[i].ViewPosMtx, &mtxTrans);
-
-		//	if (i == 0)
-		//	{
-		//		//プレイヤーとかける
-		//		D3DXMatrixMultiply(&g_View[i].ViewPosMtx, &g_View[i].ViewPosMtx, &EscapeMtx);
-
-		//	}
-		//	else if (i == 1)
-		//	{
-		//		//0番目とかける
-		//		D3DXMatrixMultiply(&g_View[i].ViewPosMtx, &g_View[i].ViewPosMtx, &g_ViewPosMtx[0]);
-		//	}
-
-
-
-
-		//	//ワールドマトリックスの設定
-		//	pDevice->SetTransform(D3DTS_WORLD, &g_View[i].ViewPosMtx);
-
-		//	//現在のマテリアルを取得
-		//	pDevice->GetMaterial(&matDef);
-
-
-		//	//マテリアルデータへのポインタを取得
-		//	pMat = (D3DXMATERIAL*)g_pBuffMatModel[2]->GetBufferPointer();
-
-		//	for (int nCntMat = 0; nCntMat < (int)dwNumMatModel[2]; nCntMat++)
-		//	{
-		//		//マテリアルの設定
-		//		pDevice->SetMaterial(&pMat[nCntMat].MatD3D);
-
-		//		//テクスチャの設定
-		//		pDevice->SetTexture(0, NULL);//今回は設定しない
-
-		//		//モデル(パーツ)の描画
-		//		g_pMeshModel[2]->DrawSubset(nCntMat);
-
-		//		//保存してたマテリアルを戻す
-		//		pDevice->SetMaterial(&matDef);
-		//	}
-		//}
 	}
+	
 }
 //=============================
 //プレイヤー情報取得処理
@@ -814,7 +824,7 @@ void InPutKeyboardPlayer(void)
 {
 	bool MoveNow = false;//移動入力できてるか
 
-	bool NomalMove = false;//通常入力かどうか
+//	bool NomalMove = false;//通常入力かどうか
 
 	Camera* pCamera;
 	pCamera = GetCamera();
@@ -1077,6 +1087,8 @@ void InputKeyAttack(void)
 		g_Player.JumpNow = true;
 
 		g_Player.move.y += 2.0f;
+
+		g_test = true;
 	}
 
 	//アクション

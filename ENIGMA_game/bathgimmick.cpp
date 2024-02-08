@@ -104,7 +104,7 @@ void UninitBathGimmick(void)
 //=============================================
 void UpdateBathGimmick(void)
 {
-	float Random;
+	float Random=0;
 	if (g_bChange == true)
 	{
 		Random = ((float)rand() / RAND_MAX) * 30.0f;

@@ -18,7 +18,7 @@
 // +playerに転移直後かboolで無限跳躍を防ぐ予定
 //+++++++++++++++++++++++++++++++++++++++++
 
-#define MAXZONE	(30)//アクションエリア最大数
+#define MAXZONE	(260)//アクションエリア最大数
 
 
 //転移エリアサイズ(当たり判定用)
@@ -32,9 +32,6 @@ typedef enum
 {
 	ACTION_TYPE_A = 0,
 	ACTION_TYPE_BATH, //お風呂ギミック
-	ACTION_TYPE_BUTTON_1, //ガレージボタンギミック(1)
-	ACTION_TYPE_BUTTON_2, //ガレージボタンギミック(2)
-	ACTION_TYPE_TOILET, //トイレギミック(仮でアイテムスポーン)
 	ACTION_TYPE_MAX,//--進行方向に転移
 }ACTIONTYPE;
 

@@ -387,7 +387,7 @@ void UpdateGame(void)
 		UpdateSky();
 
 		UpdateLight();
-		UpdateCamera();
+		UpdateCamera();//カメラ
 		UpdateModel();
 		UpdateStage();
 
@@ -505,17 +505,18 @@ void DrawGame(void)
 		DrawSteam();
 		DrawModel();
 		DrawStage();
-		DrawPlayer();
-		DrawPlayer_2P();
+
+		//特殊
+		DrawPlayer(nCnt);
+		DrawPlayer_2P(nCnt);
 
 
 
 		DrawTransferGate();
 
-		DrawActionZone();
-
 
 #if _DEBUG
+		DrawActionZone();
 		DrawLine();
 		DrawDebugModel();
 #endif
@@ -1053,6 +1054,11 @@ void BoxCollisionPlayer(D3DXVECTOR3 PlayerMin, D3DXVECTOR3 PlayerMax, D3DXVECTOR
 //===================================
 void AdjustPlayerPositionToCollision_CAMERA(D3DXVECTOR3 playerPos, int CameraIndex,D3DXVECTOR3 HitMin, D3DXVECTOR3 HitMax)
 {
+	Player* pPlayer;
+	pPlayer = GetPlayer();
+	Player_2P* pPlayer2;
+	pPlayer2 = GetPlayer_2P();
+
 	Camera* pCamera;
 	pCamera = GetCamera();
 
@@ -1095,6 +1101,19 @@ void AdjustPlayerPositionToCollision_CAMERA(D3DXVECTOR3 playerPos, int CameraInd
 		pCamera[CameraIndex].posV -= (normalizedDir * 0.98f);
 		pCamera[CameraIndex].move = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 		pCamera[CameraIndex].CameraLength = collisionDistance-3.0f;
+
+		if (collisionDistance < 46)
+		{//距離が短い
+			if (CameraIndex==0)
+			{//プレイヤー1
+				pPlayer->bTransparent = true;
+			}
+			else if (CameraIndex == 1)
+			{//プレイヤー2
+				pPlayer2->bTransparent = true;
+			}
+		}
+
 	}
 }
 //===================================
@@ -1874,7 +1893,7 @@ void SphereCollisionZone(D3DXVECTOR3 PlayerPos, int PlayerIndex, int ZoneIndex)
 		if (bIn == true)
 		{//接触判定時
 			
-			//pActionZone[ZoneIndex].ZoneColor = D3DXCOLOR(1.0f, 5.0f, 2.0f,0.2f);
+			pActionZone[ZoneIndex].ZoneColor = D3DXCOLOR(1.0f, 5.0f, 2.0f,0.2f);
 			pActionZone[ZoneIndex].bDrawOk = false;
 		}
 		else
@@ -1897,33 +1916,6 @@ void SphereCollisionZone(D3DXVECTOR3 PlayerPos, int PlayerIndex, int ZoneIndex)
 					RunWater(0);
 				}
 			}
-			if (pActionZone[ZoneIndex].ActionType == ACTION_TYPE_BUTTON_1 && bIn == true)
-			{
-				if (GetJoypadTrigger(JOYKEY_X, 0) == true)
-				{//地下室のギミック作動
-					//ボタン1起動
-					SetSteam(pActionZone[ZoneIndex].pos, D3DXVECTOR3(0.0f, 20.0f, 0.0f));
-
-				}
-			}
-			if (pActionZone[ZoneIndex].ActionType == ACTION_TYPE_BUTTON_2 && bIn == true)
-			{
-				if (GetJoypadTrigger(JOYKEY_X, 0) == true)
-				{//地下室のギミック作動
-					//ボタン2起動
-					SetSteam(pActionZone[ZoneIndex].pos, D3DXVECTOR3(0.0f, 20.0f, 0.0f));
-				}
-			}
-			if (pActionZone[ZoneIndex].ActionType == ACTION_TYPE_TOILET && bIn == true)
-			{
-				if (GetJoypadTrigger(JOYKEY_X, 0) == true)
-				{//トイレのギミック作動
-					//アイテムスポーン起動
-					SetItem(D3DXVECTOR3(pActionZone[ZoneIndex].pos.x - 70.0f, pActionZone[ZoneIndex].pos.y, pActionZone[ZoneIndex].pos.z)
-						, D3DXVECTOR3(0.0f, 0.0f, 0.0f)
-						, ITEMTYPE_SIKIGAMI);
-				}
-			}
 		}
 	}
 	else if (PlayerIndex == 1)
@@ -1931,7 +1923,12 @@ void SphereCollisionZone(D3DXVECTOR3 PlayerPos, int PlayerIndex, int ZoneIndex)
 		if (bIn == true)
 		{//接触判定時
 
-			pActionZone[ZoneIndex].ZoneColor = D3DXCOLOR(2.0f, 1.0f, 2.0f, 0.2f);
+			//pActionZone[ZoneIndex].ZoneColor = D3DXCOLOR(1.0f, 5.0f, 2.0f,0.2f);
+			pActionZone[ZoneIndex].bDrawOk = false;
+		}
+		else
+		{
+			pActionZone[ZoneIndex].bDrawOk = true;
 		}
 
 		if (pPlayer2->bAction == true)
@@ -1942,36 +1939,10 @@ void SphereCollisionZone(D3DXVECTOR3 PlayerPos, int PlayerIndex, int ZoneIndex)
 
 			}
 			if (pActionZone[ZoneIndex].ActionType == ACTION_TYPE_BATH && bIn == true)
-			{//お風呂のギミック（2P）
+			{//お風呂のギミック（1P）
 				if (GetJoypadTrigger(JOYKEY_X, 1) == true)
 				{//お風呂のギミック作動
 					RunWater(1);
-				}
-			}
-			if (pActionZone[ZoneIndex].ActionType == ACTION_TYPE_BUTTON_1 && bIn == true)
-			{
-				if (GetJoypadTrigger(JOYKEY_X, 1) == true)
-				{
-					//ボタン1起動
-					SetSteam(pActionZone[ZoneIndex].pos, D3DXVECTOR3(0.0f,20.0f,0.0f));
-				}
-			}
-			if (pActionZone[ZoneIndex].ActionType == ACTION_TYPE_BUTTON_2 && bIn == true)
-			{
-				if (GetJoypadTrigger(JOYKEY_X, 1) == true)
-				{
-					//ボタン2起動
-					SetSteam(pActionZone[ZoneIndex].pos, D3DXVECTOR3(0.0f, 20.0f, 0.0f));
-				}
-			}
-			if (pActionZone[ZoneIndex].ActionType == ACTION_TYPE_TOILET && bIn == true)
-			{
-				if (GetJoypadTrigger(JOYKEY_X, 1) == true)
-				{//トイレのギミック作動
-					//アイテムスポーン起動
-					SetItem(D3DXVECTOR3(pActionZone[ZoneIndex].pos.x - 70.0f, pActionZone[ZoneIndex].pos.y, pActionZone[ZoneIndex].pos.z)
-						, D3DXVECTOR3(0.0f, 0.0f, 0.0f)
-						, ITEMTYPE_SIKIGAMI);
 				}
 			}
 		}

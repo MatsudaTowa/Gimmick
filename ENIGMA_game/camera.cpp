@@ -131,6 +131,10 @@ void UpdateCamera(void)
 	Player_2P* pPlayer2;
 	pPlayer2 = GetPlayer_2P();
 
+	//Ç±Ç±Ç≈èâä˙âª
+	pPlayer->bTransparent = false;
+	pPlayer2->bTransparent = false;
+
 	D3DXVECTOR3 pViewPos[MAXCAMERA];
 
 	View* pViewMtx = GetView();
@@ -260,6 +264,8 @@ void UpdateCamera(void)
 			 //----------------------------------------------------------------------------ÉÇÉfÉãê⁄êG
 			 MAPOBJECT* pMapObject;
 			 pMapObject = GetMapObject();
+
+
 
 			 for (int i = 0; i < MAX_MODEL; i++)
 			 {

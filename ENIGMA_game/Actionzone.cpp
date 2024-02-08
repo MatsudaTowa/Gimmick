@@ -100,27 +100,27 @@ void UpdateActionZone(void)
             D3DXVECTOR3 ActionZoneMax = g_ActionZone[nCntZone].pos + g_ActionZone[nCntZone].ZoneMax;
 
 #if _DEBUG
-            //ラインの位置
-            // 上下の辺
-            SetLine(D3DXVECTOR3(ActionZoneMin.x, ActionZoneMax.y, ActionZoneMin.z), D3DXVECTOR3(ActionZoneMax.x, ActionZoneMax.y, ActionZoneMin.z), D3DXCOLOR(1.0f, 1.0f, 0.0f, 1.0f));
-            SetLine(D3DXVECTOR3(ActionZoneMin.x, ActionZoneMin.y, ActionZoneMin.z), D3DXVECTOR3(ActionZoneMax.x, ActionZoneMin.y, ActionZoneMin.z), D3DXCOLOR(1.0f, 1.0f, 0.0f, 1.0f));
+            ////ラインの位置
+            //// 上下の辺
+            //SetLine(D3DXVECTOR3(ActionZoneMin.x, ActionZoneMax.y, ActionZoneMin.z), D3DXVECTOR3(ActionZoneMax.x, ActionZoneMax.y, ActionZoneMin.z), D3DXCOLOR(1.0f, 1.0f, 0.0f, 1.0f));
+            //SetLine(D3DXVECTOR3(ActionZoneMin.x, ActionZoneMin.y, ActionZoneMin.z), D3DXVECTOR3(ActionZoneMax.x, ActionZoneMin.y, ActionZoneMin.z), D3DXCOLOR(1.0f, 1.0f, 0.0f, 1.0f));
 
-            SetLine(D3DXVECTOR3(ActionZoneMin.x, ActionZoneMax.y, ActionZoneMax.z), D3DXVECTOR3(ActionZoneMax.x, ActionZoneMax.y, ActionZoneMax.z), D3DXCOLOR(1.0f, 1.0f, 0.0f, 1.0f));
-            SetLine(D3DXVECTOR3(ActionZoneMin.x, ActionZoneMin.y, ActionZoneMax.z), D3DXVECTOR3(ActionZoneMax.x, ActionZoneMin.y, ActionZoneMax.z), D3DXCOLOR(1.0f, 1.0f, 0.0f, 1.0f));
+            //SetLine(D3DXVECTOR3(ActionZoneMin.x, ActionZoneMax.y, ActionZoneMax.z), D3DXVECTOR3(ActionZoneMax.x, ActionZoneMax.y, ActionZoneMax.z), D3DXCOLOR(1.0f, 1.0f, 0.0f, 1.0f));
+            //SetLine(D3DXVECTOR3(ActionZoneMin.x, ActionZoneMin.y, ActionZoneMax.z), D3DXVECTOR3(ActionZoneMax.x, ActionZoneMin.y, ActionZoneMax.z), D3DXCOLOR(1.0f, 1.0f, 0.0f, 1.0f));
 
-            // 側面の辺
-            SetLine(D3DXVECTOR3(ActionZoneMin.x, ActionZoneMin.y, ActionZoneMin.z), D3DXVECTOR3(ActionZoneMin.x, ActionZoneMax.y, ActionZoneMin.z), D3DXCOLOR(1.0f, 1.0f, 0.0f, 1.0f));
-            SetLine(D3DXVECTOR3(ActionZoneMax.x, ActionZoneMin.y, ActionZoneMin.z), D3DXVECTOR3(ActionZoneMax.x, ActionZoneMax.y, ActionZoneMin.z), D3DXCOLOR(1.0f, 1.0f, 0.0f, 1.0f));
+            //// 側面の辺
+            //SetLine(D3DXVECTOR3(ActionZoneMin.x, ActionZoneMin.y, ActionZoneMin.z), D3DXVECTOR3(ActionZoneMin.x, ActionZoneMax.y, ActionZoneMin.z), D3DXCOLOR(1.0f, 1.0f, 0.0f, 1.0f));
+            //SetLine(D3DXVECTOR3(ActionZoneMax.x, ActionZoneMin.y, ActionZoneMin.z), D3DXVECTOR3(ActionZoneMax.x, ActionZoneMax.y, ActionZoneMin.z), D3DXCOLOR(1.0f, 1.0f, 0.0f, 1.0f));
 
-            SetLine(D3DXVECTOR3(ActionZoneMin.x, ActionZoneMin.y, ActionZoneMax.z), D3DXVECTOR3(ActionZoneMin.x, ActionZoneMax.y, ActionZoneMax.z), D3DXCOLOR(1.0f, 1.0f, 0.0f, 1.0f));
-            SetLine(D3DXVECTOR3(ActionZoneMax.x, ActionZoneMin.y, ActionZoneMax.z), D3DXVECTOR3(ActionZoneMax.x, ActionZoneMax.y, ActionZoneMax.z), D3DXCOLOR(1.0f, 1.0f, 0.0f, 1.0f));
+            //SetLine(D3DXVECTOR3(ActionZoneMin.x, ActionZoneMin.y, ActionZoneMax.z), D3DXVECTOR3(ActionZoneMin.x, ActionZoneMax.y, ActionZoneMax.z), D3DXCOLOR(1.0f, 1.0f, 0.0f, 1.0f));
+            //SetLine(D3DXVECTOR3(ActionZoneMax.x, ActionZoneMin.y, ActionZoneMax.z), D3DXVECTOR3(ActionZoneMax.x, ActionZoneMax.y, ActionZoneMax.z), D3DXCOLOR(1.0f, 1.0f, 0.0f, 1.0f));
 
-            // その他の辺
-            SetLine(D3DXVECTOR3(ActionZoneMin.x, ActionZoneMin.y, ActionZoneMin.z), D3DXVECTOR3(ActionZoneMin.x, ActionZoneMin.y, ActionZoneMax.z), D3DXCOLOR(1.0f, 1.0f, 0.0f, 1.0f));
-            SetLine(D3DXVECTOR3(ActionZoneMax.x, ActionZoneMax.y, ActionZoneMin.z), D3DXVECTOR3(ActionZoneMax.x, ActionZoneMax.y, ActionZoneMax.z), D3DXCOLOR(1.0f, 1.0f, 0.0f, 1.0f));
+            //// その他の辺
+            //SetLine(D3DXVECTOR3(ActionZoneMin.x, ActionZoneMin.y, ActionZoneMin.z), D3DXVECTOR3(ActionZoneMin.x, ActionZoneMin.y, ActionZoneMax.z), D3DXCOLOR(1.0f, 1.0f, 0.0f, 1.0f));
+            //SetLine(D3DXVECTOR3(ActionZoneMax.x, ActionZoneMax.y, ActionZoneMin.z), D3DXVECTOR3(ActionZoneMax.x, ActionZoneMax.y, ActionZoneMax.z), D3DXCOLOR(1.0f, 1.0f, 0.0f, 1.0f));
 
-            SetLine(D3DXVECTOR3(ActionZoneMin.x, ActionZoneMax.y, ActionZoneMin.z), D3DXVECTOR3(ActionZoneMin.x, ActionZoneMax.y, ActionZoneMax.z), D3DXCOLOR(1.0f, 1.0f, 0.0f, 1.0f));
-            SetLine(D3DXVECTOR3(ActionZoneMax.x, ActionZoneMin.y, ActionZoneMin.z), D3DXVECTOR3(ActionZoneMax.x, ActionZoneMin.y, ActionZoneMax.z), D3DXCOLOR(1.0f, 1.0f, 0.0f, 1.0f));
+            //SetLine(D3DXVECTOR3(ActionZoneMin.x, ActionZoneMax.y, ActionZoneMin.z), D3DXVECTOR3(ActionZoneMin.x, ActionZoneMax.y, ActionZoneMax.z), D3DXCOLOR(1.0f, 1.0f, 0.0f, 1.0f));
+            //SetLine(D3DXVECTOR3(ActionZoneMax.x, ActionZoneMin.y, ActionZoneMin.z), D3DXVECTOR3(ActionZoneMax.x, ActionZoneMin.y, ActionZoneMax.z), D3DXCOLOR(1.0f, 1.0f, 0.0f, 1.0f));
 
 #endif
 

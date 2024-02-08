@@ -106,27 +106,27 @@ void UpdateTransferGate(void)
             D3DXVECTOR3 TransferGateMax = g_TransferGate[nCntGate].pos + g_TransferGate[nCntGate].GateMax;
    
 #if _DEBUG
-            //ラインの位置
-            // 上下の辺
-            SetLine(D3DXVECTOR3(TransferGateMin.x, TransferGateMax.y, TransferGateMin.z), D3DXVECTOR3(TransferGateMax.x, TransferGateMax.y, TransferGateMin.z), D3DXCOLOR(1.0f, 1.0f, 0.0f, 1.0f));
-            SetLine(D3DXVECTOR3(TransferGateMin.x, TransferGateMin.y, TransferGateMin.z), D3DXVECTOR3(TransferGateMax.x, TransferGateMin.y, TransferGateMin.z), D3DXCOLOR(1.0f, 1.0f, 0.0f, 1.0f));
+            ////ラインの位置
+            //// 上下の辺
+            //SetLine(D3DXVECTOR3(TransferGateMin.x, TransferGateMax.y, TransferGateMin.z), D3DXVECTOR3(TransferGateMax.x, TransferGateMax.y, TransferGateMin.z), D3DXCOLOR(1.0f, 1.0f, 0.0f, 1.0f));
+            //SetLine(D3DXVECTOR3(TransferGateMin.x, TransferGateMin.y, TransferGateMin.z), D3DXVECTOR3(TransferGateMax.x, TransferGateMin.y, TransferGateMin.z), D3DXCOLOR(1.0f, 1.0f, 0.0f, 1.0f));
 
-            SetLine(D3DXVECTOR3(TransferGateMin.x, TransferGateMax.y, TransferGateMax.z), D3DXVECTOR3(TransferGateMax.x, TransferGateMax.y, TransferGateMax.z), D3DXCOLOR(1.0f, 1.0f, 0.0f, 1.0f));
-            SetLine(D3DXVECTOR3(TransferGateMin.x, TransferGateMin.y, TransferGateMax.z), D3DXVECTOR3(TransferGateMax.x, TransferGateMin.y, TransferGateMax.z), D3DXCOLOR(1.0f, 1.0f, 0.0f, 1.0f));
+            //SetLine(D3DXVECTOR3(TransferGateMin.x, TransferGateMax.y, TransferGateMax.z), D3DXVECTOR3(TransferGateMax.x, TransferGateMax.y, TransferGateMax.z), D3DXCOLOR(1.0f, 1.0f, 0.0f, 1.0f));
+            //SetLine(D3DXVECTOR3(TransferGateMin.x, TransferGateMin.y, TransferGateMax.z), D3DXVECTOR3(TransferGateMax.x, TransferGateMin.y, TransferGateMax.z), D3DXCOLOR(1.0f, 1.0f, 0.0f, 1.0f));
 
-            // 側面の辺
-            SetLine(D3DXVECTOR3(TransferGateMin.x, TransferGateMin.y, TransferGateMin.z), D3DXVECTOR3(TransferGateMin.x, TransferGateMax.y, TransferGateMin.z), D3DXCOLOR(1.0f, 1.0f, 0.0f, 1.0f));
-            SetLine(D3DXVECTOR3(TransferGateMax.x, TransferGateMin.y, TransferGateMin.z), D3DXVECTOR3(TransferGateMax.x, TransferGateMax.y, TransferGateMin.z), D3DXCOLOR(1.0f, 1.0f, 0.0f, 1.0f));
+            //// 側面の辺
+            //SetLine(D3DXVECTOR3(TransferGateMin.x, TransferGateMin.y, TransferGateMin.z), D3DXVECTOR3(TransferGateMin.x, TransferGateMax.y, TransferGateMin.z), D3DXCOLOR(1.0f, 1.0f, 0.0f, 1.0f));
+            //SetLine(D3DXVECTOR3(TransferGateMax.x, TransferGateMin.y, TransferGateMin.z), D3DXVECTOR3(TransferGateMax.x, TransferGateMax.y, TransferGateMin.z), D3DXCOLOR(1.0f, 1.0f, 0.0f, 1.0f));
 
-            SetLine(D3DXVECTOR3(TransferGateMin.x, TransferGateMin.y, TransferGateMax.z), D3DXVECTOR3(TransferGateMin.x, TransferGateMax.y, TransferGateMax.z), D3DXCOLOR(1.0f, 1.0f, 0.0f, 1.0f));
-            SetLine(D3DXVECTOR3(TransferGateMax.x, TransferGateMin.y, TransferGateMax.z), D3DXVECTOR3(TransferGateMax.x, TransferGateMax.y, TransferGateMax.z), D3DXCOLOR(1.0f, 1.0f, 0.0f, 1.0f));
+            //SetLine(D3DXVECTOR3(TransferGateMin.x, TransferGateMin.y, TransferGateMax.z), D3DXVECTOR3(TransferGateMin.x, TransferGateMax.y, TransferGateMax.z), D3DXCOLOR(1.0f, 1.0f, 0.0f, 1.0f));
+            //SetLine(D3DXVECTOR3(TransferGateMax.x, TransferGateMin.y, TransferGateMax.z), D3DXVECTOR3(TransferGateMax.x, TransferGateMax.y, TransferGateMax.z), D3DXCOLOR(1.0f, 1.0f, 0.0f, 1.0f));
 
-            // その他の辺
-            SetLine(D3DXVECTOR3(TransferGateMin.x, TransferGateMin.y, TransferGateMin.z), D3DXVECTOR3(TransferGateMin.x, TransferGateMin.y, TransferGateMax.z), D3DXCOLOR(1.0f, 1.0f, 0.0f, 1.0f));
-            SetLine(D3DXVECTOR3(TransferGateMax.x, TransferGateMax.y, TransferGateMin.z), D3DXVECTOR3(TransferGateMax.x, TransferGateMax.y, TransferGateMax.z), D3DXCOLOR(1.0f, 1.0f, 0.0f, 1.0f));
+            //// その他の辺
+            //SetLine(D3DXVECTOR3(TransferGateMin.x, TransferGateMin.y, TransferGateMin.z), D3DXVECTOR3(TransferGateMin.x, TransferGateMin.y, TransferGateMax.z), D3DXCOLOR(1.0f, 1.0f, 0.0f, 1.0f));
+            //SetLine(D3DXVECTOR3(TransferGateMax.x, TransferGateMax.y, TransferGateMin.z), D3DXVECTOR3(TransferGateMax.x, TransferGateMax.y, TransferGateMax.z), D3DXCOLOR(1.0f, 1.0f, 0.0f, 1.0f));
 
-            SetLine(D3DXVECTOR3(TransferGateMin.x, TransferGateMax.y, TransferGateMin.z), D3DXVECTOR3(TransferGateMin.x, TransferGateMax.y, TransferGateMax.z), D3DXCOLOR(1.0f, 1.0f, 0.0f, 1.0f));
-            SetLine(D3DXVECTOR3(TransferGateMax.x, TransferGateMin.y, TransferGateMin.z), D3DXVECTOR3(TransferGateMax.x, TransferGateMin.y, TransferGateMax.z), D3DXCOLOR(1.0f, 1.0f, 0.0f, 1.0f));
+            //SetLine(D3DXVECTOR3(TransferGateMin.x, TransferGateMax.y, TransferGateMin.z), D3DXVECTOR3(TransferGateMin.x, TransferGateMax.y, TransferGateMax.z), D3DXCOLOR(1.0f, 1.0f, 0.0f, 1.0f));
+            //SetLine(D3DXVECTOR3(TransferGateMax.x, TransferGateMin.y, TransferGateMin.z), D3DXVECTOR3(TransferGateMax.x, TransferGateMin.y, TransferGateMax.z), D3DXCOLOR(1.0f, 1.0f, 0.0f, 1.0f));
         
 #endif
 

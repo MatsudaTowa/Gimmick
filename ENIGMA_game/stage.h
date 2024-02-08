@@ -11,19 +11,29 @@
 #include"main.h"
 
 #define NUMSTAGE	(64)//壁の数
-#define TEXNUM	(4)//テクスチャの数
+#define STAGETEXNUM	(5)//テクスチャの数
 
 #define STAGESIZE	(3000.0f)
 
 //壁の向いてる方向構造体
 typedef enum
 {
-	STAGETYPE_test0 = 0,
+	STAGETYPE_WALL = 0,
+	STAGETYPE_FLOOR,
+	STAGETYPE_test0,
 	STAGETYPE_test1,
-	STAGETYPE_test2,
-	STAGETYPE_test3,
 }STAGETYPE;
 
+//テクスチャの種類
+typedef enum
+{
+	TEXTYPE_00 = 0,
+	TEXTYPE_01,
+	TEXTYPE_02,
+	TEXTYPE_03,
+	TEXTYPE_04,
+	TEXTYPE_MAX
+}TEXTYPE;
 
 //壁の構造体
 typedef struct
@@ -31,12 +41,15 @@ typedef struct
 	D3DXVECTOR3 posStage;	//位置
 	D3DXVECTOR3 rotStage;	//向き
 	D3DXMATRIX mtxWorldStage;//ワールドマトリックス
-	STAGETYPE StageType;//壁の向き
+	//STAGETYPE StageType;//壁の向き
+	TEXTYPE TexType;
+
+	bool bCollision;//当たり判定がONか
+	D3DXVECTOR3	MaxPos;
+	D3DXVECTOR3	MinPos;
+
 	bool bUse;
 }STAGE;
-
-
-
 
 void InitStage(void);
 void UninitStage(void);
@@ -45,7 +58,7 @@ void DrawStage(void);
 STAGE* GetStage(void);
 
 //壁の設定
-void SetStage(D3DXVECTOR3 Pos,float angle, float Width, float Height, STAGETYPE testType);
+void SetStage(D3DXVECTOR3 Pos, float angle, float bes, float ver,TEXTYPE TexType);
 
 
 #endif

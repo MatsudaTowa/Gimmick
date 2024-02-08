@@ -3437,7 +3437,7 @@ Mesh {
    0.000000;0.000000;0.000000;;
    0.121569;0.121569;0.121569;;
    TextureFilename {
-    "data\\TEXTURE\\blue_hair_background_image.png";
+    "data\\TEXTURE\\blue_hair.png";
    }
   }
   Material {

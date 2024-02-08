@@ -293,7 +293,7 @@ Mesh {
    0.000000;0.000000;0.000000;;
    0.000000;0.000000;0.000000;;
    TextureFilename {
-    "C:\\Users\\student\\Downloads\\black_hair_background_image.jpg";
+    "data\\TEXTURE\\black_hair.jpg";
    }
   }
   Material {
@@ -308,7 +308,7 @@ Mesh {
    0.000000;0.000000;0.000000;;
    0.190000;0.190000;0.190000;;
    TextureFilename {
-    "C:\\Users\\student\\Downloads\\57583335.png";
+    "data\\TEXTURE\\57583335.png";
    }
   }
   Material {
@@ -317,7 +317,7 @@ Mesh {
    0.000000;0.000000;0.000000;;
    0.000000;0.000000;0.000000;;
    TextureFilename {
-    "C:\\Users\\student\\Downloads\\texture_00130.jpg";
+    "data\\TEXTURE\\texture_00130.jpg";
    }
   }
   Material {
@@ -332,7 +332,7 @@ Mesh {
    0.000000;0.000000;0.000000;;
    0.000000;0.000000;0.000000;;
    TextureFilename {
-    "C:\\Users\\student\\Downloads\\r00607.png";
+    "data\\TEXTURE\\r00607.png";
    }
   }
   Material {
@@ -347,7 +347,7 @@ Mesh {
    0.530000;0.530000;0.530000;;
    0.078500;0.302000;0.082500;;
    TextureFilename {
-    "C:\\Users\\student\\Downloads\\metal02.jpg";
+    "data\\TEXTURE\\metal02.jpg";
    }
   }
   Material {
@@ -368,7 +368,7 @@ Mesh {
    0.000000;0.000000;0.000000;;
    0.000000;0.000000;0.000000;;
    TextureFilename {
-    "C:\\Users\\student\\Downloads\\57583335_455x636.png";
+    "data\\TEXTURE\\57583335_455x636.png";
    }
   }
   Material {
@@ -389,7 +389,7 @@ Mesh {
    0.000000;0.000000;0.000000;;
    0.000000;0.000000;0.000000;;
    TextureFilename {
-    "C:\\Users\\student\\Downloads\\kuti.png";
+    "data\\TEXTURE\\kuti.png";
    }
   }
  }

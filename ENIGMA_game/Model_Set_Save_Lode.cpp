@@ -196,12 +196,13 @@ void Model_DebugSave(void)
 			{
 				int Escape = static_cast<int>(pMapObject[i].nType);
 
-				fprintf(pFile, "MODELSET\nPOS = %.1f %.1f %.1f\nROT = %.1f %.1f %.1f\nMODELTYPE = %d\nEND_MODELSET\n\n"
+				fprintf(pFile, "MODELSET\nPOS = %.2f %.2f %.2f\nROT = %.2f %.2f %.2f\nMODELTYPE = %d\nEND_MODELSET\n\n"
 					, pMapObject[i].pos.x, pMapObject[i].pos.y, pMapObject[i].pos.z
 					, pMapObject[i].rot.x, pMapObject[i].rot.y, pMapObject[i].rot.z
 					, Escape);
 			}
 		}
+
 
 
 

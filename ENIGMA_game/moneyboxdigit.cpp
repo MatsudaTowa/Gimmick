@@ -17,8 +17,6 @@ MONEYBOXDIGIT g_aMoneyboxDigit[NUM_DIGIT];	//ポーズ構造体の情報
 int g_nSelectNumber;						//選択してる数字
 int g_nMark; //選択してるマーク
 bool g_bClear; //クリアしたかの判定
-int g_nVibrationCnt; //バイブ時間
-bool g_bMissTake;
 
 //=============================================
 //壁のテクスチャの種類
@@ -53,9 +51,7 @@ void InitMoneyboxDigit(void)
 
 	g_nSelectNumber = 0; //選択してる番号の初期化
 	g_nMark = 0;//選択してる番号の初期化
-	g_nVibrationCnt = 0;
 	g_bClear = false;
-	g_bMissTake = false;
 
 	//頂点バッファの生成
 	pDevice->CreateVertexBuffer(sizeof(VERTEX_2D) * 4 * NUM_DIGIT, D3DUSAGE_WRITEONLY, FVF_VERTEX_2D, D3DPOOL_MANAGED, &g_pVtxBuffMoneyboxDigit, NULL);
@@ -154,24 +150,9 @@ void ControlMoneybox1P(void)
 	//頂点バッファをロックし、頂点情報へのポインタを取得
 	g_pVtxBuffMoneyboxDigit->Lock(0, 0, (void**)&pVtx, 0);
 
-	int nCountPause = 0;
+//	int nCountPause = 0;
 
 	DWORD dwResult = XInputGetState(0, &joykeystate);
-
-
-	if (g_bMissTake == true)
-	{
-		VibrationLeft(45000);
-		VibrationRight(45000);
-		g_nVibrationCnt++;
-		if (g_nVibrationCnt > 30)
-		{
-			VibrationLeft(0);
-			VibrationRight(0);
-			g_nVibrationCnt = 0;
-			g_bMissTake = false;
-		}
-	}
 
 	if (dwResult == ERROR_SUCCESS)
 	{
@@ -316,7 +297,7 @@ void ControlMoneybox2P(void)
 	//頂点バッファをロックし、頂点情報へのポインタを取得
 	g_pVtxBuffMoneyboxDigit->Lock(0, 0, (void**)&pVtx, 0);
 
-	int nCountPause = 0;
+//	int nCountPause = 0;
 
 	DWORD dwResult = XInputGetState(0, &joykeystate);
 
@@ -618,10 +599,8 @@ void CorrectMoneyboxDigit(void)
 //=========================================================
 //失敗処理
 //=========================================================
-bool MistakeMoneyboxDigit(void)
+void MistakeMoneyboxDigit(void)
 {
-	g_bMissTake = true;
-	return g_bMissTake;
 	//SEで不正解を表す
 }
 

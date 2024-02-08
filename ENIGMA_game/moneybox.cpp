@@ -32,7 +32,7 @@ void InitMoneybox(void)
 //デバイスの取得
 	pDevice = GetDevice();
 
-	int nCntPause = 0;
+//	int nCntPause = 0;
 
 	//テクスチャの読み込み
 	D3DXCreateTextureFromFile(pDevice,

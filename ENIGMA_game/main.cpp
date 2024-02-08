@@ -541,7 +541,7 @@ void Update(void)
 	InitializeDeltaTimer();
 
 	// デルタタイムの取得
-	double deltaTime = GetDeltaTimer();
+//	double deltaTime = GetDeltaTimer();
 	//どう使うか問題
 
 

@@ -40,8 +40,8 @@
 #define MAXLIFE_2P		(300)
 
 //プレイヤーサイズ(当たり判定用)
-#define PLAYERMIN_2P	(D3DXVECTOR3(-17.0f,0.0f,-17.0f))
-#define PLAYERMAX_2P	(D3DXVECTOR3(17.0f,90.0f,17.0f))
+#define PLAYERMIN_2P	(D3DXVECTOR3(-27.0f,0.0f,-27.0f))
+#define PLAYERMAX_2P	(D3DXVECTOR3(27.0f,85.0f,27.0f))
 
 #define GRAVITY_2P	(0.9f)//重力
 
@@ -118,6 +118,8 @@ typedef struct
 	bool bMoneyBoxGimmick; //金庫のギミックをしてるか
 
 	bool bAction;//行動ボタン
+
+	bool bTransparent;//透明か
 
 
 	bool MotionBrend;//モーションブレンドモード
@@ -199,7 +201,7 @@ typedef struct
 void InitPlayer_2P(void);//プレイヤーの初期化処理
 void UninitPlayer_2P(void);//プレイヤーの終了処理
 void UpdatePlayer_2P(void);//プレイヤーの更新処理
-void DrawPlayer_2P(void);//プレイヤーの描画処理
+void DrawPlayer_2P(int CameraLoopNum);//プレイヤーの描画処理
 
 Player_2P* GetPlayer_2P(void);
 

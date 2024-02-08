@@ -3280,7 +3280,7 @@ Mesh {
    0.000000;0.000000;0.000000;;
    0.000000;0.000000;0.000000;;
    TextureFilename {
-    "data\\TEXTURE\\black_hair_background_image.jpg";
+    "data\\TEXTURE\\black_hair.jpg";
    }
   }
   Material {

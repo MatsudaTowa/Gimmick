@@ -19,6 +19,7 @@
 #include <string.h>//文字列を扱う変数
 #include "game.h"
 #include "item.h"
+#include "stage.h"
 
 
 
@@ -43,7 +44,7 @@ View2 g_View_2P[2];
 
 int g_Cnt2 = 0;//テスト。
 
-
+bool g_test2 = false;
 //=============================
 //モデルの初期化処理
 //=============================
@@ -116,6 +117,7 @@ void InitPlayer_2P(void)
 	g_Player_2P.BrendCnt = 0;
 	g_Player_2P.EscapeMotion = MOTIONTYPE_2P_BREND;
 
+	g_Player_2P.bTransparent = false;
 
 	//-------------------------------------------------モデル系
 	g_Model_2P.nMaxMotionCnt = 0;
@@ -207,12 +209,14 @@ void UpdatePlayer_2P(void)
 	g_Player_2P.JumpNow = false;
 	g_Player_2P.bLandingNow = false;
 	g_Player_2P.bAction = false;
+	g_test2 = false;
+
 	//---------------------------------------------------------------------------------------------------------ここで腰を相手に向ける
-	bool calculated = false;//腰傾けたか
+//	bool calculated = false;//腰傾けたか
 
 	//腰の角度
-	float minYAngle = -0.5f; // 下側の角度の限界
-	float maxYAngle = 0.5f;  // 上側の角度の限界
+//	float minYAngle = -0.5f; // 下側の角度の限界
+//	float maxYAngle = 0.5f;  // 上側の角度の限界
 
 	//-----------------------------------------------------------------------------------入力ここから
 	if (CheckInputMove2_2P() == -1)
@@ -327,12 +331,29 @@ void UpdatePlayer_2P(void)
 				D3DXVECTOR3 ModelMax = D3DXVECTOR3(pMapObject[i].pos + pMapObject[i].Maxpos);
 
 				//プレイヤー同士当たり判定
-				BoxCollisionPlayer(PlayerMin_2P, PlayerMax_2P, ModelMin, ModelMax, 1);
+				BoxCollisionPlayer(PlayerMin_2P, PlayerMax_2P, ModelMin, ModelMax, 2);
 			}
 		}
 	}
 
 
+	//----------------------------------------------------------------------------壁、床接触
+	STAGE* pStage;
+	pStage = GetStage();
+	for (int nWall = 0; nWall < NUMSTAGE; nWall++)
+	{
+		if (pStage[nWall].bUse == true)
+		{
+			if (pStage[nWall].bCollision == true)
+			{
+				D3DXVECTOR3 StageMin = D3DXVECTOR3(pStage[nWall].posStage + pStage[nWall].MinPos);
+				D3DXVECTOR3 StageMax = D3DXVECTOR3(pStage[nWall].posStage + pStage[nWall].MaxPos);
+
+				//プレイヤー同士当たり判定
+				BoxCollisionPlayer(PlayerMin_2P, PlayerMax_2P, StageMin, StageMax, 2);
+			}
+		}
+	}
 
 
 
@@ -586,7 +607,7 @@ void UpdatePlayer_2P(void)
 //=============================
 //モデルの描画処理
 //=============================
-void DrawPlayer_2P(void)
+void DrawPlayer_2P(int CameraLoopNum)
 {
 
 	if (g_Player_2P.bUse == true)
@@ -684,14 +705,38 @@ void DrawPlayer_2P(void)
 			//現在のマテリアルを取得
 			pDevice->GetMaterial(&matDef);
 
-
 			//マテリアルデータへのポインタを取得
 			pMat = (D3DXMATERIAL*)g_pBuffMatModel_2P[nCnt]->GetBufferPointer();
 
 			for (int nCntMat = 0; nCntMat < (int)dwNumMatModel_2P[nCnt]; nCntMat++)
 			{
-				//マテリアルの設定
-				pDevice->SetMaterial(&pMat[nCntMat].MatD3D);
+
+				//------------------------カラーチェンジ
+				if (g_test2 == true)
+				{
+					// マテリアルの設定
+					D3DMATERIAL9 matTemp = pMat[nCntMat].MatD3D;
+					matTemp.Diffuse = D3DXCOLOR(1.0f, 0.1f, 0.1f, 0.8f);
+					//matTemp.Diffuse.a = 0.5f;  // 透過度を設定（0.0fで完全透明、1.0fで不透明）
+					pDevice->SetMaterial(&matTemp);
+				}
+				else
+				{
+					//マテリアルの設定
+					pDevice->SetMaterial(&pMat[nCntMat].MatD3D);
+				}
+
+				if (CameraLoopNum != 1)
+				{//0カメ
+					if (g_Player_2P.bTransparent == true)
+					{//透過
+						// マテリアルの設定
+						D3DMATERIAL9 matTemp = pMat[nCntMat].MatD3D;
+						//matTemp.Diffuse = D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.2f);
+						matTemp.Diffuse.a = 0.2f;  // 透過度を設定（0.0fで完全透明、1.0fで不透明）
+						pDevice->SetMaterial(&matTemp);
+					}
+				}
 
 				//テクスチャの設定
 				pDevice->SetTexture(0, NULL);//今回は設定しない
@@ -742,7 +787,7 @@ void InPutKeyboardPlayer_2P(void)
 
 	bool MoveNow = false;//移動入力できてるか
 
-	bool NomalMove = false;//通常入力かどうか
+//	bool NomalMove = false;//通常入力かどうか
 
 	float Xdate = 0.0f;
 	float Zdate = 0.0f;
@@ -977,6 +1022,7 @@ void InputKeyAttack_2P(void)
 	if (GetkeyboardPress(DIK_SPACE) == true || joykeystate.Gamepad.bRightTrigger > XINPUT_GAMEPAD_TRIGGER_THRESHOLD || joykeystate.Gamepad.bLeftTrigger > XINPUT_GAMEPAD_TRIGGER_THRESHOLD)//トリガー
 	{//スペースがおされた//L2キー
 		g_Player_2P.NowMotionDOWN = MOTIONTYPE_2P_ATTACK;
+		g_test2 = true;
 	}
 
 	//ジャンプ

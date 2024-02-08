@@ -118,8 +118,10 @@ typedef struct
 	bool bLandingNow;//着地
 	bool bMoneyBoxGimmick; //金庫のギミックをしてるか
 
+	bool bTransparent;//透明か
 	
 	bool bAction;//行動ボタン押した
+
 
 	bool MotionBrend;//モーションブレンドモード
 	int BrendCnt;//ブレンドカウンター
@@ -201,7 +203,7 @@ typedef struct
 void InitPlayer(void);//プレイヤーの初期化処理
 void UninitPlayer(void);//プレイヤーの終了処理
 void UpdatePlayer(void);//プレイヤーの更新処理
-void DrawPlayer(void);//プレイヤーの描画処理
+void DrawPlayer(int CameraLoopNum);//プレイヤーの描画処理
 
 Player* GetPlayer(void);
 
