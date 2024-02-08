@@ -840,8 +840,7 @@ void InPutKeyboardPlayer(void)
 	//キーボード
 	if (GetkeyboardPress(DIK_A) == true )
 	{//Aがおされた(左)
-		Xdate =
-			1;
+		Xdate =1;
 		MoveNow = true;
 	}
 	else if (GetkeyboardPress(DIK_D) == true )
@@ -894,9 +893,6 @@ void InPutControllerPlayer(void)
 	//ショイパットの状態を取得
 	DWORD dwResult = XInputGetState(0, &joykeystate);
 
-
-
-
 	float nMoveSpeed = 0;
 
 	//移動量を一時保存(移動量の変動などに)
@@ -908,6 +904,7 @@ void InPutControllerPlayer(void)
 
 	bool MoveNowCom = false;//移動入力できてるか--Controller
 
+	bool Sneak = false; //スニークしてるかどうか
 
 	//分割率
 	float  Split = 1.6f;
@@ -963,10 +960,17 @@ void InPutControllerPlayer(void)
 
 	//Controller
 	//--------------------------------------------------------------------------------------
+
+	if (joykeystate.Gamepad.bLeftTrigger > XINPUT_GAMEPAD_TRIGGER_THRESHOLD)
+	{
+		Sneak = true;
+	}
+
 	if ( joykeystate.Gamepad.sThumbLX <= -(XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE - 6000))
 	{//Aがおされた(左)
 	//	Xdate = 1;
 		MoveNowCom = true;
+
 	}
 	else if (joykeystate.Gamepad.sThumbLX >= (XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE - 6000))
 	{//Dがおされた(右)
@@ -1006,8 +1010,15 @@ void InPutControllerPlayer(void)
 	else
 	{//Controller
 		g_Player.NowMotionDOWN = MOTIONTYPE_1P_MOVE;
-		float BoostMove = 1;
-
+		float BoostMove;
+		if (Sneak == false)
+		{
+			BoostMove = 1.0f;
+		}
+		else if (Sneak == true)
+		{
+			BoostMove = 0.5f;
+		}
 		float Angle2 = atan2f(-joykeystate.Gamepad.sThumbLX, -joykeystate.Gamepad.sThumbLY);//これが方角
 
 		g_Player.fRotDest = (Angle2 - pCamera[0].rot.y - (1.0f * D3DX_PI));
@@ -1070,7 +1081,7 @@ void InputKeyAttack(void)
 
 
 	//入力の有無を確認して分岐
-	if (GetkeyboardPress(DIK_SPACE) == true || joykeystate.Gamepad.bRightTrigger > XINPUT_GAMEPAD_TRIGGER_THRESHOLD || joykeystate.Gamepad.bLeftTrigger > XINPUT_GAMEPAD_TRIGGER_THRESHOLD)//トリガー
+	if (GetkeyboardPress(DIK_SPACE) == true || joykeystate.Gamepad.bRightTrigger > XINPUT_GAMEPAD_TRIGGER_THRESHOLD)//トリガー
 	{//スペースがおされた//L2キー
 	//	g_Player.NowMotionUP = MOTIONTYPE_1P_ATTACK;
 		g_Player.NowMotionDOWN = MOTIONTYPE_1P_ATTACK;
