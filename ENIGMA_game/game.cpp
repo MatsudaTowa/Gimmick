@@ -72,7 +72,8 @@
 	bool g_ClearFlag = false;
 	bool g_MoneyboxPlayer = false; //どっちのプレイヤーが操作してるか false:1P,true2P
 	bool g_bClearMoneybox = false;
-
+	bool g_bLever1 = false;
+	bool g_bLever2 = false;
 
 	//ゲームループを一度でもしたか
 	bool GameLoopSave = false;
@@ -96,6 +97,9 @@ void InitGame(void)
 	g_bClearMoneybox = false; //ギミッククリアしてないにする
 
 	g_ClearFlag = false;//クリアしてないにする
+
+	g_bLever1 = false; //レバーオフ
+	g_bLever2 = false; //レバーオフ
 
 	InitLight();
 	InitCamera();
@@ -353,6 +357,10 @@ void UpdateGame(void)
 				UpdateMoneyboxDigit();
 				UpdatePassword();
 			}
+		}
+		if (g_bLever1 == true && g_bLever2 == true)
+		{
+			LaverOn();
 		}
 
 		UpdateBathGimmick();
@@ -1776,14 +1784,37 @@ void SphereCollisionZone(D3DXVECTOR3 PlayerPos, int PlayerIndex, int ZoneIndex)
 			{//
 
 			}
-			if (pActionZone[ZoneIndex].ActionType == ACTION_TYPE_BATH && bIn == true)
+			else if (pActionZone[ZoneIndex].ActionType == ACTION_TYPE_BATH && bIn == true)
 			{//お風呂のギミック（1P）
 				if (GetJoypadTrigger(JOYKEY_X, 0) == true)
 				{//お風呂のギミック作動
 					RunWater(0);
 				}
 			}
+			if (pActionZone[ZoneIndex].ActionType == ACTION_TYPE_LEVER_1 && bIn == true)
+			{//レバーのギミック（1P）
+				if (GetJoypadPress(JOYKEY_X, 0) == true)
+				{//レバーのギミック作動
+					g_bLever1 = true;
+				}
+				else
+				{
+					g_bLever1 = false;
+				}
+			}
+			else if (pActionZone[ZoneIndex].ActionType == ACTION_TYPE_LEVER_2 && bIn == true)
+			{//レバーのギミック（1P）
+				if (GetJoypadPress(JOYKEY_X, 0) == true)
+				{//レバーのギミック作動
+					g_bLever2 = true;
+				}
+				else
+				{
+					g_bLever2 = false;
+				}
+			}
 		}
+		
 	}
 	else if (PlayerIndex == 1)
 	{//2Pの時
@@ -1810,6 +1841,28 @@ void SphereCollisionZone(D3DXVECTOR3 PlayerPos, int PlayerIndex, int ZoneIndex)
 				if (GetJoypadTrigger(JOYKEY_X, 1) == true)
 				{//お風呂のギミック作動
 					RunWater(1);
+				}
+			}
+			if (pActionZone[ZoneIndex].ActionType == ACTION_TYPE_LEVER_1 && bIn == true)
+			{//レバーのギミック（2P）
+				if (GetJoypadPress(JOYKEY_X, 1) == true)
+				{//レバーのギミック作動
+					g_bLever1 = true;
+				}
+				else
+				{
+					g_bLever1 = false;
+				}
+			}
+			else if (pActionZone[ZoneIndex].ActionType == ACTION_TYPE_LEVER_2 && bIn == true)
+			{//レバーのギミック（2P）
+				if (GetJoypadTrigger(JOYKEY_X, 1) == true)
+				{//レバーのギミック作動
+					g_bLever2 = true;
+				}
+				else
+				{
+					g_bLever2 = false;
 				}
 			}
 		}

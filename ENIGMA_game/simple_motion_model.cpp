@@ -6,6 +6,13 @@
 //=========================================================
 #include "main.h"
 #include "simple_motion_model.h"
+#include "Actionzone.h"
+#include "game.h"
+
+//-------------------------------------------
+//ƒ}ƒNƒ’è‹`
+//-------------------------------------------
+#define LEVER_ACTIONZONE_RADIUS	(120.0f) //‚¨•—˜C‚ÌƒMƒ~ƒbƒN”»’è
 
 //ƒOƒ[ƒoƒ‹•Ï”éŒ¾
 
@@ -45,6 +52,9 @@ LPD3DXBUFFER g_pBuffMatSimpleModel[SIMPLEMOTIONMODEL_MAX] = {};//ƒ}ƒeƒŠƒAƒ‹‚Ö‚Ìƒ
 
 DWORD dwNumMatSimpleModel[SIMPLEMOTIONMODEL_MAX] = {};//ƒ}ƒeƒŠƒAƒ‹‚Ì”
 
+bool g_bOnLever1;
+bool g_bOnLever2;
+
 
 //=============================
 //ŠÈˆÕƒ‚[ƒVƒ‡ƒ“ƒ‚ƒfƒ‹‰Šú‰»ˆ—
@@ -59,7 +69,8 @@ void InitSimpleModel(void)
 	}
 
 
-
+	g_bOnLever1 = false; //ƒŒƒo[OFF
+	g_bOnLever2 = false; //ƒŒƒo[OFF
 
 
 	//‚±‚±‚©‚ç‰Šú’lƒZƒbƒg
@@ -68,9 +79,16 @@ void InitSimpleModel(void)
 	//ÔƒŒƒo[
 	SetSimpleModel(SIMPLEMOTIONMODEL_LEVER_RED_ROOT, D3DXVECTOR3(-1180.0f, 100.0f, -1000.0f), D3DXVECTOR3(0.0f, -1.57f, 0.0f));		//–{‘Ì
 	SetSimpleModel(SIMPLEMOTIONMODEL_LEVER_RED_LEVER, D3DXVECTOR3(0.0f, 0.0f, 8.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));		//ƒŒƒo[
+
+	//ƒŒƒo[1‚ÌƒAƒNƒVƒ‡ƒ“ƒ][ƒ“Ý’u
+	SetActionZone(D3DXVECTOR3(-1180.0f, 100.0f, -1000.0f), LEVER_ACTIONZONE_RADIUS, ACTION_TYPE_LEVER_1, D3DXCOLOR(1.0f, 1.0f, 0.0f, 0.8f));
+
 	//ÂƒŒƒo[
 	SetSimpleModel(SIMPLEMOTIONMODEL_LEVER_BLUE_ROOT, D3DXVECTOR3(-1180.0f, 100.0f, -400.0f), D3DXVECTOR3(0.0f, -1.57f, 0.0f));	//–{‘Ì
 	SetSimpleModel(SIMPLEMOTIONMODEL_LEVER_BLUE_LEVER, D3DXVECTOR3(0.0f, 0.0f, 8.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));		//ƒŒƒo[
+
+	//ƒŒƒo[2‚ÌƒAƒNƒVƒ‡ƒ“ƒ][ƒ“Ý’u
+	SetActionZone(D3DXVECTOR3(-1180.0f, 100.0f, -400.0f), LEVER_ACTIONZONE_RADIUS, ACTION_TYPE_LEVER_2, D3DXCOLOR(1.0f, 0.0f, 0.3f, 0.8f));
 
 
 }
@@ -101,7 +119,6 @@ void UninitSimpleModel(void)
 void UpdateSimpleModel(void)
 {
 	//*********‚±‚±‚Å‚à‚Ì‚É‡‚í‚¹‚Äˆ—‚ð’Ç‰Á
-
 
 	//for (int SimpleModel = 0; SimpleModel < SIMPLEMOTIONMODEL_MAX; SimpleModel++)
 	//{
@@ -177,6 +194,22 @@ void DrawSimpleModel(void)
 		}
 	}
 }
+//=============================
+//ƒŒƒo[ONˆ—
+//=============================
+void LaverOn(void)
+{
+	if (g_ModelInfo[SIMPLEMOTIONMODEL_LEVER_RED_LEVER].SinpleModel.rot.x > -1.75f)
+	{
+		g_ModelInfo[SIMPLEMOTIONMODEL_LEVER_RED_LEVER].SinpleModel.rot.x -= 0.1f;
+	}
+
+	if (g_ModelInfo[SIMPLEMOTIONMODEL_LEVER_BLUE_LEVER].SinpleModel.rot.x > -1.75f)
+	{
+		g_ModelInfo[SIMPLEMOTIONMODEL_LEVER_BLUE_LEVER].SinpleModel.rot.x -= 0.1f;
+	}
+}
+
 //=============================
 //ŠÈˆÕƒ‚[ƒVƒ‡ƒ“ƒ‚ƒfƒ‹Ý’èˆ—
 //=============================
