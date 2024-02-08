@@ -235,6 +235,7 @@ void UpdateGame(void)
 	bool bPlayer1inOK = false;
 	bool bPlayer2inOK = false;
 
+
 	if (GetkeyboardTrigger(DIK_P) == true)
 	{//Pキー(ポーズ)が押された
 		g_bPause = g_bPause ? false : true;
@@ -1784,7 +1785,7 @@ void SphereCollisionZone(D3DXVECTOR3 PlayerPos, int PlayerIndex, int ZoneIndex)
 			{//
 
 			}
-			else if (pActionZone[ZoneIndex].ActionType == ACTION_TYPE_BATH && bIn == true)
+			if (pActionZone[ZoneIndex].ActionType == ACTION_TYPE_BATH && bIn == true)
 			{//お風呂のギミック（1P）
 				if (GetJoypadTrigger(JOYKEY_X, 0) == true)
 				{//お風呂のギミック作動
@@ -1797,26 +1798,35 @@ void SphereCollisionZone(D3DXVECTOR3 PlayerPos, int PlayerIndex, int ZoneIndex)
 				{//レバーのギミック作動
 					g_bLever1 = true;
 				}
-				else
+				if (GetJoypadRelease(JOYKEY_X, 0) == true)
 				{
 					g_bLever1 = false;
 				}
 			}
-			else if (pActionZone[ZoneIndex].ActionType == ACTION_TYPE_LEVER_2 && bIn == true)
+			else if (pActionZone[ZoneIndex].ActionType == ACTION_TYPE_LEVER_1 && bIn == false)
+			{//レバーのギミック（1P）
+				g_bLever1 = false;
+			}
+			if (pActionZone[ZoneIndex].ActionType == ACTION_TYPE_LEVER_2 && bIn == true)
 			{//レバーのギミック（1P）
 				if (GetJoypadPress(JOYKEY_X, 0) == true)
 				{//レバーのギミック作動
 					g_bLever2 = true;
 				}
-				else
+				if (GetJoypadRelease(JOYKEY_X, 0) == true)
 				{
 					g_bLever2 = false;
 				}
+
+			}
+			else if (pActionZone[ZoneIndex].ActionType == ACTION_TYPE_LEVER_2 && bIn == false)
+			{//レバーのギミック（1P）
+				g_bLever2 = false;
 			}
 		}
 		
 	}
-	else if (PlayerIndex == 1)
+	if (PlayerIndex == 1)
 	{//2Pの時
 		if (bIn == true)
 		{//接触判定時
@@ -1844,28 +1854,38 @@ void SphereCollisionZone(D3DXVECTOR3 PlayerPos, int PlayerIndex, int ZoneIndex)
 				}
 			}
 			if (pActionZone[ZoneIndex].ActionType == ACTION_TYPE_LEVER_1 && bIn == true)
-			{//レバーのギミック（2P）
+			{//レバーのギミック（1P）
 				if (GetJoypadPress(JOYKEY_X, 1) == true)
 				{//レバーのギミック作動
 					g_bLever1 = true;
 				}
-				else
+				if (GetJoypadRelease(JOYKEY_X, 1) == true)
 				{
 					g_bLever1 = false;
 				}
 			}
-			else if (pActionZone[ZoneIndex].ActionType == ACTION_TYPE_LEVER_2 && bIn == true)
-			{//レバーのギミック（2P）
-				if (GetJoypadTrigger(JOYKEY_X, 1) == true)
+			else if (pActionZone[ZoneIndex].ActionType == ACTION_TYPE_LEVER_1 && bIn == false)
+			{//レバーのギミック（1P）
+				g_bLever1 = false;
+			}
+			if (pActionZone[ZoneIndex].ActionType == ACTION_TYPE_LEVER_2 && bIn == true)
+			{//レバーのギミック（1P）
+				if (GetJoypadPress(JOYKEY_X, 1) == true)
 				{//レバーのギミック作動
 					g_bLever2 = true;
 				}
-				else
+				if (GetJoypadRelease(JOYKEY_X, 1) == true)
 				{
 					g_bLever2 = false;
 				}
+
+			}
+			else if (pActionZone[ZoneIndex].ActionType == ACTION_TYPE_LEVER_2 && bIn == false)
+			{//レバーのギミック（1P）
+				g_bLever2 = false;
 			}
 		}
+		
 	}
 }
 
