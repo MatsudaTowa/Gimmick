@@ -370,7 +370,7 @@ void UpdatePlayer(void)
 		if (pActionZone[nCntZone].bUse == true)
 		{
 			
-			SphereCollisionZone(g_Player.pos, 1, nCntZone);
+			SphereCollisionZone(g_Player.pos, 0, nCntZone);
 			//	break;
 		}
 	}
@@ -840,7 +840,8 @@ void InPutKeyboardPlayer(void)
 	//キーボード
 	if (GetkeyboardPress(DIK_A) == true )
 	{//Aがおされた(左)
-		Xdate =1;
+		Xdate =
+			1;
 		MoveNow = true;
 	}
 	else if (GetkeyboardPress(DIK_D) == true )
@@ -892,6 +893,9 @@ void InPutControllerPlayer(void)
 
 	//ショイパットの状態を取得
 	DWORD dwResult = XInputGetState(0, &joykeystate);
+
+
+
 
 	float nMoveSpeed = 0;
 
@@ -960,7 +964,6 @@ void InPutControllerPlayer(void)
 
 	//Controller
 	//--------------------------------------------------------------------------------------
-
 	if (joykeystate.Gamepad.bLeftTrigger > XINPUT_GAMEPAD_TRIGGER_THRESHOLD)
 	{
 		Sneak = true;
@@ -970,7 +973,6 @@ void InPutControllerPlayer(void)
 	{//Aがおされた(左)
 	//	Xdate = 1;
 		MoveNowCom = true;
-
 	}
 	else if (joykeystate.Gamepad.sThumbLX >= (XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE - 6000))
 	{//Dがおされた(右)
@@ -1020,6 +1022,7 @@ void InPutControllerPlayer(void)
 			//モーションも変える
 			BoostMove = 0.5f;
 		}
+
 		float Angle2 = atan2f(-joykeystate.Gamepad.sThumbLX, -joykeystate.Gamepad.sThumbLY);//これが方角
 
 		g_Player.fRotDest = (Angle2 - pCamera[0].rot.y - (1.0f * D3DX_PI));
@@ -1301,7 +1304,7 @@ void LoadSet(void)
 
 	//data\\motion_runningman.txt
 
-//	pFile = fopen("data\\motion_runningman.txt", "r");
+//	pFile = fopen("data\\motion_Player.txt", "r");
 	pFile = fopen("data\\motion_runningman.txt", "r");
 
 	if (pFile != NULL)

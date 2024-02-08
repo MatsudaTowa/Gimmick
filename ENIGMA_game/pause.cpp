@@ -38,7 +38,7 @@ void InitPause(void)
 	g_Pause = PAUSE_MENU_CONTINUE;
 
 	//テクスチャの読み込み
-	D3DXCreateTextureFromFile(pDevice, "data\\TEXTURE\\pause.png", &g_pTexturePause[0]);//--------書き換え済み//とりあえず
+	D3DXCreateTextureFromFile(pDevice, "data\\TEXTURE\\pauseframe.png", &g_pTexturePause[0]);//--------書き換え済み//とりあえず
 	D3DXCreateTextureFromFile(pDevice, "data\\TEXTURE\\Pause000.png", &g_pTexturePause[1]);//--------書き換え済み
 	D3DXCreateTextureFromFile(pDevice, "data\\TEXTURE\\Pause001.png", &g_pTexturePause[2]);//--------書き換え済み
 	D3DXCreateTextureFromFile(pDevice, "data\\TEXTURE\\Pause002.png", &g_pTexturePause[3]);//--------書き換え済み
@@ -163,22 +163,12 @@ void UpdatePause(void)
 
 	for (nCountPause = 0; nCountPause < NUM_PAUSEUI; nCountPause++)
 	{
-		//if (nCountPause == 0)
-		//{
-			//頂点カラーの設定--全体
-			pVtx[0].col = D3DCOLOR_RGBA(255, 255, 255, 240);
-			pVtx[1].col = D3DCOLOR_RGBA(255, 255, 255, 240);
-			pVtx[2].col = D3DCOLOR_RGBA(255, 255, 255, 240);
-			pVtx[3].col = D3DCOLOR_RGBA(255, 255, 255, 240);
-		//}
-		//else
-		//{
-		//	//頂点カラーの設定--全体
-		//	pVtx[0].col = D3DCOLOR_RGBA(255, 255, 255, 100);
-		//	pVtx[1].col = D3DCOLOR_RGBA(255, 255, 255, 100);
-		//	pVtx[2].col = D3DCOLOR_RGBA(255, 255, 255, 100);
-		//	pVtx[3].col = D3DCOLOR_RGBA(255, 255, 255, 100);
-		//}
+
+		//頂点カラーの設定--全体
+		pVtx[0].col = D3DCOLOR_RGBA(255, 255, 255, 240);
+		pVtx[1].col = D3DCOLOR_RGBA(255, 255, 255, 240);
+		pVtx[2].col = D3DCOLOR_RGBA(255, 255, 255, 240);
+		pVtx[3].col = D3DCOLOR_RGBA(255, 255, 255, 240);
 
 		if (nCountPause == 0)
 		{

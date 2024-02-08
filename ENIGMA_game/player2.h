@@ -31,7 +31,7 @@
 #define MAX_PARTS_2P	(60)//最大PARTS数
 #define MAX_WORD2_2P	(200)//最大文字数
 #define MAX_MOTION_2P	(20)//モーション最大数
-#define MAXKEY_2P	(260)//最大キー数
+#define MAXKEY_2P	(120)//最大キー数
 
 //行動可能半径
 #define MAXMAREA_2P	(3000.0f)

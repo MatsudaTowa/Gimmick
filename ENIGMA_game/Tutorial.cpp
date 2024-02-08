@@ -29,7 +29,7 @@ void InitTutorial(void)
 	VERTEX_2D* pVtx;//頂点情報のポインタ
 
 	//テクスチャの読み込み
-	D3DXCreateTextureFromFile(pDevice, "data\\TEXTURE\\Tutorial000.png", &g_pTextureTutorial);//--------書き換え済み
+	D3DXCreateTextureFromFile(pDevice, "data\\TEXTURE\\tutorial.png", &g_pTextureTutorial);//--------書き換え済み
 
 	//頂点バッファの生成
 	pDevice->CreateVertexBuffer(sizeof(VERTEX_2D) * 4, D3DUSAGE_WRITEONLY, FVF_VERTEX_2D, D3DPOOL_MANAGED, &g_pVtxBuffTutorial, NULL);

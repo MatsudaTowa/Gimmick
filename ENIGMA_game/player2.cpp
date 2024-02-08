@@ -860,8 +860,8 @@ void InPutControllerPlayer_2P(void)
 	bool MoveNowCom = false;//移動入力できてるか--Controller
 
 	bool NomalMove = false;//通常入力かどうか
-
 	bool Sneak = false; //スニークしてるかどうか
+
 
 	//分割率
 	float  Split = 1.6f;
@@ -916,12 +916,10 @@ void InPutControllerPlayer_2P(void)
 
 	//Controller
 	//--------------------------------------------------------------------------------------
-
 	if (joykeystate.Gamepad.bLeftTrigger > XINPUT_GAMEPAD_TRIGGER_THRESHOLD)
 	{
 		Sneak = true;
 	}
-
 	if (joykeystate.Gamepad.sThumbLX <= -(XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE - 6000))
 	{//Aがおされた(左)
 //		Xdate = -1;
@@ -1037,7 +1035,7 @@ void InputKeyAttack_2P(void)
 
 
 	//入力の有無を確認して分岐
-	if (GetkeyboardPress(DIK_SPACE) == true || joykeystate.Gamepad.bRightTrigger > XINPUT_GAMEPAD_TRIGGER_THRESHOLD || joykeystate.Gamepad.bLeftTrigger > XINPUT_GAMEPAD_TRIGGER_THRESHOLD)//トリガー
+	if (GetkeyboardPress(DIK_SPACE) == true || joykeystate.Gamepad.bRightTrigger > XINPUT_GAMEPAD_TRIGGER_THRESHOLD)//トリガー
 	{//スペースがおされた//L2キー
 		g_Player_2P.NowMotionDOWN = MOTIONTYPE_2P_ATTACK;
 		g_test2 = true;

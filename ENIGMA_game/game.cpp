@@ -32,10 +32,13 @@
 #include "screenui.h"
 #include "speechbubble.h"
 #include "text.h"
-#include"DebugModel.h"
+//#include"DebugModel.h"
 #include "item.h"
 #include "particle.h"
 #include"itemUI.h"
+#include "simple_motion_model.h"
+#include "advanced_motion_model.h"
+
 //仮
 #include "Model_Set_Save_Lode.h"
 
@@ -71,7 +74,6 @@
 	bool g_bClearMoneybox = false;
 
 
-
 	//ゲームループを一度でもしたか
 	bool GameLoopSave = false;
 
@@ -80,14 +82,6 @@
 //=============================
 void InitGame(void)
 {
-
-
-
-
-
-
-
-
 
 	g_EndGameFrame = GAME_END_DELAY;//クリアからゲーム終了までの余韻
 
@@ -112,7 +106,7 @@ void InitGame(void)
 	InitModel();
 	LoadModel();
 	InitStage();
-
+	InitAdvancedModel();
 
 	InitShadow();
 	InitMoneybox();
@@ -123,7 +117,7 @@ void InitGame(void)
 
 	InitPlayer();
 	InitPlayer_2P();
-
+	
 	InitSky();
 
 
@@ -133,6 +127,7 @@ void InitGame(void)
 	InitScreenUI();
 	InitSpeechBubble();
 	InitParticle();
+	InitSimpleModel();
 
 
 	//----------------------------制限時間
@@ -142,76 +137,17 @@ void InitGame(void)
 	InitLimitTime();
 	//-----------------------------
 
-	////仮配置置き場
-	////---------------------------------------------------------------------------------------------
-	////仮
-
-	////地下室モデル配置
-	//{
-	//	SetModel(D3DXVECTOR3(-600.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), MODELTYPE_CUBE);
-
-	//	SetModel(D3DXVECTOR3(-600.0f, 0.0f, 100.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), MODELTYPE_DOOR);
-	//	SetModel(D3DXVECTOR3(20.0f, 0.0f, -950.0f), D3DXVECTOR3(0.0f, D3DX_PI * 0.5, 0.0f), MODELTYPE_DOOR);
-
-	//	for (int nCntCARDBOARD_T = 0; nCntCARDBOARD_T < 7; nCntCARDBOARD_T++)
-	//	{
-	//		for (int nCntCARDBOARD_Y = 0; nCntCARDBOARD_Y < 3; nCntCARDBOARD_Y++)
-	//		{
-	//			SetModel(D3DXVECTOR3(-440.0f - (nCntCARDBOARD_T * 60.0f), 0.0f + (nCntCARDBOARD_Y * 50.0f), -200.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), MODELTYPE_CARDBOARD);
-	//		}
-	//	}
-
-	//	for (int nCntMETASHE_T = 0; nCntMETASHE_T < 2; nCntMETASHE_T++)
-	//	{
-	//		for (int nCntMETASHE_Y = 0; nCntMETASHE_Y < 3; nCntMETASHE_Y++)
-	//		{
-	//			SetModel(D3DXVECTOR3(-1000.0f + (nCntMETASHE_Y * 300.0f), 0.0f + (nCntMETASHE_T * 110.0f), -600.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), MODELTYPE_METARSHELF);
-	//			SetModel(D3DXVECTOR3(-1000.0f + (nCntMETASHE_Y * 300.0f), 0.0f + (nCntMETASHE_T * 110.0f), -820.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), MODELTYPE_METARSHELF);
-	//		}
-	//	}
-
-	//	SetModel(D3DXVECTOR3(-600.0f, 0.0f, -1200.0f), D3DXVECTOR3(0.0f, D3DX_PI, 0.0f), MODELTYPE_GARAGE);
-
-	//	for (int nCntT = 0; nCntT < 3; nCntT++)
-	//	{
-	//		for (int nCntY = 0; nCntY < 3; nCntY++)
-	//		{
-	//			SetModel(D3DXVECTOR3(0.0f, 0.0f + (nCntT * 50.0f), -1200.0f + (nCntY * 60.0f)), D3DXVECTOR3(0.0f, D3DX_PI * 0.5, 0.0f), MODELTYPE_CARDBOARD);
-	//		}
-	//	}
-
-	//	for (int nCntT = 0; nCntT < 3; nCntT++)
-	//	{
-	//		for (int nCntY = 0; nCntY < 3; nCntY++)
-	//		{
-	//			SetModel(D3DXVECTOR3(0.0f, 0.0f + (nCntT * 50.0f), -800.0f + (nCntY * 60.0f)), D3DXVECTOR3(0.0f, D3DX_PI * 0.5, 0.0f), MODELTYPE_CARDBOARD);
-	//		}
-	//	}
-	//}
-
-	////十字路モデル配置
-	//{
-	//	SetModel(D3DXVECTOR3(-600.0f, 0.0f, -2000.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), MODELTYPE_CUBE);
-
-	//	SetModel(D3DXVECTOR3(400.0f, 0.0f, -2900.0f), D3DXVECTOR3(0.0f, D3DX_PI * 0.5, 0.0f), MODELTYPE_DOOR);
-	//	SetModel(D3DXVECTOR3(-600.0f, 0.0f, -1900.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), MODELTYPE_DOOR);
-	//	SetModel(D3DXVECTOR3(-600.0f, 0.0f, -3900.0f), D3DXVECTOR3(0.0f, D3DX_PI, 0.0f), MODELTYPE_DOOR);
-	//	SetModel(D3DXVECTOR3(-1600.0f, 0.0f, -2900.0f), D3DXVECTOR3(0.0f, D3DX_PI * -0.5, 0.0f), MODELTYPE_DOOR);
-	//}
-
 	
+
 	InitMeshField();//------------------------デバッグ
 #if _DEBUG
 	if (GameLoopSave == false)
 	{
 	}
 
-
 	InitLine();
 
-
 #endif
-
 
 	//デバッグ-------------------
 	InitModel_SSL();
@@ -221,9 +157,8 @@ void InitGame(void)
 	//新規モデル置き場
 	NewSet_Debug_Model();
 
-
 	//デバッグモデル
-	InitDebugModel();
+//	InitDebugModel();
 
 	//-------------------あたり判定再計算
 	ExclusionCollision();
@@ -233,8 +168,6 @@ void InitGame(void)
 //=============================
 void UninitGame(void)
 {
-	//StopSound();
-
 	//振動ストップ
 	VibrationLeft(0);
 	VibrationRight(0);
@@ -255,7 +188,6 @@ void UninitGame(void)
 
 	UninitSky();
 
-
 	UninitTransferGate();
 	UninitActionZone();
 	UninitGameFade();
@@ -267,10 +199,13 @@ void UninitGame(void)
 	UninitItem_UI();
 
 	UninitMeshField();
+	UninitSimpleModel();
+	UninitAdvancedModel();
+
 #if _DEBUG
 
 	UninitLine();
-	UninitDebugModel();
+//	UninitDebugModel();
 #endif
 
 }
@@ -286,7 +221,6 @@ void UpdateGame(void)
 	pNowtime = GetNowTime();
 
 	g_bClearMoneybox = GetClearMoneyBox(); //金庫クリア確認
-	
 
 	Player* pPlayer;
 	pPlayer = GetPlayer();
@@ -301,6 +235,7 @@ void UpdateGame(void)
 	{//Pキー(ポーズ)が押された
 		g_bPause = g_bPause ? false : true;
 	}
+
 	if (GetJoypadTrigger(JOYKEY_B, 0) == true && pPlayer2->bMoneyBoxGimmick != true)
 	{//他のプレイヤーが金庫に触れてないときのみ
 		pPlayer->bMoneyBoxGimmick = pPlayer->bMoneyBoxGimmick ? false : true;
@@ -324,8 +259,6 @@ void UpdateGame(void)
 		SubLimitTime();
 		UpdateLimitTime();
 
-
-
 		//--------------------------------------------------------------------------------クリア、敗北条件
 		if (GetkeyboardPress(DIK_O) == true)//トリガー
 		{//oが押された(デバッグ用)
@@ -341,6 +274,7 @@ void UpdateGame(void)
 			//モード設定(フェードの後リザルト画面に移行)
 			SetFade(MODE_RESULT);
 		}
+
 		if (g_ClearFlag == true)
 		{
 	
@@ -355,8 +289,6 @@ void UpdateGame(void)
 			}
 		}
 
-
-		
 		//------------------------------------ゲームオーバー条件変更
 		if (pNowtime->NowTime <= 0 || pPlayer->bUse == false || pPlayer2->bUse == false)
 		{//ゲームオーバー
@@ -378,8 +310,6 @@ void UpdateGame(void)
 		}
 		//--------------------------------------------------------------------------------クリア、敗北条件ここまで
 	
-
-
 		g_nLoopCnt++;//出現タイミングで使用
 		
 		UpdateGameFade();
@@ -389,14 +319,13 @@ void UpdateGame(void)
 		UpdateLight();
 		UpdateCamera();//カメラ
 		UpdateModel();
+		UpdateAdvancedModel();
+
 		UpdateStage();
 
-		UpdateMeshField();
+//		UpdateMeshField();
 
-		
 		UpdateItem();
-
-
 
 		//--------------------プレイヤー
 		if (pPlayer->bMoneyBoxGimmick != true)
@@ -410,14 +339,9 @@ void UpdateGame(void)
 			bPlayer2inOK = true;
 		}
 		//--------------------
-
-
-
 		UpdateItem_UI(bPlayer1inOK, bPlayer2inOK);//入力受付可能かどうか
 
-
-
-
+		UpdateSimpleModel();
 
 
 		if ((pPlayer->bMoneyBoxGimmick == true || pPlayer2->bMoneyBoxGimmick == true))
@@ -444,7 +368,7 @@ void UpdateGame(void)
 		UpdateScreenUI();
 		UpdateSpeechBubble();
 		UpdateModel();
-		UpdateDebugModel();
+//		UpdateDebugModel();
 		UpdateParticle();
 
 	}
@@ -473,11 +397,6 @@ void DrawGame(void)
 
 	for (int nCnt = 0; nCnt < MAXCAMERA; nCnt++)
 	{
-
-
-		//// バックバッファクリア
-		//pDevice->Clear(0, NULL, D3DCLEAR_TARGET, D3DCOLOR_XRGB(0, 0, 0), 0.0f, 0);
-
 		// バッファのクリア(バックバッファ、Zバッファ)
 		pDevice->Clear(
 			0,
@@ -504,21 +423,21 @@ void DrawGame(void)
 		DrawBathGimmick();
 		DrawSteam();
 		DrawModel();
+		DrawSimpleModel();
 		DrawStage();
+
+		DrawAdvancedModel();
 
 		//特殊
 		DrawPlayer(nCnt);
 		DrawPlayer_2P(nCnt);
 
-
-
 		DrawTransferGate();
-
 
 #if _DEBUG
 		DrawActionZone();
 		DrawLine();
-		DrawDebugModel();
+//		DrawDebugModel();
 #endif
 		//αテストを有効
 		pDevice->SetRenderState(D3DRS_ALPHATESTENABLE, TRUE);
@@ -538,14 +457,7 @@ void DrawGame(void)
 	
 		//ビューポートの設定
 		pDevice->SetViewport(&pCamera[nCnt].viewport);
-
-
-
 	}
-
-	//ビューポートをもとに戻す
-	//ビューポートの設定
-	//pDevice->SetViewport(&g_fullScreen_Viewport);
 
 	//全画面ビューポート
 	D3DVIEWPORT9 FullViewport = GetViewPort();
@@ -565,24 +477,20 @@ void DrawGame(void)
 	}
 
 	DrawGameFade();
-
 	DrawLimitTime();
 	DrawScreenUI();
-
 	DrawItem_UI();
 
 	DrawTextSet(D3DXVECTOR3(550.0f, 660.0f, 0.0f), 20, FONT_AKABARASINDELERA, D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f), "Oキーでリザルト＆モデル配置をセーブ！");
 	DrawTextSet(D3DXVECTOR3(550.0f, 680.0f, 0.0f), 20, FONT_AKABARASINDELERA, D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f), "事故防止のためゲームループ後は無効！");
 	DrawTextSet(D3DXVECTOR3(550.0f, 700.0f, 0.0f), 20, FONT_AKABARASINDELERA, D3DXCOLOR(1.0f, 1.0f, 0.0f, 1.0f), "Xボタンでとりあえずアイテム出現");
 
-
-
 	if (g_bPause == true)
 	{
 		DrawPause();
 	}
 
-	DrawDebugDelC0mment();
+//	DrawDebugDelC0mment();
 }
 //===================================
 //Clear専用処理
@@ -616,7 +524,6 @@ void LoadModel(void)
 
 		//ファイルを閉じる
 		fclose(pFile);
-
 	}
 
 	else
@@ -656,10 +563,10 @@ void LoadField(void)
 		return;
 	}
 
-	for (int nCnt = 0; nCnt < g_nUseField; nCnt++)
-	{
-		//SetField(g_aFieldInfo[nCnt].pos, g_aFieldInfo[nCnt].rot, g_aFieldInfo[nCnt].fWide, g_aFieldInfo[nCnt].fDepth, g_aFieldInfo[nCnt].nType);
-	}
+	//for (int nCnt = 0; nCnt < g_nUseField; nCnt++)
+	//{
+	//	//SetField(g_aFieldInfo[nCnt].pos, g_aFieldInfo[nCnt].rot, g_aFieldInfo[nCnt].fWide, g_aFieldInfo[nCnt].fDepth, g_aFieldInfo[nCnt].nType);
+	//}
 }
 
 //===================================
@@ -688,10 +595,10 @@ void LoadWall(void)
 		return;
 	}
 
-	for (int nCnt = 0; nCnt < g_nUseWall; nCnt++)
-	{
-		//SetWall(g_aWallInfo[nCnt].pos, g_aWallInfo[nCnt].rot, g_aWallInfo[nCnt].fWide, g_aWallInfo[nCnt].fHeight, g_aModelInfo[nCnt].nType);
-	}
+	//for (int nCnt = 0; nCnt < g_nUseWall; nCnt++)
+	//{
+	//	//SetWall(g_aWallInfo[nCnt].pos, g_aWallInfo[nCnt].rot, g_aWallInfo[nCnt].fWide, g_aWallInfo[nCnt].fHeight, g_aModelInfo[nCnt].nType);
+	//}
 }
 
 
@@ -1038,15 +945,6 @@ void BoxCollisionPlayer(D3DXVECTOR3 PlayerMin, D3DXVECTOR3 PlayerMax, D3DXVECTOR
 //	//SetLine(D3DXVECTOR3(HitMax.x, HitMin.y, HitMin.z), D3DXVECTOR3(HitMax.x, HitMin.y, HitMax.z), D3DXCOLOR(0.0f, 1.0f, 1.0f, 1.0f));
 //
 //}
-
-
-
-
-
-
-
-
-
 
 
 //===================================
@@ -1780,39 +1678,8 @@ void BoxCollisionGate(D3DXVECTOR3 PlayerMin, D3DXVECTOR3 PlayerMax, D3DXVECTOR3 
 					}
 				}
 			}
-
-
 		}
-
-
 	}
-
-
-
-
-
-	////// 上下の辺
-	////SetLine(D3DXVECTOR3(HitMin.x, HitMax.y, HitMin.z), D3DXVECTOR3(HitMax.x, HitMax.y, HitMin.z), D3DXCOLOR(0.0f, 1.0f, 1.0f, 1.0f));
-	////SetLine(D3DXVECTOR3(HitMin.x, HitMin.y, HitMin.z), D3DXVECTOR3(HitMax.x, HitMin.y, HitMin.z), D3DXCOLOR(0.0f, 1.0f, 1.0f, 1.0f));
-
-	////SetLine(D3DXVECTOR3(HitMin.x, HitMax.y, HitMax.z), D3DXVECTOR3(HitMax.x, HitMax.y, HitMax.z), D3DXCOLOR(0.0f, 1.0f, 1.0f, 1.0f));
-	////SetLine(D3DXVECTOR3(HitMin.x, HitMin.y, HitMax.z), D3DXVECTOR3(HitMax.x, HitMin.y, HitMax.z), D3DXCOLOR(0.0f, 1.0f, 1.0f, 1.0f));
-
-	////// 側面の辺																											
-	////SetLine(D3DXVECTOR3(HitMin.x, HitMin.y, HitMin.z), D3DXVECTOR3(HitMin.x, HitMax.y, HitMin.z), D3DXCOLOR(0.0f, 1.0f, 1.0f, 1.0f));
-	////SetLine(D3DXVECTOR3(HitMax.x, HitMin.y, HitMin.z), D3DXVECTOR3(HitMax.x, HitMax.y, HitMin.z), D3DXCOLOR(0.0f, 1.0f, 1.0f, 1.0f));
-
-	////SetLine(D3DXVECTOR3(HitMin.x, HitMin.y, HitMax.z), D3DXVECTOR3(HitMin.x, HitMax.y, HitMax.z), D3DXCOLOR(0.0f, 1.0f, 1.0f, 1.0f));
-	////SetLine(D3DXVECTOR3(HitMax.x, HitMin.y, HitMax.z), D3DXVECTOR3(HitMax.x, HitMax.y, HitMax.z), D3DXCOLOR(0.0f, 1.0f, 1.0f, 1.0f));
-
-
-	////// その他の辺																									   
-	////SetLine(D3DXVECTOR3(HitMin.x, HitMin.y, HitMin.z), D3DXVECTOR3(HitMin.x, HitMin.y, HitMax.z), D3DXCOLOR(0.0f, 1.0f, 1.0f, 1.0f));
-	////SetLine(D3DXVECTOR3(HitMax.x, HitMax.y, HitMin.z), D3DXVECTOR3(HitMax.x, HitMax.y, HitMax.z), D3DXCOLOR(0.0f, 1.0f, 1.0f, 1.0f));
-
-	////SetLine(D3DXVECTOR3(HitMin.x, HitMax.y, HitMin.z), D3DXVECTOR3(HitMin.x, HitMax.y, HitMax.z), D3DXCOLOR(0.0f, 1.0f, 1.0f, 1.0f));
-	////SetLine(D3DXVECTOR3(HitMax.x, HitMin.y, HitMin.z), D3DXVECTOR3(HitMax.x, HitMin.y, HitMax.z), D3DXCOLOR(0.0f, 1.0f, 1.0f, 1.0f));
-
 }
 
 //===================================
@@ -1923,7 +1790,7 @@ void SphereCollisionZone(D3DXVECTOR3 PlayerPos, int PlayerIndex, int ZoneIndex)
 		if (bIn == true)
 		{//接触判定時
 
-			//pActionZone[ZoneIndex].ZoneColor = D3DXCOLOR(1.0f, 5.0f, 2.0f,0.2f);
+			pActionZone[ZoneIndex].ZoneColor = D3DXCOLOR(1.0f, 5.0f, 2.0f,0.2f);
 			pActionZone[ZoneIndex].bDrawOk = false;
 		}
 		else
@@ -1959,8 +1826,6 @@ void BoxCollisionItem(D3DXVECTOR3 PlayerMin, D3DXVECTOR3 PlayerMax, D3DXVECTOR3 
 	ITEM* pItem;
 	pItem = GetItem();
 
-
-
 	bool bGet = false;
 
 	if (HitPos.x >= PlayerMin.x && HitPos.x <= PlayerMax.x)
@@ -1970,7 +1835,6 @@ void BoxCollisionItem(D3DXVECTOR3 PlayerMin, D3DXVECTOR3 PlayerMax, D3DXVECTOR3 
 			if (HitPos.z >= PlayerMin.z && HitPos.z <= PlayerMax.z)
 			{
 				bGet = true;
-
 			}
 		}
 	}
@@ -1997,33 +1861,6 @@ void BoxCollisionItem(D3DXVECTOR3 PlayerMin, D3DXVECTOR3 PlayerMax, D3DXVECTOR3 
 		}
 	}
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

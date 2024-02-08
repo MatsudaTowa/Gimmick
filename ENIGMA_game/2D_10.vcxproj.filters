@@ -121,6 +121,12 @@
     <Filter Include="ソース ファイル\--++|    GAME   |++--\//GAME_SYSTEM//\BathGimmick">
       <UniqueIdentifier>{3db95dfe-61cc-4abf-ad8f-f8c9fec2750d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\--++|    GAME   |++--\//3D_Model//\SIMPLE_MOTION_MODEL">
+      <UniqueIdentifier>{e93977c8-db98-45c8-b630-2f8dae19895d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\--++|    GAME   |++--\//3D_Model//\ADVANCED_MOTION MODEL">
+      <UniqueIdentifier>{e281bbad-35ae-4c32-adc9-3661cad23f2b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="input.cpp">
@@ -234,6 +240,12 @@
     <ClCompile Include="steam.cpp">
       <Filter>ソース ファイル\--++|    GAME   |++--\//GAME_SYSTEM//\BathGimmick</Filter>
     </ClCompile>
+    <ClCompile Include="simple_motion_model.cpp">
+      <Filter>ソース ファイル\--++|    GAME   |++--\//3D_Model//\SIMPLE_MOTION_MODEL</Filter>
+    </ClCompile>
+    <ClCompile Include="advanced_motion_model.cpp">
+      <Filter>ソース ファイル\--++|    GAME   |++--\//3D_Model//\ADVANCED_MOTION MODEL</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="input.h">
@@ -346,6 +358,12 @@
     </ClInclude>
     <ClInclude Include="steam.h">
       <Filter>ソース ファイル\--++|    GAME   |++--\//GAME_SYSTEM//\BathGimmick</Filter>
+    </ClInclude>
+    <ClInclude Include="simple_motion_model.h">
+      <Filter>ソース ファイル\--++|    GAME   |++--\//3D_Model//\SIMPLE_MOTION_MODEL</Filter>
+    </ClInclude>
+    <ClInclude Include="advanced_motion_model.h">
+      <Filter>ソース ファイル\--++|    GAME   |++--\//3D_Model//\ADVANCED_MOTION MODEL</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
