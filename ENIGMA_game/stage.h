@@ -58,7 +58,7 @@ void DrawStage(void);
 STAGE* GetStage(void);
 
 //ï«ÇÃê›íË
-void SetStage(D3DXVECTOR3 Pos, float angle, float bes, float ver,TEXTYPE TexType);
+void SetStage(D3DXVECTOR3 Pos, D3DXVECTOR3 Rot, float bes, float ver,TEXTYPE TexType);
 
 
 #endif
