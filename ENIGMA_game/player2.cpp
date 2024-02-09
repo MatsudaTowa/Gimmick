@@ -20,6 +20,7 @@
 #include "game.h"
 #include "item.h"
 #include "stage.h"
+#include "hitcollision_mistake_prevention.h"
 
 
 
@@ -356,6 +357,24 @@ void UpdatePlayer_2P(void)
 		}
 	}
 
+
+
+	//“–‚½‚è”»’è”²‚¯–hŽ~/-----------------------------------------------------------------------------------------------------------------------------------------
+	COLLISION_PRE* pColisionPre;
+	pColisionPre = GetCollision_Pre();
+
+	for (int i = 0; i < MAXCOLLISION_PRE; i++)
+	{
+		if (pColisionPre[i].bUse == true)
+		{
+			D3DXVECTOR3 ColisionPreMin = D3DXVECTOR3(pColisionPre[i].pos + pColisionPre[i].Min);
+			D3DXVECTOR3 ColisionPreMax = D3DXVECTOR3(pColisionPre[i].pos + pColisionPre[i].Max);
+
+			//ƒvƒŒƒCƒ„[“¯Žm“–‚½‚è”»’è
+			BoxCollisionPlayer(PlayerMin_2P, PlayerMax_2P, ColisionPreMin, ColisionPreMax, 1);
+
+		}
+	}
 
 
 

@@ -15,7 +15,8 @@
 //#define MAX_WORD	(8192)
 //#define MAX_WORD3	(512)
 
-#define MAX_MODEL	(256) //モデルの最大数
+//#define MAX_MODEL	(256) //モデルの最大数
+//#define NUM_MODEL	(26) //モデルの種類
 #define MAX_FIELD	(256) //床の最大数
 #define MAX_WALL	(256) //壁の最大数
 #define GAME_END_DELAY	(180)//余韻

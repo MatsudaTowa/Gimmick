@@ -55,6 +55,7 @@ void InitItem_UI(void)
 	D3DXCreateTextureFromFile(pDevice, "data\\TEXTURE\\item002.png", &g_pTextureItem_UI[4]);//鍵だし
 	D3DXCreateTextureFromFile(pDevice, "data\\TEXTURE\\item003.png", &g_pTextureItem_UI[5]);//身代わり
 	D3DXCreateTextureFromFile(pDevice, "data\\TEXTURE\\item004.png", &g_pTextureItem_UI[6]);//式神
+	D3DXCreateTextureFromFile(pDevice, "data\\TEXTURE\\key000.png", &g_pTextureItem_UI[7]);//式神
 
 	
 	//アイテムUIの情報の初期化(いわゆる初期地点)
@@ -123,8 +124,7 @@ void InitItem_UI(void)
 	}
 
 
-
-
+	SetItem_UI(D3DXVECTOR3(SCREEN_WIDE-100.0f, 35.0f, 0), ITEM_UI_TYPE_KEYUI, ITEMTYPE_MAX, -1, 2);//鍵
 
 }
 //=============================
@@ -373,6 +373,14 @@ void UpdateItem_UI(bool Player1InputOK, bool Player2InputOK)
 			pVtx[3].pos = D3DXVECTOR3(g_ItemUI[nCntItem_UI].pos.x + ITEMUISIZE * 0.7f, g_ItemUI[nCntItem_UI].pos.y + ITEMUISIZE * 0.7f, 0.0f);
 
 		}
+		else if (g_ItemUI[nCntItem_UI].UItype == ITEM_UI_TYPE_KEYUI)
+		{
+			//頂点座標の更新-----------------------------------
+			pVtx[0].pos = D3DXVECTOR3(g_ItemUI[nCntItem_UI].pos.x - ITEMUISIZE2, g_ItemUI[nCntItem_UI].pos.y - ITEMUISIZE2, 0.0f);
+			pVtx[1].pos = D3DXVECTOR3(g_ItemUI[nCntItem_UI].pos.x + ITEMUISIZE2, g_ItemUI[nCntItem_UI].pos.y - ITEMUISIZE2, 0.0f);
+			pVtx[2].pos = D3DXVECTOR3(g_ItemUI[nCntItem_UI].pos.x - ITEMUISIZE2, g_ItemUI[nCntItem_UI].pos.y + ITEMUISIZE2, 0.0f);
+			pVtx[3].pos = D3DXVECTOR3(g_ItemUI[nCntItem_UI].pos.x + ITEMUISIZE2, g_ItemUI[nCntItem_UI].pos.y + ITEMUISIZE2, 0.0f);
+		}
 		else
 		{
 		//頂点座標の更新-----------------------------------
@@ -427,6 +435,17 @@ void DrawItem_UI(void)
 					//テクスチャの設定
 					pDevice->SetTexture(0, g_pTextureItem_UI[EscapeNum2 + 2]);//---------書き換え済み
 			}
+			else if (g_ItemUI[nCntItem_UI].UItype == ITEM_UI_TYPE_KEYUI)
+			{//アイテム自体
+
+					//列挙をintに
+			//	int EscapeNum2 = static_cast<int>(g_ItemUI[nCntItem_UI].nItemType);
+
+				//テクスチャの設定
+				pDevice->SetTexture(0, g_pTextureItem_UI[7]);//---------書き換え済み
+			}
+
+
 					//ポリゴンの描画
 			pDevice->DrawPrimitive(D3DPT_TRIANGLESTRIP,//プリミティブの種類
 				nCntItem_UI * 4,//描画する最初の頂点インデックス
@@ -462,11 +481,23 @@ void SetItem_UI(D3DXVECTOR3 pos, ITEM_UI_TYPE ItemUIType, ITEMTYPE ItemType, int
 			g_ItemUI[nCntItem_UI].PosNum = PosNum;
 			g_ItemUI[nCntItem_UI].PlayerNum = PlayerNum;
 
-			//頂点座標の更新-----------------------------------
-			pVtx[0].pos = D3DXVECTOR3(g_ItemUI[nCntItem_UI].pos.x - ITEMUISIZE, g_ItemUI[nCntItem_UI].pos.y - ITEMUISIZE, 0.0f);
-			pVtx[1].pos = D3DXVECTOR3(g_ItemUI[nCntItem_UI].pos.x + ITEMUISIZE, g_ItemUI[nCntItem_UI].pos.y - ITEMUISIZE, 0.0f);
-			pVtx[2].pos = D3DXVECTOR3(g_ItemUI[nCntItem_UI].pos.x - ITEMUISIZE, g_ItemUI[nCntItem_UI].pos.y + ITEMUISIZE, 0.0f);
-			pVtx[3].pos = D3DXVECTOR3(g_ItemUI[nCntItem_UI].pos.x + ITEMUISIZE, g_ItemUI[nCntItem_UI].pos.y + ITEMUISIZE, 0.0f);
+			if (ItemUIType == ITEM_UI_TYPE_KEYUI)
+			{
+				//頂点座標の更新-----------------------------------
+				pVtx[0].pos = D3DXVECTOR3(g_ItemUI[nCntItem_UI].pos.x - ITEMUISIZE2, g_ItemUI[nCntItem_UI].pos.y - ITEMUISIZE2, 0.0f);
+				pVtx[1].pos = D3DXVECTOR3(g_ItemUI[nCntItem_UI].pos.x + ITEMUISIZE2, g_ItemUI[nCntItem_UI].pos.y - ITEMUISIZE2, 0.0f);
+				pVtx[2].pos = D3DXVECTOR3(g_ItemUI[nCntItem_UI].pos.x - ITEMUISIZE2, g_ItemUI[nCntItem_UI].pos.y + ITEMUISIZE2, 0.0f);
+				pVtx[3].pos = D3DXVECTOR3(g_ItemUI[nCntItem_UI].pos.x + ITEMUISIZE2, g_ItemUI[nCntItem_UI].pos.y + ITEMUISIZE2, 0.0f);
+			}
+			else
+			{
+				//頂点座標の更新-----------------------------------
+				pVtx[0].pos = D3DXVECTOR3(g_ItemUI[nCntItem_UI].pos.x - ITEMUISIZE, g_ItemUI[nCntItem_UI].pos.y - ITEMUISIZE, 0.0f);
+				pVtx[1].pos = D3DXVECTOR3(g_ItemUI[nCntItem_UI].pos.x + ITEMUISIZE, g_ItemUI[nCntItem_UI].pos.y - ITEMUISIZE, 0.0f);
+				pVtx[2].pos = D3DXVECTOR3(g_ItemUI[nCntItem_UI].pos.x - ITEMUISIZE, g_ItemUI[nCntItem_UI].pos.y + ITEMUISIZE, 0.0f);
+				pVtx[3].pos = D3DXVECTOR3(g_ItemUI[nCntItem_UI].pos.x + ITEMUISIZE, g_ItemUI[nCntItem_UI].pos.y + ITEMUISIZE, 0.0f);
+			}
+			
 
 
 

@@ -23,6 +23,7 @@
 #include "game.h"
 #include "item.h"
 #include "stage.h"
+#include "hitcollision_mistake_prevention.h"
 
 
 
@@ -327,7 +328,7 @@ void UpdatePlayer(void)
 				D3DXVECTOR3 ModelMin = D3DXVECTOR3(pMapObject[i].pos + pMapObject[i].Minpos);
 				D3DXVECTOR3 ModelMax = D3DXVECTOR3(pMapObject[i].pos + pMapObject[i].Maxpos);
 
-				//プレイヤー同士当たり判定
+				//判定
 				BoxCollisionPlayer(PlayerMin, PlayerMax, ModelMin, ModelMax, 1);
 			}
 		}
@@ -352,15 +353,6 @@ void UpdatePlayer(void)
 	}
 
 
-
-
-
-
-
-
-
-
-
 	//行動エリア/-----------------------------------------------------------------------------------------------------------------------------------------
 	ACTIONZONE* pActionZone;
 	pActionZone = GetActionZone();
@@ -374,6 +366,25 @@ void UpdatePlayer(void)
 			//	break;
 		}
 	}
+
+	//当たり判定抜け防止/-----------------------------------------------------------------------------------------------------------------------------------------
+	COLLISION_PRE* pColisionPre;
+	pColisionPre = GetCollision_Pre();
+
+	for (int i = 0; i < MAXCOLLISION_PRE; i++)
+	{
+		if (pColisionPre[i].bUse == true)
+		{
+
+			D3DXVECTOR3 ColisionPreMin = D3DXVECTOR3(pColisionPre[i].pos + pColisionPre[i].Min);
+			D3DXVECTOR3 ColisionPreMax = D3DXVECTOR3(pColisionPre[i].pos + pColisionPre[i].Max);
+
+			//プレイヤー同士当たり判定
+			BoxCollisionPlayer(PlayerMin, PlayerMax, ColisionPreMin, ColisionPreMax, 1);
+
+		}
+	}
+
 
 
 

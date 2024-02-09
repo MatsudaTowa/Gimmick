@@ -15,10 +15,12 @@
 
 #include "item.h"
 
-#define ITEMTEXUINUM	(7)//テクスチャ最大数
+#define ITEMTEXUINUM	(8)//テクスチャ最大数
 #define MAXITEMUI	(74)//最大数
 
 #define ITEMUISIZE	(32.0f)//サイズ
+#define ITEMUISIZE2	(26.0f)//サイズ
+
 
 #define MAXGETITEM	(3)//アイテム最大所持数
 
@@ -29,6 +31,7 @@ typedef enum
 	ITEM_UI_TYPE_FRAME = 0,//枠
 	ITEM_UI_TYPE_POINTER, //ポインター
 	ITEM_UI_TYPE_MAINBODY,//本体
+	ITEM_UI_TYPE_KEYUI,//鍵UI
 	ITEM_UI_TYPE_MAX
 
 }ITEM_UI_TYPE;

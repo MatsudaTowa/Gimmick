@@ -92,7 +92,7 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
-      <WarningLevel>Level4</WarningLevel>
+      <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
@@ -152,6 +152,7 @@
     <ClCompile Include="Actionzone.cpp" />
     <ClCompile Include="advanced_motion_model.cpp" />
     <ClCompile Include="bathgimmick.cpp" />
+    <ClCompile Include="hitcollision_mistake_prevention.cpp" />
     <ClCompile Include="simple_motion_model.cpp" />
     <ClCompile Include="camera.cpp" />
     <ClCompile Include="DebugModel.cpp" />
@@ -193,6 +194,7 @@
     <ClInclude Include="Actionzone.h" />
     <ClInclude Include="advanced_motion_model.h" />
     <ClInclude Include="bathgimmick.h" />
+    <ClInclude Include="hitcollision_mistake_prevention.h" />
     <ClInclude Include="simple_motion_model.h" />
     <ClInclude Include="camera.h" />
     <ClInclude Include="DebugModel.h" />

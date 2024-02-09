@@ -674,7 +674,7 @@ void Draw(void)
 		DrawDebugText();
 
 		
-		DrawTextSet(D3DXVECTOR3(980.0f, 0.0f, 0.0f), 30, FONT_DOKIDOKI, D3DXCOLOR(0.0f, 1.0f, 0.5f, 1.0f),"テストーFPS%d", g_nCountFPS);
+		DrawTextSet(D3DXVECTOR3(900.0f, 0.0f, 0.0f), 0, FONT_DOKIDOKI, D3DXCOLOR(0.0f, 1.0f, 0.5f, 1.0f),"テストーFPS%d", g_nCountFPS);
 
 
 		
@@ -841,8 +841,8 @@ void DrawDebugText(void)
 
 
 
-	DrawTextSet(D3DXVECTOR3(1150.0f, 10.0f, 0.0f), 0, FONT_AKABARASINDELERA, D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f), "フレーム--%d", pPlayer->NowFrameCntDOWN);
-	DrawTextSet(D3DXVECTOR3(1050.0f, 700.0f, 0.0f), 0, FONT_AKABARASINDELERA, D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f), "１Pの位置--,%d,%d,%d", Xpos, Ypos, Zpos);
+	DrawTextSet(D3DXVECTOR3(750.0f, 0.0f, 0.0f), 0, FONT_AKABARASINDELERA, D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f), "フレーム--%d", pPlayer->NowFrameCntDOWN);
+	DrawTextSet(D3DXVECTOR3(950.0f, 700.0f, 0.0f), 0, FONT_AKABARASINDELERA, D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f), "１Pの位置--,%d,%d,%d", Xpos, Ypos, Zpos);
 
 }
 

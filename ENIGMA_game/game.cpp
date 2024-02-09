@@ -38,7 +38,7 @@
 #include"itemUI.h"
 #include "simple_motion_model.h"
 #include "advanced_motion_model.h"
-
+#include "hitcollision_mistake_prevention.h"
 //仮
 #include "Model_Set_Save_Lode.h"
 
@@ -126,6 +126,7 @@ void InitGame(void)
 
 
 	InitTransferGate();
+	InitCollision_Pre();
 	InitActionZone();
 	InitGameFade();
 	InitScreenUI();
@@ -205,6 +206,7 @@ void UninitGame(void)
 	UninitMeshField();
 	UninitSimpleModel();
 	UninitAdvancedModel();
+	UninitCollision_Pre();
 
 #if _DEBUG
 
@@ -362,6 +364,7 @@ void UpdateGame(void)
 //		UpdateDebugModel();
 		UpdateParticle();
 
+		UpdateCollision_Pre();
 	}
 	else
 	{//ポーズ中
@@ -424,6 +427,7 @@ void DrawGame(void)
 		DrawPlayer_2P(nCnt);
 
 		DrawTransferGate();
+		DrawCollision_Pre();
 
 #if _DEBUG
 		DrawActionZone();
@@ -1838,11 +1842,6 @@ void SphereCollisionZone(D3DXVECTOR3 PlayerPos, int PlayerIndex, int ZoneIndex)
 			pActionZone[ZoneIndex].bDrawOk = true;
 		}
 
-		//動作ごとに分岐
-		if (pActionZone[ZoneIndex].ActionType == ACTION_TYPE_MAX)
-		{//
-
-		}
 		if (pActionZone[ZoneIndex].ActionType == ACTION_TYPE_MONEYBOX && bIn == true)
 		{//金庫のギミック（2P）
 			if (GetJoypadTrigger(JOYKEY_X, 1) == true && pPlayer->bMoneyBoxGimmick != true)
@@ -1857,6 +1856,11 @@ void SphereCollisionZone(D3DXVECTOR3 PlayerPos, int PlayerIndex, int ZoneIndex)
 		if (pActionZone[ZoneIndex].ActionType == ACTION_TYPE_MONEYBOX && bIn == false)
 		{//外に出たら解除
 			pPlayer2->bMoneyBoxGimmick = false;
+		}
+		//動作ごとに分岐
+		if (pActionZone[ZoneIndex].ActionType == ACTION_TYPE_MAX)
+		{//
+
 		}
 		if (pActionZone[ZoneIndex].ActionType == ACTION_TYPE_BATH && bIn == true)
 		{//お風呂のギミック（1P）

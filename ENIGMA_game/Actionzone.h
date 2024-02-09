@@ -31,7 +31,7 @@
 typedef enum
 {
 	ACTION_TYPE_A = 0,
-	ACTION_TYPE_MONEYBOX = 0,
+	ACTION_TYPE_MONEYBOX, //金庫ギミック
 	ACTION_TYPE_BATH, //お風呂ギミック
 	ACTION_TYPE_LEVER_1, //レバーギミック
 	ACTION_TYPE_LEVER_2, //レバーギミック

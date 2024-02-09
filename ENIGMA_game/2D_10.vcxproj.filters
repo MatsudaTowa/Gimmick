@@ -127,6 +127,9 @@
     <Filter Include="ソース ファイル\--++|    GAME   |++--\//ITEM//\Item_UI_">
       <UniqueIdentifier>{af3cef64-ff3f-4bae-a1f9-00b48c2a0853}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\--++|    GAME   |++--\//Stage%28Arrangements%29//\HITCOLLISION＿MISTAKE_PREVENTION">
+      <UniqueIdentifier>{56c79d5a-e0c7-4b9d-b559-bd9a6465bf1a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="input.cpp">
@@ -246,6 +249,9 @@
     <ClCompile Include="advanced_motion_model.cpp">
       <Filter>ソース ファイル\--++|    GAME   |++--\//3D_Model//\ADVANCED_MOTION MODEL</Filter>
     </ClCompile>
+    <ClCompile Include="hitcollision_mistake_prevention.cpp">
+      <Filter>ソース ファイル\--++|    GAME   |++--\//Stage%28Arrangements%29//\HITCOLLISION＿MISTAKE_PREVENTION</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="input.h">
@@ -364,6 +370,9 @@
     </ClInclude>
     <ClInclude Include="advanced_motion_model.h">
       <Filter>ソース ファイル\--++|    GAME   |++--\//3D_Model//\ADVANCED_MOTION MODEL</Filter>
+    </ClInclude>
+    <ClInclude Include="hitcollision_mistake_prevention.h">
+      <Filter>ソース ファイル\--++|    GAME   |++--\//Stage%28Arrangements%29//\HITCOLLISION＿MISTAKE_PREVENTION</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
