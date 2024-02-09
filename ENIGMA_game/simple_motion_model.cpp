@@ -267,3 +267,11 @@ void SetSimpleModel(SIMPLEMOTIONMODEL SetUpName_Index,D3DXVECTOR3 pos,D3DXVECTOR
 		//エラー
 	}
 }
+
+//=============================
+//鍵スポーンしたか取得
+//=============================
+bool GetSpawnKey(void)
+{
+	return g_bKeyspawn;
+}

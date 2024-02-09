@@ -1792,6 +1792,19 @@ void SphereCollisionZone(D3DXVECTOR3 PlayerPos, int PlayerIndex, int ZoneIndex)
 					RunWater(0);
 				}
 			}
+			
+			bool pSpawnKey = GetSpawnKey();
+			SPEECHBUBBLE* pSpeachBubble = GetSpeechBubble();
+
+			if ((pActionZone[ZoneIndex].ActionType == ACTION_TYPE_LEVER_1
+				|| pActionZone[ZoneIndex].ActionType == ACTION_TYPE_LEVER_2)
+				&& pSpawnKey == true)
+			{//鍵がスポーンしたら削除
+				pActionZone[ZoneIndex].bUse = false;
+				pSpeachBubble[ZoneIndex].bUse = false;
+
+			}
+
 			if (pActionZone[ZoneIndex].ActionType == ACTION_TYPE_LEVER_1 && bIn == true)
 			{//レバーのギミック（1P）
 				if (GetJoypadPress(JOYKEY_X, 0) == true)
@@ -1842,6 +1855,18 @@ void SphereCollisionZone(D3DXVECTOR3 PlayerPos, int PlayerIndex, int ZoneIndex)
 				RunWater(1);
 			}
 		}
+
+		bool pSpawnKey = GetSpawnKey();
+		SPEECHBUBBLE* pSpeachBubble = GetSpeechBubble();
+
+		if ((pActionZone[ZoneIndex].ActionType == ACTION_TYPE_LEVER_1
+			|| pActionZone[ZoneIndex].ActionType == ACTION_TYPE_LEVER_2)
+			&& pSpawnKey == true)
+		{//鍵がスポーンしたら削除
+			pActionZone[ZoneIndex].bUse = false;
+			pSpeachBubble[ZoneIndex].bUse = false;
+		}
+
 		if (pActionZone[ZoneIndex].ActionType == ACTION_TYPE_LEVER_1 && bIn == true)
 		{//レバーのギミック（1P）
 			if (GetJoypadPress(JOYKEY_X, 1) == true)

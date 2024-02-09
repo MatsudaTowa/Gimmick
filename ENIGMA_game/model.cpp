@@ -349,6 +349,12 @@ void SetModel(D3DXVECTOR3 pos, D3DXVECTOR3 rot, ModelType nType)
 					, BATHWATER_DEPTH);
 				SetActionZone(g_aModel[nCnt].pos, BATH_ACTIONZONE_RADIUS, ACTION_TYPE_BATH, D3DXCOLOR(1.0f, 1.0f, 0.0f, 0.7f));
 			}
+			if (g_aModel[nCnt].nType == MODELTYPE_KEY1
+				|| g_aModel[nCnt].nType == MODELTYPE_KEY2
+				|| g_aModel[nCnt].nType == MODELTYPE_KEY3)
+			{
+				SetActionZone(g_aModel[nCnt].pos, BATH_ACTIONZONE_RADIUS, ACTION_TYPE_KEY, D3DXCOLOR(0.5f, 0.5f, 0.0f, 0.7f));
+			}
 			//SetActionZone(g_aModel[nCnt].pos, BATH_ACTIONZONE_RADIUS, ACTION_TYPE_MAX, D3DXCOLOR(1.0f, 1.0f, 0.0f, 0.7f));
 
 
@@ -413,7 +419,17 @@ void SetModel(D3DXVECTOR3 pos, D3DXVECTOR3 rot, ModelType nType)
 			g_aModel[g_aModel[nCnt].nType].pMesh->UnlockVertexBuffer();
 
 			g_aModel[nCnt].bUse = true;
-			g_aModel[nCnt].bCollision = true;
+
+			if (g_aModel[nCnt].nType == MODELTYPE_KEY1
+				|| g_aModel[nCnt].nType == MODELTYPE_KEY2
+				|| g_aModel[nCnt].nType == MODELTYPE_KEY3)
+			{//åÆÇÃÇ›ìñÇΩÇËîªíËçÌèú
+				g_aModel[nCnt].bCollision = false;
+			}
+			else
+			{
+				g_aModel[nCnt].bCollision = true;
+			}
 			break;
 		}
 	}
