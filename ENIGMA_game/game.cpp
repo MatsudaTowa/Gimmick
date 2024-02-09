@@ -1842,7 +1842,20 @@ void SphereCollisionZone(D3DXVECTOR3 PlayerPos, int PlayerIndex, int ZoneIndex)
 				g_nHaveKey++;
 				pSpeachBubble[ZoneIndex].bUse = false;
 				pActionZone[ZoneIndex].bUse = false;
+				switch (pActionZone[ZoneIndex].ActionType)
+				{
+				case ACTION_TYPE_KEY_1:
+					GetKey(MODELTYPE_KEY1);
+					break;
 
+				case ACTION_TYPE_KEY_2:
+					GetKey(MODELTYPE_KEY2);
+					break;
+
+				case ACTION_TYPE_KEY_3:
+					GetKey(MODELTYPE_KEY3);
+					break;
+				}
 			}
 		}
 		
@@ -1930,6 +1943,20 @@ void SphereCollisionZone(D3DXVECTOR3 PlayerPos, int PlayerIndex, int ZoneIndex)
 				g_nHaveKey++;
 				pActionZone[ZoneIndex].bUse = false;
 				pSpeachBubble[ZoneIndex].bUse = false;
+				switch (pActionZone[ZoneIndex].ActionType)
+				{
+				case ACTION_TYPE_KEY_1:
+					GetKey(MODELTYPE_KEY1);
+					break;
+
+				case ACTION_TYPE_KEY_2:
+					GetKey(MODELTYPE_KEY2);
+					break;
+
+				case ACTION_TYPE_KEY_3:
+					GetKey(MODELTYPE_KEY3);
+					break;
+				}
 			}
 		}
 	}

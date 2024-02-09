@@ -448,9 +448,15 @@ void SetModel(D3DXVECTOR3 pos, D3DXVECTOR3 rot, ModelType nType)
 //=============================================
 //Œ®Šl“¾ˆ—
 //=============================================
-void GetKey(int KeyIndex)
+void GetKey(ModelType nType)
 {
-
+	for (int nCnt = 0; nCnt < MAX_MODEL; nCnt++)
+	{
+		if (g_aModel[nCnt].bUse == true && g_aModel[nCnt].nType == nType)
+		{
+			g_aModel[nCnt].bUse = false;
+		}
+	}
 }
 //=============================================
 //ƒ|ƒŠƒSƒ“‚Ìî•ñæ“¾

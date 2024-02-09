@@ -70,7 +70,7 @@ void UninitModel(void);
 void UpdateModel(void);
 void DrawModel(void);
 void SetModel(D3DXVECTOR3 pos, D3DXVECTOR3 rot,ModelType nType);
-void GetKey(int nKeyIndex);
+void GetKey(ModelType nType);
 
 MAPOBJECT* GetMapObject(void);
 
