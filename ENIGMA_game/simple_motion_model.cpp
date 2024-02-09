@@ -54,6 +54,7 @@ DWORD dwNumMatSimpleModel[SIMPLEMOTIONMODEL_MAX] = {};//マテリアルの数
 
 bool g_bOnLever1;
 bool g_bOnLever2;
+bool g_bKeyspawn; 
 
 
 //=============================
@@ -71,6 +72,7 @@ void InitSimpleModel(void)
 
 	g_bOnLever1 = false; //レバーOFF
 	g_bOnLever2 = false; //レバーOFF
+	g_bKeyspawn = false; 
 
 
 	//ここから初期値セット
@@ -194,6 +196,7 @@ void DrawSimpleModel(void)
 		}
 	}
 }
+
 //=============================
 //レバーON処理
 //=============================
@@ -208,6 +211,29 @@ void LaverOn(void)
 	{
 		g_ModelInfo[SIMPLEMOTIONMODEL_LEVER_BLUE_LEVER].SinpleModel.rot.x -= 0.1f;
 	}
+
+	if (g_ModelInfo[SIMPLEMOTIONMODEL_LEVER_BLUE_LEVER].SinpleModel.rot.x <= -1.75f
+		&& g_ModelInfo[SIMPLEMOTIONMODEL_LEVER_BLUE_LEVER].SinpleModel.rot.x <= -1.75f
+		&& g_bKeyspawn == false)
+	{
+		g_bKeyspawn = true;
+		SpawnKey();
+	}
+}
+
+//=============================
+//キースポーン処理
+//=============================
+void SpawnKey(void)
+{
+	SetModel(D3DXVECTOR3(g_ModelInfo[SIMPLEMOTIONMODEL_LEVER_BLUE_ROOT].SinpleModel.pos.x,
+		20.0f,
+		g_ModelInfo[SIMPLEMOTIONMODEL_LEVER_BLUE_ROOT].SinpleModel.pos.z),
+		D3DXVECTOR3(0.0f, 0.0f, 0.0f), MODELTYPE_KEY1);
+	SetModel(D3DXVECTOR3(g_ModelInfo[SIMPLEMOTIONMODEL_LEVER_RED_ROOT].SinpleModel.pos.x,
+		20.0f,
+		g_ModelInfo[SIMPLEMOTIONMODEL_LEVER_RED_ROOT].SinpleModel.pos.z),
+		D3DXVECTOR3(0.0f, 0.0f, 0.0f), MODELTYPE_KEY2);
 }
 
 //=============================
