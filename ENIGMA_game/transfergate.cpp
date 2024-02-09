@@ -45,7 +45,7 @@ void InitTransferGate(void)
 
 
 
-//---------------------座標------------------------最小--------------------最大---------自分の番号----転移先の番号--色--強制転移かどうか---------行動ボタンで転移かどうか
+//---------------------座標------------------------最小--------------------最大---------自分の番号----転移先の番号---自分の方向----色--強制転移かどうか---------行動ボタンで転移かどうか
 // ペアで２つごとに記入--色は単色で(合成色を他のに使用したい)
     //
     //---****備考--行動ボタン転移は、転位方向(TRANS_ANGLE～)を「TRANS_ANGLE_MAX」にできない。方向を指定するべし
@@ -56,6 +56,10 @@ void InitTransferGate(void)
     //---通過方向
     SetTransferGate(D3DXVECTOR3(100.0f, 0.0f, 0.0f), D3DXVECTOR3(-50.0f, 0.0f, -60.0f), D3DXVECTOR3(50.0f, 100.0f, 60.0f), 0, 1, TRANS_ANGLE_MIN_X, D3DXCOLOR(1.0f, 0.0f, 0.0f, 0.7f),false,true);
     SetTransferGate(D3DXVECTOR3(-50.0f, 0.0f, -1000.0f), D3DXVECTOR3(-50.0f, 0.0f, -60.0f), D3DXVECTOR3(50.0f, 100.0f, 60.0f), 1, 0, TRANS_ANGLE_MIN_X, D3DXCOLOR(1.0f, 0.0f, 0.0f, 0.7f),false, true);
+
+    //---通過方向
+    SetTransferGate(D3DXVECTOR3(-600.0f, 0.0f, -2100.0f), D3DXVECTOR3(-50.0f, 0.0f, -60.0f), D3DXVECTOR3(50.0f, 100.0f, 60.0f), 2, 3, TRANS_ANGLE_MIN_Z, D3DXCOLOR(1.0f, 0.0f, 0.0f, 0.7f), false, true);
+    SetTransferGate(D3DXVECTOR3(-600.0f, 0.0f, 100.0f), D3DXVECTOR3(-50.0f, 0.0f, -60.0f), D3DXVECTOR3(50.0f, 100.0f, 60.0f), 3, 2, TRANS_ANGLE_MIN_Z, D3DXCOLOR(1.0f, 0.0f, 0.0f, 0.7f), false, true);
 
     ////--出現方向指定
     //SetTransferGate(D3DXVECTOR3(200.0f, 100.0f, -300.0f), D3DXVECTOR3(-100.0f, 0.0f, -60.0f), D3DXVECTOR3(100.0f, 100.0f, 60.0f), 2, 3, TRANS_ANGLE_MAX_Z, D3DXCOLOR(1.0f, 1.0f, 0.0f, 0.7f),false, true);

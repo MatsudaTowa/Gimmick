@@ -292,6 +292,7 @@ void UpdatePlayer_2P(void)
 	{
 		if (pTransferGate[nCntGate].bUse == true)
 		{
+
 			D3DXVECTOR3 GateMin = D3DXVECTOR3(pTransferGate[nCntGate].pos + pTransferGate[nCntGate].GateMin);
 			D3DXVECTOR3 GateMax = D3DXVECTOR3(pTransferGate[nCntGate].pos + pTransferGate[nCntGate].GateMax);
 
