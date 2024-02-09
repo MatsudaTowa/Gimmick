@@ -1106,11 +1106,11 @@ void InputKeyAttack(void)
 		g_test = true;
 	}
 
-	//アクション
-	if (GetJoypadTrigger(JOYKEY_X, 0) == true)
-	{
-		g_Player.bAction = true;
-	}
+	////アクション
+	//if (GetJoypadTrigger(JOYKEY_X, 0) == true)
+	//{
+	//	g_Player.bAction = true;
+	//}
 
 	if (GetJoypadTrigger(JOYKEY_Y, 0) == true)
 	{

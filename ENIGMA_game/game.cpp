@@ -1777,8 +1777,8 @@ void SphereCollisionZone(D3DXVECTOR3 PlayerPos, int PlayerIndex, int ZoneIndex)
 			pActionZone[ZoneIndex].bDrawOk = true;
 		}
 
-		if (pPlayer->bAction == true)
-		{//アクション
+		//if (pPlayer->bAction == true)
+		//{//アクション
 
 			//動作ごとに分岐
 			if (pActionZone[ZoneIndex].ActionType==ACTION_TYPE_MAX)
@@ -1803,10 +1803,6 @@ void SphereCollisionZone(D3DXVECTOR3 PlayerPos, int PlayerIndex, int ZoneIndex)
 					g_bLever1 = false;
 				}
 			}
-			else if (pActionZone[ZoneIndex].ActionType == ACTION_TYPE_LEVER_1 && bIn == false)
-			{//レバーのギミック（1P）
-				g_bLever1 = false;
-			}
 			if (pActionZone[ZoneIndex].ActionType == ACTION_TYPE_LEVER_2 && bIn == true)
 			{//レバーのギミック（1P）
 				if (GetJoypadPress(JOYKEY_X, 0) == true)
@@ -1817,15 +1813,10 @@ void SphereCollisionZone(D3DXVECTOR3 PlayerPos, int PlayerIndex, int ZoneIndex)
 				{
 					g_bLever2 = false;
 				}
-
-			}
-			else if (pActionZone[ZoneIndex].ActionType == ACTION_TYPE_LEVER_2 && bIn == false)
-			{//レバーのギミック（1P）
-				g_bLever2 = false;
 			}
 		}
-		
-	}
+	//	
+	//}
 	if (PlayerIndex == 1)
 	{//2Pの時
 		if (bIn == true)
@@ -1839,54 +1830,44 @@ void SphereCollisionZone(D3DXVECTOR3 PlayerPos, int PlayerIndex, int ZoneIndex)
 			pActionZone[ZoneIndex].bDrawOk = true;
 		}
 
-		if (pPlayer2->bAction == true)
-		{//アクション
-			//動作ごとに分岐
-			if (pActionZone[ZoneIndex].ActionType == ACTION_TYPE_MAX)
-			{//
+		//動作ごとに分岐
+		if (pActionZone[ZoneIndex].ActionType == ACTION_TYPE_MAX)
+		{//
 
-			}
-			if (pActionZone[ZoneIndex].ActionType == ACTION_TYPE_BATH && bIn == true)
-			{//お風呂のギミック（1P）
-				if (GetJoypadTrigger(JOYKEY_X, 1) == true)
-				{//お風呂のギミック作動
-					RunWater(1);
-				}
-			}
-			if (pActionZone[ZoneIndex].ActionType == ACTION_TYPE_LEVER_1 && bIn == true)
-			{//レバーのギミック（1P）
-				if (GetJoypadPress(JOYKEY_X, 1) == true)
-				{//レバーのギミック作動
-					g_bLever1 = true;
-				}
-				if (GetJoypadRelease(JOYKEY_X, 1) == true)
-				{
-					g_bLever1 = false;
-				}
-			}
-			else if (pActionZone[ZoneIndex].ActionType == ACTION_TYPE_LEVER_1 && bIn == false)
-			{//レバーのギミック（1P）
-				g_bLever1 = false;
-			}
-			if (pActionZone[ZoneIndex].ActionType == ACTION_TYPE_LEVER_2 && bIn == true)
-			{//レバーのギミック（1P）
-				if (GetJoypadPress(JOYKEY_X, 1) == true)
-				{//レバーのギミック作動
-					g_bLever2 = true;
-				}
-				if (GetJoypadRelease(JOYKEY_X, 1) == true)
-				{
-					g_bLever2 = false;
-				}
-
-			}
-			else if (pActionZone[ZoneIndex].ActionType == ACTION_TYPE_LEVER_2 && bIn == false)
-			{//レバーのギミック（1P）
-				g_bLever2 = false;
+		}
+		if (pActionZone[ZoneIndex].ActionType == ACTION_TYPE_BATH && bIn == true)
+		{//お風呂のギミック（1P）
+			if (GetJoypadTrigger(JOYKEY_X, 1) == true)
+			{//お風呂のギミック作動
+				RunWater(1);
 			}
 		}
-		
+		if (pActionZone[ZoneIndex].ActionType == ACTION_TYPE_LEVER_1 && bIn == true)
+		{//レバーのギミック（1P）
+			if (GetJoypadPress(JOYKEY_X, 1) == true)
+			{//レバーのギミック作動
+				g_bLever1 = true;
+			}
+			if (GetJoypadRelease(JOYKEY_X, 1) == true)
+			{
+				g_bLever1 = false;
+			}
+		}
+		if (pActionZone[ZoneIndex].ActionType == ACTION_TYPE_LEVER_2 && bIn == true)
+		{//レバーのギミック（1P）
+			if (GetJoypadPress(JOYKEY_X, 1) == true)
+			{//レバーのギミック作動
+				g_bLever2 = true;
+			}
+			if (GetJoypadRelease(JOYKEY_X, 1) == true)
+			{
+				g_bLever2 = false;
+			}
+
+		}
 	}
+		
+
 }
 
 
