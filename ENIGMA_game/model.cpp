@@ -356,6 +356,10 @@ void SetModel(D3DXVECTOR3 pos, D3DXVECTOR3 rot, ModelType nType)
 			{
 				SetActionZone(g_aModel[nCnt].pos, BATH_ACTIONZONE_RADIUS, ACTION_TYPE_KEY, D3DXCOLOR(0.5f, 0.5f, 0.0f, 0.7f));
 			}
+			if (g_aModel[nCnt].nType == MODELTYPE_SAFE)
+			{
+				SetActionZone(g_aModel[nCnt].pos, BATH_ACTIONZONE_RADIUS, ACTION_TYPE_MONEYBOX, D3DXCOLOR(0.0f, 0.5f, 0.0f, 0.7f));
+			}
 			//SetActionZone(g_aModel[nCnt].pos, BATH_ACTIONZONE_RADIUS, ACTION_TYPE_MAX, D3DXCOLOR(1.0f, 1.0f, 0.0f, 0.7f));
 
 

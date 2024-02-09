@@ -240,23 +240,6 @@ void UpdateGame(void)
 		g_bPause = g_bPause ? false : true;
 	}
 
-	if (GetJoypadTrigger(JOYKEY_B, 0) == true && pPlayer2->bMoneyBoxGimmick != true)
-	{//他のプレイヤーが金庫に触れてないときのみ
-		pPlayer->bMoneyBoxGimmick = pPlayer->bMoneyBoxGimmick ? false : true;
-		if (pPlayer->bMoneyBoxGimmick == true)
-		{
-			g_MoneyboxPlayer = false;
-		}
-	}
-	else if (GetJoypadTrigger(JOYKEY_B, 1) == true && pPlayer->bMoneyBoxGimmick != true)
-	{
-		pPlayer2->bMoneyBoxGimmick = pPlayer2->bMoneyBoxGimmick ? false : true;
-		if (pPlayer2->bMoneyBoxGimmick == true)
-		{
-			g_MoneyboxPlayer = true;
-		}
-	}
-
 	if (g_bPause == false)
 	{//ポーズ中でなければ
 
@@ -332,16 +315,16 @@ void UpdateGame(void)
 		UpdateItem();
 
 		//--------------------プレイヤー
-		if (pPlayer->bMoneyBoxGimmick != true)
-		{//ギミックを操作していたらプレイヤーを止める(仮) ※ギミック中用のモーション出来たらそれに切り替え
+		//if (pPlayer->bMoneyBoxGimmick != true)
+		//{//ギミックを操作していたらプレイヤーを止める(仮) ※ギミック中用のモーション出来たらそれに切り替え
 			UpdatePlayer();
 			bPlayer1inOK = true;
-		}
-		if (pPlayer2->bMoneyBoxGimmick != true)
-		{//ギミックを操作していたらプレイヤーを止める(仮) ※ギミック中用のモーション出来たらそれに切り替え
+		//}
+		//if (pPlayer2->bMoneyBoxGimmick != true)
+		//{//ギミックを操作していたらプレイヤーを止める(仮) ※ギミック中用のモーション出来たらそれに切り替え
 			UpdatePlayer_2P();
 			bPlayer2inOK = true;
-		}
+		//}
 		//--------------------
 		UpdateItem_UI(bPlayer1inOK, bPlayer2inOK);//入力受付可能かどうか
 
@@ -1784,6 +1767,21 @@ void SphereCollisionZone(D3DXVECTOR3 PlayerPos, int PlayerIndex, int ZoneIndex)
 		{//
 
 		}
+		if (pActionZone[ZoneIndex].ActionType == ACTION_TYPE_MONEYBOX && bIn == true)
+		{//金庫のギミック（1P）
+			if (GetJoypadTrigger(JOYKEY_X, 0) == true && pPlayer2->bMoneyBoxGimmick != true)
+			{//金庫のギミック作動
+				pPlayer->bMoneyBoxGimmick = pPlayer->bMoneyBoxGimmick ? false : true;
+				if (pPlayer->bMoneyBoxGimmick == true)
+				{
+					g_MoneyboxPlayer = false;
+				}
+			}
+		}
+		if (pActionZone[ZoneIndex].ActionType == ACTION_TYPE_MONEYBOX && bIn == false)
+		{//外に出たら解除
+			pPlayer->bMoneyBoxGimmick = false;
+		}
 		if (pActionZone[ZoneIndex].ActionType == ACTION_TYPE_BATH && bIn == true)
 		{//お風呂のギミック（1P）
 			if (GetJoypadTrigger(JOYKEY_X, 0) == true)
@@ -1844,6 +1842,21 @@ void SphereCollisionZone(D3DXVECTOR3 PlayerPos, int PlayerIndex, int ZoneIndex)
 		if (pActionZone[ZoneIndex].ActionType == ACTION_TYPE_MAX)
 		{//
 
+		}
+		if (pActionZone[ZoneIndex].ActionType == ACTION_TYPE_MONEYBOX && bIn == true)
+		{//金庫のギミック（2P）
+			if (GetJoypadTrigger(JOYKEY_X, 1) == true && pPlayer->bMoneyBoxGimmick != true)
+			{//金庫のギミック作動
+				pPlayer2->bMoneyBoxGimmick = pPlayer2->bMoneyBoxGimmick ? false : true;
+				if (pPlayer2->bMoneyBoxGimmick == true)
+				{
+					g_MoneyboxPlayer = true;
+				}
+			}
+		}
+		if (pActionZone[ZoneIndex].ActionType == ACTION_TYPE_MONEYBOX && bIn == false)
+		{//外に出たら解除
+			pPlayer2->bMoneyBoxGimmick = false;
 		}
 		if (pActionZone[ZoneIndex].ActionType == ACTION_TYPE_BATH && bIn == true)
 		{//お風呂のギミック（1P）

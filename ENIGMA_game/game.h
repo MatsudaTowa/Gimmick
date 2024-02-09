@@ -16,7 +16,6 @@
 //#define MAX_WORD3	(512)
 
 #define MAX_MODEL	(256) //ƒ‚ƒfƒ‹‚ÌÅ‘å”
-#define NUM_MODEL	(26) //ƒ‚ƒfƒ‹‚Ìí—Ş
 #define MAX_FIELD	(256) //°‚ÌÅ‘å”
 #define MAX_WALL	(256) //•Ç‚ÌÅ‘å”
 #define GAME_END_DELAY	(180)//—]‰C
