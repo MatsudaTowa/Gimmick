@@ -54,17 +54,18 @@ void InitTransferGate(void)
     //-----基本はボタンで移動かつみんなで移動になるかも
 
     //---通過方向
-    SetTransferGate(D3DXVECTOR3(2000.0f, 0.0f, -700.0f), D3DXVECTOR3(-100.0f, 0.0f, -60.0f), D3DXVECTOR3(100.0f, 100.0f, 60.0f), 0, 1, TRANS_ANGLE_MAX_X, D3DXCOLOR(1.0f, 0.0f, 0.0f, 0.7f),false,true);
-    SetTransferGate(D3DXVECTOR3(2000.0f, 0.0f, 700.0f), D3DXVECTOR3(-100.0f, 0.0f, -60.0f), D3DXVECTOR3(100.0f, 100.0f, 60.0f), 1, 0, TRANS_ANGLE_MAX_X, D3DXCOLOR(1.0f, 0.0f, 0.0f, 0.7f),false, true);
+    SetTransferGate(D3DXVECTOR3(100.0f, 0.0f, 0.0f), D3DXVECTOR3(-50.0f, 0.0f, -60.0f), D3DXVECTOR3(50.0f, 100.0f, 60.0f), 0, 1, TRANS_ANGLE_MIN_X, D3DXCOLOR(1.0f, 0.0f, 0.0f, 0.7f),false,true);
+    SetTransferGate(D3DXVECTOR3(-50.0f, 0.0f, -1000.0f), D3DXVECTOR3(-50.0f, 0.0f, -60.0f), D3DXVECTOR3(50.0f, 100.0f, 60.0f), 1, 0, TRANS_ANGLE_MIN_X, D3DXCOLOR(1.0f, 0.0f, 0.0f, 0.7f),false, true);
 
-    //--出現方向指定
-    SetTransferGate(D3DXVECTOR3(200.0f, 100.0f, -300.0f), D3DXVECTOR3(-100.0f, 0.0f, -60.0f), D3DXVECTOR3(100.0f, 100.0f, 60.0f), 2, 3, TRANS_ANGLE_MAX_Z, D3DXCOLOR(1.0f, 1.0f, 0.0f, 0.7f),false, true);
-    SetTransferGate(D3DXVECTOR3(200.0f, 0.0f, 300.0f), D3DXVECTOR3(-100.0f, 0.0f, -60.0f), D3DXVECTOR3(100.0f, 100.0f, 60.0f), 3, 2, TRANS_ANGLE_MIN_Z, D3DXCOLOR(1.0f, 1.0f, 0.0f, 0.7f), false, true);
+    ////--出現方向指定
+    //SetTransferGate(D3DXVECTOR3(200.0f, 100.0f, -300.0f), D3DXVECTOR3(-100.0f, 0.0f, -60.0f), D3DXVECTOR3(100.0f, 100.0f, 60.0f), 2, 3, TRANS_ANGLE_MAX_Z, D3DXCOLOR(1.0f, 1.0f, 0.0f, 0.7f),false, true);
+    //SetTransferGate(D3DXVECTOR3(200.0f, 0.0f, 300.0f), D3DXVECTOR3(-100.0f, 0.0f, -60.0f), D3DXVECTOR3(100.0f, 100.0f, 60.0f), 3, 2, TRANS_ANGLE_MIN_Z, D3DXCOLOR(1.0f, 1.0f, 0.0f, 0.7f), false, true);
     
 
-    //---通過方向
-    SetTransferGate(D3DXVECTOR3(-2000.0f, 0.0f, -700.0f), D3DXVECTOR3(-100.0f, 0.0f, -60.0f), D3DXVECTOR3(100.0f, 100.0f, 60.0f), 4, 5, TRANS_ANGLE_MIN_X, D3DXCOLOR(1.0f, 0.0f, 1.0f, 0.7f), true, true);
-    SetTransferGate(D3DXVECTOR3(-2000.0f, 0.0f, 700.0f), D3DXVECTOR3(-100.0f, 0.0f, -60.0f), D3DXVECTOR3(100.0f, 100.0f, 60.0f), 5, 4, TRANS_ANGLE_MAX_Z, D3DXCOLOR(1.0f, 0.0f, 1.0f, 0.7f), true, true);
+    ////---通過方向
+    //SetTransferGate(D3DXVECTOR3(-2000.0f, 0.0f, -700.0f), D3DXVECTOR3(-100.0f, 0.0f, -60.0f), D3DXVECTOR3(100.0f, 100.0f, 60.0f), 4, 5, TRANS_ANGLE_MIN_X, D3DXCOLOR(1.0f, 0.0f, 1.0f, 0.7f), true, true);
+    //SetTransferGate(D3DXVECTOR3(-2000.0f, 0.0f, 700.0f), D3DXVECTOR3(-100.0f, 0.0f, -60.0f), D3DXVECTOR3(100.0f, 100.0f, 60.0f), 5, 4, TRANS_ANGLE_MAX_Z, D3DXCOLOR(1.0f, 0.0f, 1.0f, 0.7f), true, true);
+
 
 
     

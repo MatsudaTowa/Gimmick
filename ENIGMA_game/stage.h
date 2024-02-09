@@ -58,7 +58,12 @@ void DrawStage(void);
 STAGE* GetStage(void);
 
 //壁の設定
-void SetStage(D3DXVECTOR3 Pos, D3DXVECTOR3 Rot, float bes, float ver,TEXTYPE TexType);
+void SetStage(D3DXVECTOR3 Pos, D3DXVECTOR3 rot, float bes, float ver, TEXTYPE TexType);
 
+// ローカル座標系での壁の頂点座標を設定する関数
+void SetWallVertices(VERTEX_3D* pVtx, float bes, float ver);
+
+// 壁の位置と回転に準拠した後の頂点座標を計算する関数
+void CalculateTransformedWallVertices(D3DXVECTOR3 Pos, D3DXVECTOR3 rot, float bes, float ver, VERTEX_3D* pVtxint,int Index);
 
 #endif

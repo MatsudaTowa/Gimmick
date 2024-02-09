@@ -674,7 +674,7 @@ void Draw(void)
 		DrawDebugText();
 
 		
-		DrawTextSet(D3DXVECTOR3(550.0f, 460.0f, 0.0f), 30, FONT_DOKIDOKI, D3DXCOLOR(0.0f, 1.0f, 0.5f, 1.0f),"テストーFPS%d", g_nCountFPS);
+		DrawTextSet(D3DXVECTOR3(980.0f, 0.0f, 0.0f), 30, FONT_DOKIDOKI, D3DXCOLOR(0.0f, 1.0f, 0.5f, 1.0f),"テストーFPS%d", g_nCountFPS);
 
 
 		
@@ -825,10 +825,10 @@ void DrawDebugText(void)
 	//int fYdate = pCamera[0].posV.y;
 	//int fZdate = pCamera[0].posV.z;
 
-	////プレーヤー位置
-	//int Xpos = pPlayer->pos.x;
-	//int Ypos = pPlayer->pos.y;
-	//int Zpos = pPlayer->pos.z;
+	//プレーヤー位置
+	int Xpos = pPlayer->pos.x;
+	int Ypos = pPlayer->pos.y;
+	int Zpos = pPlayer->pos.z;
 
 	//文字列に代入
 	//wsprintf(&aStr[0], "F4-メッシュ表示\n\nカメラ角度:%d\nプレイヤー座標\nX:%d/Y:%d/Z:%d\nプレイヤーの角度:%d\n++カメラ座標++\nX座標:%d\nY座標:%d\nZ座標:%d\n+---------+\n--プレイヤー操作--\n左スティック--移動\n右スティック--カメラ操作\nAボタン--飛翔\n\nP:デバッグ用ポーズ\nO:Resultへ", CameraRot, Xpos, Ypos, Zpos, yRot, fXdate, fYdate, fZdate);
@@ -841,7 +841,9 @@ void DrawDebugText(void)
 
 
 
-	DrawTextSet(D3DXVECTOR3(550.0f, 430.0f, 0.0f), 30, FONT_AKABARASINDELERA, D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f), "フレーム--%d", pPlayer->NowFrameCntDOWN);
+	DrawTextSet(D3DXVECTOR3(1150.0f, 10.0f, 0.0f), 0, FONT_AKABARASINDELERA, D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f), "フレーム--%d", pPlayer->NowFrameCntDOWN);
+	DrawTextSet(D3DXVECTOR3(1050.0f, 700.0f, 0.0f), 0, FONT_AKABARASINDELERA, D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f), "１Pの位置--,%d,%d,%d", Xpos, Ypos, Zpos);
+
 }
 
 ////=============================

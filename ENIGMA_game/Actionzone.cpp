@@ -43,13 +43,13 @@ void InitActionZone(void)
     //-----------------------------自分座標-----------半径---------行動タイプ-------色
 // ペアで２つごとに記入--色は単色で(合成色を他のに使用したい)
 
-    //これで１ペア
-    SetActionZone(D3DXVECTOR3(1000.0f, 0.0f, -500.0f), 200, ACTION_TYPE_MAX, D3DXCOLOR(1.0f, 0.0f, 1.0f, 0.7f));
-    SetActionZone(D3DXVECTOR3(1000.0f, 0.0f, 500.0f), 200, ACTION_TYPE_MAX, D3DXCOLOR(1.0f, 0.0f, 1.0f, 0.7f));
+    ////これで１ペア
+    //SetActionZone(D3DXVECTOR3(1000.0f, 0.0f, -500.0f), 200, ACTION_TYPE_MAX, D3DXCOLOR(1.0f, 0.0f, 1.0f, 0.7f));
+    //SetActionZone(D3DXVECTOR3(1000.0f, 0.0f, 500.0f), 200, ACTION_TYPE_MAX, D3DXCOLOR(1.0f, 0.0f, 1.0f, 0.7f));
 
 
-    SetActionZone(D3DXVECTOR3(500.0f, 300.0f, -300.0f), 300, ACTION_TYPE_MAX, D3DXCOLOR(0.0f, 1.0f, 1.0f, 0.7f));
-    SetActionZone(D3DXVECTOR3(500.0f, 300.0f, 300.0f), 300, ACTION_TYPE_MAX, D3DXCOLOR(0.0f, 1.0f, 1.0f, 0.7f));
+    //SetActionZone(D3DXVECTOR3(500.0f, 300.0f, -300.0f), 300, ACTION_TYPE_MAX, D3DXCOLOR(0.0f, 1.0f, 1.0f, 0.7f));
+    //SetActionZone(D3DXVECTOR3(500.0f, 300.0f, 300.0f), 300, ACTION_TYPE_MAX, D3DXCOLOR(0.0f, 1.0f, 1.0f, 0.7f));
 
 
 

@@ -33,4 +33,8 @@ void UninitText(void);
 //テキスト書き出し処理
 void DrawTextSet(D3DXVECTOR3 DrawPos, int FontSize, FONT Font, D3DXCOLOR RGBA, const char* Text, ...);
 
+
+//void DrawWorldText(D3DXVECTOR3 WorldPos, int FontSize, FONT Font, D3DXCOLOR RGBA, const char* Text, ...);
+
+
 #endif // !_TEXT_H_

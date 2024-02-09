@@ -9,6 +9,7 @@
 #include "player.h"
 #include "player2.h"
 #include "transfergate.h"
+#include "stage.h"
 
 //グローバル変数宣言
 Camera g_camera[MAXCAMERA] = {};//カメラの情報
@@ -286,7 +287,21 @@ void UpdateCamera(void)
 				 }
 			 }
 
+			 STAGE* pStage;
+			 pStage = GetStage();
 
+			 for (int nWall = 0; nWall < NUMSTAGE; nWall++)
+			 {
+				 if (pStage[nWall].bUse == true)
+				 {
+					 D3DXVECTOR3 StageMin = D3DXVECTOR3(pStage[nWall].posStage + pStage[nWall].MinPos);
+					 D3DXVECTOR3 StageMax = D3DXVECTOR3(pStage[nWall].posStage + pStage[nWall].MaxPos);
+
+					 //障害物検知
+					 AdjustPlayerPositionToCollision_CAMERA(pViewPos[nCnt], nCnt, StageMin, StageMax);
+
+				 }
+			 }
 
 			// //-----------------------------------カメラ距離の変動差分を計算
 			// int Dir = EscapeLength - g_camera[nCnt].CameraLength;

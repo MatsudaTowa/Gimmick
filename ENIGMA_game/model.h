@@ -10,7 +10,7 @@
 #include "main.h"
 
 #define MAX_MODEL	(256) //モデルの最大数
-#define NUM_MODEL	(25) //モデルの種類
+#define NUM_MODEL	(26) //モデルの種類
 #define NUM_TEXTURE	(5) //テクスチャ数
 
 typedef enum
@@ -40,6 +40,7 @@ typedef enum
 	MODELTYPE_TVSTAND,
 	MODELTYPE_WASHBASIN,
 	MODELTYPE_CUBE,
+	MODELTYPE_SAFE,
 	MODELTYPE_MAX,
 }ModelType;
 

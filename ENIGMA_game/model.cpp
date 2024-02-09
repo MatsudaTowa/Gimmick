@@ -57,6 +57,7 @@ static const char* MODEL_NAME[NUM_MODEL] =
 	"data\\MODEL\\TVstand.x",
 	"data\\MODEL\\Washbasin.x",
 	"data\\MODEL\\cube.x",
+	"data\\MODEL\\safe.x",
 };
 
 //=============================================
@@ -471,7 +472,7 @@ void ExclusionCollision(void)
 	g_aModel[47].Maxpos = D3DXVECTOR3(31.0f, 153.0f, 90.0f);
 	g_aModel[47].bCollision = true;
 	//36--シャッター
-	g_aModel[36].Minpos = D3DXVECTOR3(-280.0f, 0.0f, -35.0f);
-	g_aModel[36].Maxpos = D3DXVECTOR3(280.0f, 410.0f, -20.0f);
+	g_aModel[36].Minpos = D3DXVECTOR3(-280.0f, 0.0f, -45.0f);
+	g_aModel[36].Maxpos = D3DXVECTOR3(280.0f, 410.0f, -35.0f);
 	g_aModel[36].bCollision = true;
 }

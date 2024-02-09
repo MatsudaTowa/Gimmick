@@ -97,9 +97,6 @@
     <Filter Include="ソース ファイル\+||||-ALL_SYSTEM-||||+\TEXT">
       <UniqueIdentifier>{a0ad713f-c288-4405-8b77-3a048038cabe}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ソース ファイル\--++|    GAME   |++--\//Stage%28Arrangements%29//\WALL">
-      <UniqueIdentifier>{6c0bd580-d924-41ef-8085-ae2f44d016bf}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ソース ファイル\--++|    GAME   |++--\//3D_Model//\DEBUGMODEL">
       <UniqueIdentifier>{709e84b6-2d6c-4f78-96f5-91e241509d71}</UniqueIdentifier>
     </Filter>
@@ -112,9 +109,6 @@
     <Filter Include="ソース ファイル\--++|    GAME   |++--\//GAME_SYSTEM//\%2aPARTICLE%2a">
       <UniqueIdentifier>{1d2b6d5c-2b25-4574-a477-a6963357ff47}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ソース ファイル\--++|    GAME   |++--\//ITEM//\Item_UI_1P">
-      <UniqueIdentifier>{af3cef64-ff3f-4bae-a1f9-00b48c2a0853}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ソース ファイル\--++|    GAME   |++--\MoneyboxGimmick">
       <UniqueIdentifier>{e2c53ea8-1ea1-48ed-ab67-4f6ace037e53}</UniqueIdentifier>
     </Filter>
@@ -126,6 +120,12 @@
     </Filter>
     <Filter Include="ソース ファイル\--++|    GAME   |++--\//3D_Model//\ADVANCED_MOTION MODEL">
       <UniqueIdentifier>{e281bbad-35ae-4c32-adc9-3661cad23f2b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\--++|    GAME   |++--\//Stage%28Arrangements%29//\STAGE">
+      <UniqueIdentifier>{6c0bd580-d924-41ef-8085-ae2f44d016bf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\--++|    GAME   |++--\//ITEM//\Item_UI_">
+      <UniqueIdentifier>{af3cef64-ff3f-4bae-a1f9-00b48c2a0853}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -160,7 +160,7 @@
       <Filter>ソース ファイル\--++|    GAME   |++--\//GAME_SYSTEM//\LIGHT</Filter>
     </ClCompile>
     <ClCompile Include="stage.cpp">
-      <Filter>ソース ファイル\--++|    GAME   |++--\//Stage%28Arrangements%29//\WALL</Filter>
+      <Filter>ソース ファイル\--++|    GAME   |++--\//Stage%28Arrangements%29//\STAGE</Filter>
     </ClCompile>
     <ClCompile Include="shadow.cpp">
       <Filter>ソース ファイル\--++|    GAME   |++--\//GAME_SYSTEM//\SHADOW</Filter>
@@ -220,7 +220,7 @@
       <Filter>ソース ファイル\--++|    GAME   |++--\//GAME_SYSTEM//\%2aPARTICLE%2a</Filter>
     </ClCompile>
     <ClCompile Include="itemUI.cpp">
-      <Filter>ソース ファイル\--++|    GAME   |++--\//ITEM//\Item_UI_1P</Filter>
+      <Filter>ソース ファイル\--++|    GAME   |++--\//ITEM//\Item_UI_</Filter>
     </ClCompile>
     <ClCompile Include="moneybox.cpp">
       <Filter>ソース ファイル\--++|    GAME   |++--\MoneyboxGimmick</Filter>
@@ -285,7 +285,7 @@
       <Filter>ソース ファイル\--++|    GAME   |++--\//GAME_SYSTEM//\LIGHT</Filter>
     </ClInclude>
     <ClInclude Include="stage.h">
-      <Filter>ソース ファイル\--++|    GAME   |++--\//Stage%28Arrangements%29//\WALL</Filter>
+      <Filter>ソース ファイル\--++|    GAME   |++--\//Stage%28Arrangements%29//\STAGE</Filter>
     </ClInclude>
     <ClInclude Include="shadow.h">
       <Filter>ソース ファイル\--++|    GAME   |++--\//GAME_SYSTEM//\SHADOW</Filter>
@@ -351,7 +351,7 @@
       <Filter>ソース ファイル\--++|    GAME   |++--\//3D_Model//</Filter>
     </ClInclude>
     <ClInclude Include="itemUI.h">
-      <Filter>ソース ファイル\--++|    GAME   |++--\//ITEM//\Item_UI_1P</Filter>
+      <Filter>ソース ファイル\--++|    GAME   |++--\//ITEM//\Item_UI_</Filter>
     </ClInclude>
     <ClInclude Include="bathgimmick.h">
       <Filter>ソース ファイル\--++|    GAME   |++--\//GAME_SYSTEM//\BathGimmick</Filter>

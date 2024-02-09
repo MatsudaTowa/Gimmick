@@ -6,8 +6,6 @@
 //=========================================================
 #include "main.h"
 #include "simple_motion_model.h"
-#include "Actionzone.h"
-#include "game.h"
 
 //-------------------------------------------
 //ƒ}ƒNƒ’è‹`
@@ -15,7 +13,7 @@
 #define LEVER_ACTIONZONE_RADIUS	(120.0f) //‚¨•—˜C‚ÌƒMƒ~ƒbƒN”»’è
 
 //ƒOƒ[ƒoƒ‹•Ï”éŒ¾
-
+bool g_bKeyspawn = false; 
 
 //ƒ‚ƒfƒ‹\‘¢‘Ì
 typedef struct
@@ -52,10 +50,6 @@ LPD3DXBUFFER g_pBuffMatSimpleModel[SIMPLEMOTIONMODEL_MAX] = {};//ƒ}ƒeƒŠƒAƒ‹‚Ö‚Ìƒ
 
 DWORD dwNumMatSimpleModel[SIMPLEMOTIONMODEL_MAX] = {};//ƒ}ƒeƒŠƒAƒ‹‚Ì”
 
-bool g_bOnLever1;
-bool g_bOnLever2;
-bool g_bKeyspawn; 
-
 
 //=============================
 //ŠÈˆÕƒ‚[ƒVƒ‡ƒ“ƒ‚ƒfƒ‹‰Šú‰»ˆ—
@@ -70,25 +64,22 @@ void InitSimpleModel(void)
 	}
 
 
-	g_bOnLever1 = false; //ƒŒƒo[OFF
-	g_bOnLever2 = false; //ƒŒƒo[OFF
-	g_bKeyspawn = false; 
+	g_bKeyspawn = false;
 
 
 	//‚±‚±‚©‚ç‰Šú’lƒZƒbƒg
 	SetSimpleModel(SIMPLEMOTIONMODEL_Test1, D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
 	SetSimpleModel(SIMPLEMOTIONMODEL_Test2, D3DXVECTOR3(30.0f, 40.0f, 0.0f), D3DXVECTOR3(0.0f, 1.57f, 0.0f));
+
 	//ÔƒŒƒo[
 	SetSimpleModel(SIMPLEMOTIONMODEL_LEVER_RED_ROOT, D3DXVECTOR3(-1180.0f, 100.0f, -1000.0f), D3DXVECTOR3(0.0f, -1.57f, 0.0f));		//–{‘Ì
 	SetSimpleModel(SIMPLEMOTIONMODEL_LEVER_RED_LEVER, D3DXVECTOR3(0.0f, 0.0f, 8.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));		//ƒŒƒo[
-
 	//ƒŒƒo[1‚ÌƒAƒNƒVƒ‡ƒ“ƒ][ƒ“İ’u
 	SetActionZone(D3DXVECTOR3(-1180.0f, 100.0f, -1000.0f), LEVER_ACTIONZONE_RADIUS, ACTION_TYPE_LEVER_1, D3DXCOLOR(1.0f, 1.0f, 0.0f, 0.8f));
 
 	//ÂƒŒƒo[
 	SetSimpleModel(SIMPLEMOTIONMODEL_LEVER_BLUE_ROOT, D3DXVECTOR3(-1180.0f, 100.0f, -400.0f), D3DXVECTOR3(0.0f, -1.57f, 0.0f));	//–{‘Ì
 	SetSimpleModel(SIMPLEMOTIONMODEL_LEVER_BLUE_LEVER, D3DXVECTOR3(0.0f, 0.0f, 8.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));		//ƒŒƒo[
-
 	//ƒŒƒo[2‚ÌƒAƒNƒVƒ‡ƒ“ƒ][ƒ“İ’u
 	SetActionZone(D3DXVECTOR3(-1180.0f, 100.0f, -400.0f), LEVER_ACTIONZONE_RADIUS, ACTION_TYPE_LEVER_2, D3DXCOLOR(1.0f, 0.0f, 0.3f, 0.8f));
 
@@ -121,6 +112,7 @@ void UninitSimpleModel(void)
 void UpdateSimpleModel(void)
 {
 	//*********‚±‚±‚Å‚à‚Ì‚É‡‚í‚¹‚Äˆ—‚ğ’Ç‰Á
+
 
 	//for (int SimpleModel = 0; SimpleModel < SIMPLEMOTIONMODEL_MAX; SimpleModel++)
 	//{
@@ -211,7 +203,6 @@ void LaverOn(void)
 	{
 		g_ModelInfo[SIMPLEMOTIONMODEL_LEVER_BLUE_LEVER].SinpleModel.rot.x -= 0.1f;
 	}
-
 	if (g_ModelInfo[SIMPLEMOTIONMODEL_LEVER_BLUE_LEVER].SinpleModel.rot.x <= -1.75f
 		&& g_ModelInfo[SIMPLEMOTIONMODEL_LEVER_BLUE_LEVER].SinpleModel.rot.x <= -1.75f
 		&& g_bKeyspawn == false)

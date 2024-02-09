@@ -7,8 +7,10 @@
 #include <stdarg.h>  // 可変長引数関連のヘッダ
 #include "text.h"
 #include <stdio.h>
+#include "camera.h"
 
 LPD3DXFONT g_pFont_Comment[MAXFONT] = {};//フォントへのポインタ
+LPD3DXFONT g_pFont_World[MAXFONT] = {};//フォントへのポインタ
 
 //フォント構造体
 typedef struct
@@ -30,6 +32,10 @@ FONTINFO g_FontInfo[FONT_MAX] =
 	{"data\\FONT\\kiraraji04.ttf", "きらら字04"},
 	{"data\\FONT\\onryou.TTF", "怨霊フォント"},
 };
+
+
+
+D3DXMATRIX g_mtxWorldText;
 
 //=============================
 //リザルト画面の初期化処理
@@ -66,6 +72,12 @@ void UninitText(void)
 			g_pFont_Comment[i]->Release();
 			g_pFont_Comment[i] = NULL;
 		}
+		//UIComment表示用フォントの破棄
+		if (g_pFont_World[i] != NULL)
+		{
+			g_pFont_World[i]->Release();
+			g_pFont_World[i] = NULL;
+		}
 	}
 }
 
@@ -81,6 +93,7 @@ void DrawTextSet(D3DXVECTOR3 DrawPos, int FontSize, FONT Font, D3DXCOLOR RGBA, c
 		g_pFont_Comment[Font]->Release();
 		g_pFont_Comment[Font] = nullptr;
 	}
+
 	
 	LPDIRECT3DDEVICE9 pDevice = GetDevice();
 
@@ -110,6 +123,7 @@ void DrawTextSet(D3DXVECTOR3 DrawPos, int FontSize, FONT Font, D3DXCOLOR RGBA, c
 	//使用例！！
 
 	//	DrawTextSet(　座標　, フォントサイズ　, フォント名（ｈ.で作ったラベル的な）, カラー, "打ちたい文字(任意で%d.%f,%s)",(任意で変数));
-
-	// printf風に動く(\nはまだ無理...)
 }
+
+
+

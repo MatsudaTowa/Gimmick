@@ -71,6 +71,8 @@ void NewSet_Debug_Model(void)
 	SetModel(D3DXVECTOR3(3200.0f, 50.0f, 1900.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), MODELTYPE_KEY2);
 	SetModel(D3DXVECTOR3(2800.0f, 50.0f, 1600.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), MODELTYPE_KEY3);
 
+	//aî≈ópã‡å…ê›íu(ínâ∫é∫)
+	SetModel(D3DXVECTOR3(-0700.0f, 0000.0f, -0450.0f), D3DXVECTOR3(0.0f, -2.35f, 0.0f), MODELTYPE_SAFE);
 
 }
 

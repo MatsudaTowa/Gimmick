@@ -295,7 +295,7 @@ void UpdatePlayer_2P(void)
 			D3DXVECTOR3 GateMin = D3DXVECTOR3(pTransferGate[nCntGate].pos + pTransferGate[nCntGate].GateMin);
 			D3DXVECTOR3 GateMax = D3DXVECTOR3(pTransferGate[nCntGate].pos + pTransferGate[nCntGate].GateMax);
 
-			BoxCollisionGate(PlayerMin_2P, PlayerMax_2P, GateMin, GateMax, 2, pTransferGate[nCntGate].nGateIndex, pTransferGate[nCntGate].nParentIndex);
+			BoxCollisionGate(PlayerMin_2P, PlayerMax_2P, GateMin, GateMax, 1, pTransferGate[nCntGate].nGateIndex, pTransferGate[nCntGate].nParentIndex);
 
 			//	break;
 		}
@@ -584,6 +584,19 @@ void UpdatePlayer_2P(void)
 				/// è·äQï®åüím
 				AdjustPlayerPositionToCollision_VIEWPOS(D3DXVECTOR3(g_Player_2P.pos.x, (g_Player_2P.pos.y + g_View_2P[1].ViewPos.y), g_Player_2P.pos.z), 2, ModelMin, ModelMax);
 			}
+		}
+	}
+
+	for (int nWall = 0; nWall < NUMSTAGE; nWall++)
+	{
+		if (pStage[nWall].bUse == true)
+		{
+			D3DXVECTOR3 StageMin = D3DXVECTOR3(pStage[nWall].posStage + pStage[nWall].MinPos);
+			D3DXVECTOR3 StageMax = D3DXVECTOR3(pStage[nWall].posStage + pStage[nWall].MaxPos);
+
+			//è·äQï®åüím
+			AdjustPlayerPositionToCollision_VIEWPOS(D3DXVECTOR3(g_Player_2P.pos.x, (g_Player_2P.pos.y + g_View_2P[1].ViewPos.y), g_Player_2P.pos.z), 0, StageMin, StageMax);
+
 		}
 	}
 

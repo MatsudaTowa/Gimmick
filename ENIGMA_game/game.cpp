@@ -235,7 +235,6 @@ void UpdateGame(void)
 	bool bPlayer1inOK = false;
 	bool bPlayer2inOK = false;
 
-
 	if (GetkeyboardTrigger(DIK_P) == true)
 	{//Pキー(ポーズ)が押された
 		g_bPause = g_bPause ? false : true;
@@ -460,6 +459,7 @@ void DrawGame(void)
 		//αテストを無効
 		pDevice->SetRenderState(D3DRS_ALPHATESTENABLE, FALSE);
 
+
 		SetCamera(nCnt);
 
 		DrawCamera();
@@ -467,7 +467,7 @@ void DrawGame(void)
 		//ビューポートの設定
 		pDevice->SetViewport(&pCamera[nCnt].viewport);
 	}
-
+	
 	//全画面ビューポート
 	D3DVIEWPORT9 FullViewport = GetViewPort();
 	//ビューポートをもとに戻す
@@ -494,12 +494,12 @@ void DrawGame(void)
 	DrawTextSet(D3DXVECTOR3(550.0f, 680.0f, 0.0f), 20, FONT_AKABARASINDELERA, D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f), "事故防止のためゲームループ後は無効！");
 	DrawTextSet(D3DXVECTOR3(550.0f, 700.0f, 0.0f), 20, FONT_AKABARASINDELERA, D3DXCOLOR(1.0f, 1.0f, 0.0f, 1.0f), "Xボタンでとりあえずアイテム出現");
 
+
+
 	if (g_bPause == true)
 	{
 		DrawPause();
 	}
-
-//	DrawDebugDelC0mment();
 }
 //===================================
 //Clear専用処理
@@ -1777,60 +1777,57 @@ void SphereCollisionZone(D3DXVECTOR3 PlayerPos, int PlayerIndex, int ZoneIndex)
 			pActionZone[ZoneIndex].bDrawOk = true;
 		}
 
-		//if (pPlayer->bAction == true)
-		//{//アクション
 
-			//動作ごとに分岐
-			if (pActionZone[ZoneIndex].ActionType==ACTION_TYPE_MAX)
-			{//
 
-			}
-			if (pActionZone[ZoneIndex].ActionType == ACTION_TYPE_BATH && bIn == true)
-			{//お風呂のギミック（1P）
-				if (GetJoypadTrigger(JOYKEY_X, 0) == true)
-				{//お風呂のギミック作動
-					RunWater(0);
-				}
-			}
-			
-			bool pSpawnKey = GetSpawnKey();
-			SPEECHBUBBLE* pSpeachBubble = GetSpeechBubble();
+		//動作ごとに分岐
+		if (pActionZone[ZoneIndex].ActionType==ACTION_TYPE_MAX)
+		{//
 
-			if ((pActionZone[ZoneIndex].ActionType == ACTION_TYPE_LEVER_1
-				|| pActionZone[ZoneIndex].ActionType == ACTION_TYPE_LEVER_2)
-				&& pSpawnKey == true)
-			{//鍵がスポーンしたら削除
-				pActionZone[ZoneIndex].bUse = false;
-				pSpeachBubble[ZoneIndex].bUse = false;
-
-			}
-
-			if (pActionZone[ZoneIndex].ActionType == ACTION_TYPE_LEVER_1 && bIn == true)
-			{//レバーのギミック（1P）
-				if (GetJoypadPress(JOYKEY_X, 0) == true)
-				{//レバーのギミック作動
-					g_bLever1 = true;
-				}
-				if (GetJoypadRelease(JOYKEY_X, 0) == true)
-				{
-					g_bLever1 = false;
-				}
-			}
-			if (pActionZone[ZoneIndex].ActionType == ACTION_TYPE_LEVER_2 && bIn == true)
-			{//レバーのギミック（1P）
-				if (GetJoypadPress(JOYKEY_X, 0) == true)
-				{//レバーのギミック作動
-					g_bLever2 = true;
-				}
-				if (GetJoypadRelease(JOYKEY_X, 0) == true)
-				{
-					g_bLever2 = false;
-				}
+		}
+		if (pActionZone[ZoneIndex].ActionType == ACTION_TYPE_BATH && bIn == true)
+		{//お風呂のギミック（1P）
+			if (GetJoypadTrigger(JOYKEY_X, 0) == true)
+			{//お風呂のギミック作動
+				RunWater(0);
 			}
 		}
-	//	
-	//}
-	if (PlayerIndex == 1)
+		bool pSpawnKey = GetSpawnKey();
+		SPEECHBUBBLE* pSpeachBubble = GetSpeechBubble();
+
+		if ((pActionZone[ZoneIndex].ActionType == ACTION_TYPE_LEVER_1
+			|| pActionZone[ZoneIndex].ActionType == ACTION_TYPE_LEVER_2)
+			&& pSpawnKey == true)
+		{//鍵がスポーンしたら削除
+			pActionZone[ZoneIndex].bUse = false;
+			pSpeachBubble[ZoneIndex].bUse = false;
+
+		}
+
+		if (pActionZone[ZoneIndex].ActionType == ACTION_TYPE_LEVER_1 && bIn == true)
+		{//レバーのギミック（1P）
+			if (GetJoypadPress(JOYKEY_X, 0) == true)
+			{//レバーのギミック作動
+				g_bLever1 = true;
+			}
+			if (GetJoypadRelease(JOYKEY_X, 0) == true)
+			{
+				g_bLever1 = false;
+			}
+		}
+		if (pActionZone[ZoneIndex].ActionType == ACTION_TYPE_LEVER_2 && bIn == true)
+		{//レバーのギミック（1P）
+			if (GetJoypadPress(JOYKEY_X, 0) == true)
+			{//レバーのギミック作動
+				g_bLever2 = true;
+			}
+			if (GetJoypadRelease(JOYKEY_X, 0) == true)
+			{
+				g_bLever2 = false;
+			}
+		}
+		
+	}
+	else if (PlayerIndex == 1)
 	{//2Pの時
 		if (bIn == true)
 		{//接触判定時
@@ -1855,7 +1852,6 @@ void SphereCollisionZone(D3DXVECTOR3 PlayerPos, int PlayerIndex, int ZoneIndex)
 				RunWater(1);
 			}
 		}
-
 		bool pSpawnKey = GetSpawnKey();
 		SPEECHBUBBLE* pSpeachBubble = GetSpeechBubble();
 
@@ -1890,9 +1886,8 @@ void SphereCollisionZone(D3DXVECTOR3 PlayerPos, int PlayerIndex, int ZoneIndex)
 			}
 
 		}
-	}
 		
-
+	}
 }
 
 

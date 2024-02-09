@@ -607,11 +607,24 @@ void UpdatePlayer(void)
 			}
 		}
 	}
+	
 
 
+	//STAGE* pStage;
+	//pStage = GetStage();
 
+	for (int nWall = 0; nWall < NUMSTAGE; nWall++)
+	{
+		if (pStage[nWall].bUse == true)
+		{
+			D3DXVECTOR3 StageMin = D3DXVECTOR3(pStage[nWall].posStage + pStage[nWall].MinPos);
+			D3DXVECTOR3 StageMax = D3DXVECTOR3(pStage[nWall].posStage + pStage[nWall].MaxPos);
 
+			//障害物検知
+			AdjustPlayerPositionToCollision_VIEWPOS(D3DXVECTOR3(g_Player.pos.x, (g_Player.pos.y + g_View[1].ViewPos.y), g_Player.pos.z), 0, StageMin, StageMax);
 
+		}
+	}
 
 
 
@@ -1106,11 +1119,11 @@ void InputKeyAttack(void)
 		g_test = true;
 	}
 
-	////アクション
-	//if (GetJoypadTrigger(JOYKEY_X, 0) == true)
-	//{
-	//	g_Player.bAction = true;
-	//}
+	//アクション
+	if (GetJoypadTrigger(JOYKEY_X, 0) == true)
+	{
+		g_Player.bAction = true;
+	}
 
 	if (GetJoypadTrigger(JOYKEY_Y, 0) == true)
 	{

@@ -143,7 +143,7 @@ void InitAdvancedModel(void)
 	}
 }
 //=============================
-//高度モーションモデル終了処理
+//モデルの終了処理
 //=============================
 void UninitAdvancedModel(void)
 {
@@ -172,7 +172,7 @@ void UninitAdvancedModel(void)
 	}
 }
 //=============================
-//高度モーションモデル更新処理
+//モデルの更新処理
 //=============================
 void UpdateAdvancedModel(void)
 {
@@ -198,7 +198,7 @@ void UpdateAdvancedModel(void)
 		//----------パーツ
 		for (int nCnt = 0; nCnt < g_Model3[ModelNum].nMaxPartsCnt; nCnt++)
 		{//パーツ分回す
-			//高度モーションモデル位置
+			//モデルの位置
 			//ワールドマトリックスの初期化
 			D3DXMatrixIdentity(&g_Model3[ModelNum].ModelParts[nCnt].mtxWorld);
 
@@ -228,7 +228,7 @@ void UpdateAdvancedModel(void)
 	}
 }
 //=============================
-//高度モーションモデル描画処理
+//モデルの描画処理
 //=============================
 void DrawAdvancedModel(void)
 {
@@ -263,7 +263,7 @@ void DrawAdvancedModel(void)
 
 			for (int nCnt = 0; nCnt < g_Model3[ModelNum].nMaxPartsCnt; nCnt++)
 			{
-				//---------------------------------------------------------------------------------------------------高度モーションモデル位置
+				//---------------------------------------------------------------------------------------------------モデルの位置
 
 				//ワールドマトリックスの初期化
 				D3DXMatrixIdentity(&g_Model3[ModelNum].ModelParts[nCnt].mtxWorld);
@@ -463,7 +463,7 @@ void LoadSet3(int Index)
 
 			}
 			else if (strcmp(&aString[0], "MODEL_FILENAME") == 0)
-			{//各高度モーションモデルパーツのパスが来たら
+			{//各モデルのパーツのパスが来たら
 				fscanf(pFile, "%s", &aString[0]);
 				fscanf(pFile, "%s", &cModelFileName[0]);//ファイルパス
 
