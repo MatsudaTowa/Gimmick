@@ -350,11 +350,17 @@ void SetModel(D3DXVECTOR3 pos, D3DXVECTOR3 rot, ModelType nType)
 					, BATHWATER_DEPTH);
 				SetActionZone(g_aModel[nCnt].pos, BATH_ACTIONZONE_RADIUS, ACTION_TYPE_BATH, D3DXCOLOR(1.0f, 1.0f, 0.0f, 0.7f));
 			}
-			if (g_aModel[nCnt].nType == MODELTYPE_KEY1
-				|| g_aModel[nCnt].nType == MODELTYPE_KEY2
-				|| g_aModel[nCnt].nType == MODELTYPE_KEY3)
+			if (g_aModel[nCnt].nType == MODELTYPE_KEY1)
 			{
-				SetActionZone(g_aModel[nCnt].pos, BATH_ACTIONZONE_RADIUS, ACTION_TYPE_KEY, D3DXCOLOR(0.5f, 0.5f, 0.0f, 0.7f));
+				SetActionZone(g_aModel[nCnt].pos, BATH_ACTIONZONE_RADIUS, ACTION_TYPE_KEY_1, D3DXCOLOR(0.5f, 0.5f, 0.0f, 0.7f));
+			}
+			if (g_aModel[nCnt].nType == MODELTYPE_KEY2)
+			{
+				SetActionZone(g_aModel[nCnt].pos, BATH_ACTIONZONE_RADIUS, ACTION_TYPE_KEY_2, D3DXCOLOR(0.5f, 1.0f, 1.0f, 0.7f));
+			}
+			if (g_aModel[nCnt].nType == MODELTYPE_KEY3)
+			{
+				SetActionZone(g_aModel[nCnt].pos, BATH_ACTIONZONE_RADIUS, ACTION_TYPE_KEY_3, D3DXCOLOR(1.0f, 0.5f, 1.0f, 0.7f));
 			}
 			if (g_aModel[nCnt].nType == MODELTYPE_SAFE)
 			{
@@ -438,6 +444,13 @@ void SetModel(D3DXVECTOR3 pos, D3DXVECTOR3 rot, ModelType nType)
 			break;
 		}
 	}
+}
+//=============================================
+//åÆälìæèàóù
+//=============================================
+void GetKey(int KeyIndex)
+{
+
 }
 //=============================================
 //É|ÉäÉSÉìÇÃèÓïÒéÊìæ

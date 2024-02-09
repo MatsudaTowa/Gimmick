@@ -63,6 +63,7 @@
 
 	int g_nLoopCnt = 0;
 
+	int g_nHaveKey = 0; //鍵保有数
 
 
 
@@ -89,6 +90,8 @@ void InitGame(void)
 	InitPause();
 	
 	g_nLoopCnt = 0;//ゲームループリセット
+
+	g_nHaveKey = 0; //鍵保有数リセット
 
 	g_bPause = false;//ポーズ解除
 
@@ -476,6 +479,8 @@ void DrawGame(void)
 	DrawLimitTime();
 	DrawScreenUI();
 	DrawItem_UI();
+
+	DrawHaveKey(g_nHaveKey);
 
 	DrawTextSet(D3DXVECTOR3(550.0f, 660.0f, 0.0f), 20, FONT_AKABARASINDELERA, D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f), "Oキーでリザルト＆モデル配置をセーブ！");
 	DrawTextSet(D3DXVECTOR3(550.0f, 680.0f, 0.0f), 20, FONT_AKABARASINDELERA, D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f), "事故防止のためゲームループ後は無効！");
@@ -1793,13 +1798,13 @@ void SphereCollisionZone(D3DXVECTOR3 PlayerPos, int PlayerIndex, int ZoneIndex)
 				RunWater(0);
 			}
 		}
-		bool pSpawnKey = GetSpawnKey();
 		SPEECHBUBBLE* pSpeachBubble = GetSpeechBubble();
-
+		bool pSpawnKey = GetSpawnKey();
 		if ((pActionZone[ZoneIndex].ActionType == ACTION_TYPE_LEVER_1
 			|| pActionZone[ZoneIndex].ActionType == ACTION_TYPE_LEVER_2)
 			&& pSpawnKey == true)
 		{//鍵がスポーンしたら削除
+
 			pActionZone[ZoneIndex].bUse = false;
 			pSpeachBubble[ZoneIndex].bUse = false;
 
@@ -1825,6 +1830,19 @@ void SphereCollisionZone(D3DXVECTOR3 PlayerPos, int PlayerIndex, int ZoneIndex)
 			if (GetJoypadRelease(JOYKEY_X, 0) == true)
 			{
 				g_bLever2 = false;
+			}
+		}
+		if ((pActionZone[ZoneIndex].ActionType == ACTION_TYPE_KEY_1
+			|| pActionZone[ZoneIndex].ActionType == ACTION_TYPE_KEY_2
+			|| pActionZone[ZoneIndex].ActionType == ACTION_TYPE_KEY_3)
+			&& bIn == true)
+		{//鍵取得（1P）
+			if (GetJoypadTrigger(JOYKEY_X, 0) == true)
+			{//鍵のギミック作動
+				g_nHaveKey++;
+				pSpeachBubble[ZoneIndex].bUse = false;
+				pActionZone[ZoneIndex].bUse = false;
+
 			}
 		}
 		
@@ -1901,9 +1919,19 @@ void SphereCollisionZone(D3DXVECTOR3 PlayerPos, int PlayerIndex, int ZoneIndex)
 			{
 				g_bLever2 = false;
 			}
-
 		}
-		
+		if ((pActionZone[ZoneIndex].ActionType == ACTION_TYPE_KEY_1
+			|| pActionZone[ZoneIndex].ActionType == ACTION_TYPE_KEY_2
+			|| pActionZone[ZoneIndex].ActionType == ACTION_TYPE_KEY_3)
+			&& bIn == true)
+		{//鍵取得（2P）
+			if (GetJoypadTrigger(JOYKEY_X, 1) == true)
+			{//鍵のギミック作動
+				g_nHaveKey++;
+				pActionZone[ZoneIndex].bUse = false;
+				pSpeachBubble[ZoneIndex].bUse = false;
+			}
+		}
 	}
 }
 
