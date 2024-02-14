@@ -252,6 +252,9 @@
     <ClCompile Include="hitcollision_mistake_prevention.cpp">
       <Filter>ソース ファイル\--++|    GAME   |++--\//Stage%28Arrangements%29//\HITCOLLISION＿MISTAKE_PREVENTION</Filter>
     </ClCompile>
+    <ClCompile Include="trap.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="input.h">
@@ -353,9 +356,6 @@
     <ClInclude Include="password.h">
       <Filter>ソース ファイル\--++|    GAME   |++--\MoneyboxGimmick</Filter>
     </ClInclude>
-    <ClInclude Include="model.h">
-      <Filter>ソース ファイル\--++|    GAME   |++--\//3D_Model//</Filter>
-    </ClInclude>
     <ClInclude Include="itemUI.h">
       <Filter>ソース ファイル\--++|    GAME   |++--\//ITEM//\Item_UI_</Filter>
     </ClInclude>
@@ -373,6 +373,12 @@
     </ClInclude>
     <ClInclude Include="hitcollision_mistake_prevention.h">
       <Filter>ソース ファイル\--++|    GAME   |++--\//Stage%28Arrangements%29//\HITCOLLISION＿MISTAKE_PREVENTION</Filter>
+    </ClInclude>
+    <ClInclude Include="trap.h">
+      <Filter>ソース ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="model.h">
+      <Filter>ソース ファイル\--++|    GAME   |++--\//GAME_SYSTEM//</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

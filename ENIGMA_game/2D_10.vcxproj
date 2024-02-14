@@ -187,6 +187,7 @@
     <ClCompile Include="text.cpp" />
     <ClCompile Include="title.cpp" />
     <ClCompile Include="transfergate.cpp" />
+    <ClCompile Include="trap.cpp" />
     <ClCompile Include="Tutorial.cpp" />
     <ClCompile Include="stage.cpp" />
   </ItemGroup>
@@ -229,6 +230,7 @@
     <ClInclude Include="text.h" />
     <ClInclude Include="title.h" />
     <ClInclude Include="transfergate.h" />
+    <ClInclude Include="trap.h" />
     <ClInclude Include="Tutorial.h" />
     <ClInclude Include="stage.h" />
   </ItemGroup>
