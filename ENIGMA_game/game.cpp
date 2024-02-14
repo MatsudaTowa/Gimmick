@@ -21,7 +21,7 @@
 #include "bathgimmick.h"
 #include "steam.h"
 #include "password.h"
-#include "trap.h"
+#include "EyeTrap.h"
 
 #include "shadow.h"
 #include "meshfield.h"
@@ -122,7 +122,7 @@ void InitGame(void)
 	InitPassword();
 	InitBathGimmick();
 	InitSteam();
-	InitTrap();
+	InitEyeTrap();
 
 	InitPlayer();
 	InitPlayer_2P();
@@ -195,7 +195,7 @@ void UninitGame(void)
 	UninitPassword();
 	UninitBathGimmick();
 	UninitSteam();
-	UninitTrap();
+	UninitEyeTrap();
 
 	UninitSky();
 
@@ -357,7 +357,7 @@ void UpdateGame(void)
 		UpdateBathGimmick();
 		UpdateSteam();
 
-		UpdateTrap();
+		UpdateEyeTrap();
 
 		UpdateTransferGate();
 		UpdateActionZone();
@@ -454,7 +454,7 @@ void DrawGame(void)
 		//αテストを無効
 		pDevice->SetRenderState(D3DRS_ALPHATESTENABLE, FALSE);
 
-		DrawTrap();
+		DrawEyeTrap();
 
 		SetCamera(nCnt);
 

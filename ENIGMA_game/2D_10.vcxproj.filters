@@ -252,7 +252,7 @@
     <ClCompile Include="hitcollision_mistake_prevention.cpp">
       <Filter>ソース ファイル\--++|    GAME   |++--\//Stage%28Arrangements%29//\HITCOLLISION＿MISTAKE_PREVENTION</Filter>
     </ClCompile>
-    <ClCompile Include="trap.cpp">
+    <ClCompile Include="eyetrap.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
@@ -374,7 +374,7 @@
     <ClInclude Include="hitcollision_mistake_prevention.h">
       <Filter>ソース ファイル\--++|    GAME   |++--\//Stage%28Arrangements%29//\HITCOLLISION＿MISTAKE_PREVENTION</Filter>
     </ClInclude>
-    <ClInclude Include="trap.h">
+    <ClInclude Include="eyetrap.h">
       <Filter>ソース ファイル</Filter>
     </ClInclude>
     <ClInclude Include="model.h">
