@@ -9,7 +9,7 @@
 #include "game.h"
 #include"text.h"
 
-//#include"sound.h"
+#include"sound.h"
 
 //グローバル変数
 LPDIRECT3DTEXTURE9 g_pTextureResult = NULL;//テクスチャへのポインタ
@@ -71,7 +71,7 @@ void InitResult(void)
 
 	InitPressEnter();
 
-//	PlaySound(SOUND_LABEL_SE_JET);
+    PlaySound(SOUND_LABEL_BGM001);
 
 }
 //=============================
@@ -95,7 +95,7 @@ void UninitResult(void)
 
 	UninitPressEnter();
 	
-	//StopSound();
+	StopSound();
 }
 //=============================
 //リザルト画面の更新処理

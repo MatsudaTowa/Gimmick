@@ -13,7 +13,7 @@
 
 #include "text.h"
 
-//#include "sound.h"
+#include "sound.h"
 
 
 #define NUM_TITLE	(3)//title画面の表示数
@@ -94,14 +94,14 @@ void InitTitle(void)
 	//頂点バッファをアンロックする
 	g_pVtxBuffTitle->Unlock();
 
-	//PlaySound(SOUND_LABEL_BGM000);
+	PlaySound(SOUND_LABEL_BGM000);
 }
 //=============================
 //タイトル画面の終了処理
 //=============================
 void UninitTitle(void)
 {
-	//StopSound(SOUND_LABEL_BGM000);
+	StopSound(SOUND_LABEL_BGM000);
 
 	int nCntTitle=0;
 

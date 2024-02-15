@@ -9,7 +9,7 @@
 #include "fade.h"
 //#include "sound.h"
 #include "pause.h"
-
+#include "eyetrap.h"
 #include "camera.h"
 #include "light.h"
 #include "stage.h"
@@ -21,7 +21,6 @@
 #include "bathgimmick.h"
 #include "steam.h"
 #include "password.h"
-#include "EyeTrap.h"
 
 #include "shadow.h"
 #include "meshfield.h"
@@ -33,7 +32,10 @@
 #include "screenui.h"
 #include "speechbubble.h"
 #include "text.h"
-//#include"DebugModel.h"
+
+#include"DebugModel.h"
+
+
 #include "item.h"
 #include "particle.h"
 #include"itemUI.h"
@@ -58,13 +60,13 @@
 	int g_nUseModel; //モデルの使用数読み込み
 	int g_nUseWall; //壁の使用数読み込み
 	int g_nUseField; //床の使用数読み込み
+	int g_nHaveKey = 0; //鍵保有数
 
 	//制限時間代入
 	int g_EndFlame = 600;	//-----limittime.hのマクロも変える
 
 	int g_nLoopCnt = 0;
 
-	int g_nHaveKey = 0; //鍵保有数
 
 
 
@@ -122,7 +124,6 @@ void InitGame(void)
 	InitPassword();
 	InitBathGimmick();
 	InitSteam();
-	InitEyeTrap();
 
 	InitPlayer();
 	InitPlayer_2P();
@@ -138,7 +139,9 @@ void InitGame(void)
 	InitSpeechBubble();
 	InitParticle();
 	InitSimpleModel();
-
+	InitEyeTrap();
+	//仕方なく仮
+	SetActionZone(D3DXVECTOR3(-50.0f, 0.0f, -500.0f), 200.0f, ACTION_TYPE_EYETRAP, D3DXCOLOR(0.0f, 1.0f, 1.0f, 0.8f));
 
 	//----------------------------制限時間
 	NowTime* pNowTime;
@@ -157,6 +160,8 @@ void InitGame(void)
 
 	InitLine();
 
+	//デバッグモデル
+	//InitDebugModel();
 #endif
 
 	//デバッグ-------------------
@@ -167,11 +172,16 @@ void InitGame(void)
 	//新規モデル置き場
 	NewSet_Debug_Model();
 
-	//デバッグモデル
-//	InitDebugModel();
+
 
 	//-------------------あたり判定再計算
 	ExclusionCollision();
+
+#if _DEBUG
+
+	//デバッグモデル
+	InitDebugModel();
+#endif
 }
 //=============================
 //ゲーム画面の終了処理
@@ -195,7 +205,6 @@ void UninitGame(void)
 	UninitPassword();
 	UninitBathGimmick();
 	UninitSteam();
-	UninitEyeTrap();
 
 	UninitSky();
 
@@ -213,11 +222,11 @@ void UninitGame(void)
 	UninitSimpleModel();
 	UninitAdvancedModel();
 	UninitCollision_Pre();
-
+	UninitEyeTrap();
 #if _DEBUG
 
 	UninitLine();
-//	UninitDebugModel();
+	UninitDebugModel();
 #endif
 
 }
@@ -258,17 +267,31 @@ void UpdateGame(void)
 		if (GetkeyboardPress(DIK_O) == true)//トリガー
 		{//oが押された(デバッグ用)
 
+		
+			//モード設定(フェードの後リザルト画面に移行)
+			SetFade(MODE_RESULT);
+		}
+
+		if (GetkeyboardPress(DIK_F5) == true)//トリガー
+		{//F4が押された(デバッグ用)
 			if (GameLoopSave == false)
 			{
 #if _DEBUG
 				Model_DebugSave();
-				GameLoopSave++;
+				GameLoopSave = true;
 #endif
 			}
 
-			//モード設定(フェードの後リザルト画面に移行)
-			SetFade(MODE_RESULT);
 		}
+
+		if (GetkeyboardPress(DIK_F1) == true)//トリガー
+		{//F1が押された(デバッグ用)
+
+#if _DEBUG
+			DeleteCoveredModel();
+#endif
+		}
+
 
 		if (g_ClearFlag == true)
 		{
@@ -322,17 +345,20 @@ void UpdateGame(void)
 
 		UpdateItem();
 
+		UpdatePlayer();
+		UpdatePlayer_2P();
+
 		//--------------------プレイヤー
-		//if (pPlayer->bMoneyBoxGimmick != true)
-		//{//ギミックを操作していたらプレイヤーを止める(仮) ※ギミック中用のモーション出来たらそれに切り替え
-			UpdatePlayer();
+
+		//-------現在アイテムの十字選択を無効化させるのに使用
+		if (pPlayer->bMoneyBoxGimmick != true)
+		{//ギミックを操作していたらプレイヤーを止める(仮) ※ギミック中用のモーション出来たらそれに切り替え
 			bPlayer1inOK = true;
-		//}
-		//if (pPlayer2->bMoneyBoxGimmick != true)
-		//{//ギミックを操作していたらプレイヤーを止める(仮) ※ギミック中用のモーション出来たらそれに切り替え
-			UpdatePlayer_2P();
+		}
+		if (pPlayer2->bMoneyBoxGimmick != true)
+		{//ギミックを操作していたらプレイヤーを止める(仮) ※ギミック中用のモーション出来たらそれに切り替え
 			bPlayer2inOK = true;
-		//}
+		}
 		//--------------------
 		UpdateItem_UI(bPlayer1inOK, bPlayer2inOK);//入力受付可能かどうか
 
@@ -357,19 +383,19 @@ void UpdateGame(void)
 		UpdateBathGimmick();
 		UpdateSteam();
 
-		UpdateEyeTrap();
-
 		UpdateTransferGate();
 		UpdateActionZone();
+		UpdateEyeTrap();
 
 		UpdateShadow();
 #if _DEBUG
 		UpdateLine();
+		UpdateDebugModel();
 #endif
 		UpdateScreenUI();
 		UpdateSpeechBubble();
 		UpdateModel();
-//		UpdateDebugModel();
+
 		UpdateParticle();
 
 		UpdateCollision_Pre();
@@ -435,12 +461,13 @@ void DrawGame(void)
 		DrawPlayer_2P(nCnt);
 
 		DrawTransferGate();
-		DrawCollision_Pre();
+	
 
 #if _DEBUG
+		DrawCollision_Pre();
 		DrawActionZone();
 		DrawLine();
-//		DrawDebugModel();
+		DrawDebugModel();
 #endif
 		//αテストを有効
 		pDevice->SetRenderState(D3DRS_ALPHATESTENABLE, TRUE);
@@ -454,7 +481,6 @@ void DrawGame(void)
 		//αテストを無効
 		pDevice->SetRenderState(D3DRS_ALPHATESTENABLE, FALSE);
 
-		DrawEyeTrap();
 
 		SetCamera(nCnt);
 
@@ -485,14 +511,16 @@ void DrawGame(void)
 	DrawLimitTime();
 	DrawScreenUI();
 	DrawItem_UI();
-
+	DrawEyeTrap();
 	DrawHaveKey(g_nHaveKey);
 
-	DrawTextSet(D3DXVECTOR3(550.0f, 660.0f, 0.0f), 20, FONT_AKABARASINDELERA, D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f), "Oキーでリザルト＆モデル配置をセーブ！");
+	DrawTextSet(D3DXVECTOR3(550.0f, 490.0f, 0.0f), 20, FONT_AKABARASINDELERA, D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f), "F1で重なりモデルを削除(取扱注意)");
+	DrawTextSet(D3DXVECTOR3(550.0f, 660.0f, 0.0f), 20, FONT_AKABARASINDELERA, D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f), "F5キーでモデル配置をセーブ！一度のみ！");
 	DrawTextSet(D3DXVECTOR3(550.0f, 680.0f, 0.0f), 20, FONT_AKABARASINDELERA, D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f), "事故防止のためゲームループ後は無効！");
 	DrawTextSet(D3DXVECTOR3(550.0f, 700.0f, 0.0f), 20, FONT_AKABARASINDELERA, D3DXCOLOR(1.0f, 1.0f, 0.0f, 1.0f), "Xボタンでとりあえずアイテム出現");
 
 
+	DrawDebugDelC0mment();
 
 	if (g_bPause == true)
 	{
@@ -678,11 +706,12 @@ bool CheckCollisionWithRay(D3DXVECTOR3 start, D3DXVECTOR3 direction, D3DXVECTOR3
 //===================================
 void BoxCollisionPlayer(D3DXVECTOR3 PlayerMin, D3DXVECTOR3 PlayerMax, D3DXVECTOR3 HitMin, D3DXVECTOR3 HitMax,int PlayerIndex)
 {//当たり判定
-	//LPDIRECT3DDEVICE9 pDevice = GetDevice();
-
+	
 	//1Pのとき
 	if (PlayerIndex == 1)
 	{
+		bool OverPenetration = true;//過貫通疑惑を判定
+
 		Player* pPlayer;
 		pPlayer = GetPlayer();
 
@@ -696,6 +725,8 @@ void BoxCollisionPlayer(D3DXVECTOR3 PlayerMin, D3DXVECTOR3 PlayerMax, D3DXVECTOR
 		{
 			pPlayer->move.x = 0.0f;
 			pPlayer->pos.x = HitMin.x + (PlayerMin.x - pPlayer->pos.x) - 0.1f;
+
+			OverPenetration = false;
 		}
 
 		if (PlayerMin.z < HitMax.z &&
@@ -707,6 +738,7 @@ void BoxCollisionPlayer(D3DXVECTOR3 PlayerMin, D3DXVECTOR3 PlayerMax, D3DXVECTOR
 		{
 			pPlayer->move.x = 0.0f;
 			pPlayer->pos.x = HitMax.x + (PlayerMax.x - pPlayer->pos.x) + 0.1f;
+			OverPenetration = false;
 		}
 
 		//---------------------------------------Z方向
@@ -719,6 +751,7 @@ void BoxCollisionPlayer(D3DXVECTOR3 PlayerMin, D3DXVECTOR3 PlayerMax, D3DXVECTOR
 		{
 			pPlayer->move.z = 0.0f;
 			pPlayer->pos.z = HitMax.z - (PlayerMin.z - pPlayer->pos.z) + 0.1f;
+			OverPenetration = false;
 		}
 
 		if (PlayerMin.x < HitMax.x &&
@@ -730,6 +763,7 @@ void BoxCollisionPlayer(D3DXVECTOR3 PlayerMin, D3DXVECTOR3 PlayerMax, D3DXVECTOR
 		{
 			pPlayer->move.z = 0.0f;
 			pPlayer->pos.z = HitMin.z - (PlayerMax.z - pPlayer->pos.z) - 0.1f;
+			OverPenetration = false;
 		}
 
 		//------------------------------------Y方向
@@ -753,12 +787,25 @@ void BoxCollisionPlayer(D3DXVECTOR3 PlayerMin, D3DXVECTOR3 PlayerMax, D3DXVECTOR
 			}
 
 			pPlayer->bLandingNow = true;
+			OverPenetration = false;
 		}
+
+
+		if (OverPenetration == false)
+		{
+
+		}
+
+
+
+
 	}
 	else if (PlayerIndex==2)
 	{//2Pの時
 		Player_2P* pPlayer2;
 		pPlayer2 = GetPlayer_2P();
+
+		bool OverPenetration = false;//過貫通疑惑を判定
 
 		//---------------------------------------X方向
 		if (PlayerMin.z < HitMax.z &&
@@ -770,6 +817,7 @@ void BoxCollisionPlayer(D3DXVECTOR3 PlayerMin, D3DXVECTOR3 PlayerMax, D3DXVECTOR
 		{
 			pPlayer2->move.x = 0.0f;
 			pPlayer2->pos.x = HitMin.x + (PlayerMin.x - pPlayer2->pos.x) - 0.1f;
+			OverPenetration = false;
 		}
 
 		if (PlayerMin.z < HitMax.z &&
@@ -781,6 +829,7 @@ void BoxCollisionPlayer(D3DXVECTOR3 PlayerMin, D3DXVECTOR3 PlayerMax, D3DXVECTOR
 		{
 			pPlayer2->move.x = 0.0f;
 			pPlayer2->pos.x = HitMax.x + (PlayerMax.x - pPlayer2->pos.x) + 0.1f;
+			OverPenetration = false;
 		}
 
 		//---------------------------------------Z方向
@@ -793,6 +842,7 @@ void BoxCollisionPlayer(D3DXVECTOR3 PlayerMin, D3DXVECTOR3 PlayerMax, D3DXVECTOR
 		{
 			pPlayer2->move.z = 0.0f;
 			pPlayer2->pos.z = HitMax.z - (PlayerMin.z - pPlayer2->pos.z) + 0.1f;
+			OverPenetration = false;
 		}
 
 		if (PlayerMin.x < HitMax.x &&
@@ -804,6 +854,7 @@ void BoxCollisionPlayer(D3DXVECTOR3 PlayerMin, D3DXVECTOR3 PlayerMax, D3DXVECTOR
 		{
 			pPlayer2->move.z = 0.0f;
 			pPlayer2->pos.z = HitMin.z - (PlayerMax.z - pPlayer2->pos.z) - 0.1f;
+			OverPenetration = false;
 		}
 
 		//------------------------------------Y方向
@@ -827,6 +878,7 @@ void BoxCollisionPlayer(D3DXVECTOR3 PlayerMin, D3DXVECTOR3 PlayerMax, D3DXVECTOR
 			}
 
 			pPlayer2->bLandingNow = true;
+			OverPenetration = false;
 		}
 	}
 
@@ -1072,7 +1124,6 @@ void AdjustPlayerPositionToCollision_VIEWPOS(D3DXVECTOR3 playerPos, int PlayerIn
 				break;
 			}
 		}
-
 		// 衝突時にカメラの位置を調整
 		if (collision == true)
 		{
@@ -1118,9 +1169,9 @@ void AdjustPlayerPositionToCollision_VIEWPOS(D3DXVECTOR3 playerPos, int PlayerIn
 		// 衝突時にカメラの位置を調整
 		if (collision == true)
 		{
-			pViewMtx2[1].ViewPosMtx._41 -= (normalizedDir.x * collisionDistance * 0.8f);
+			pViewMtx2[1].ViewPosMtx._41 -= (normalizedDir.x * collisionDistance * 0.6f);
 			//pViewMtx[1].ViewPosMtx._42 -= (normalizedDir.y);
-			pViewMtx2[1].ViewPosMtx._43 -= (normalizedDir.z * collisionDistance * 0.8f);
+			pViewMtx2[1].ViewPosMtx._43 -= (normalizedDir.z * collisionDistance * 0.6f);
 		}
 	}
 }
@@ -1152,10 +1203,14 @@ void BoxCollisionGate(D3DXVECTOR3 PlayerMin, D3DXVECTOR3 PlayerMax, D3DXVECTOR3 
 {//当たり判定
 //	LPDIRECT3DDEVICE9 pDevice = GetDevice();
 
+	D3DXVECTOR3 EscapeRot_Player;
+	EscapeRot_Player = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+
+	D3DXVECTOR3 EscapeRot_Camera;
+	EscapeRot_Camera = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+
 	Camera* pCamera;
 	pCamera = GetCamera();
-
-
 
 	TRANSFERGATE* pTransferGate;
 	pTransferGate = GetTransferGate();
@@ -1167,10 +1222,7 @@ void BoxCollisionGate(D3DXVECTOR3 PlayerMin, D3DXVECTOR3 PlayerMax, D3DXVECTOR3 
 	//移動量避難
 	D3DXVECTOR3 ESCAPEMOVE = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 
-
-
 	float PlayerCenterCorre = 45.0f;
-
 
 	if (pTransferGate[ParentIndex].bActiomTrans == false)
 	{//アクショントランスじゃない時
@@ -1184,13 +1236,6 @@ void BoxCollisionGate(D3DXVECTOR3 PlayerMin, D3DXVECTOR3 PlayerMax, D3DXVECTOR3 
 			Player* pPlayer;
 			pPlayer = GetPlayer();
 
-
-
-			if (pPlayer->bAction == true)
-			{
-			}
-
-
 			//---------------------------------------X方向
 			if (PlayerMin.z < GateMax.z &&
 				PlayerMax.z > GateMin.z &&
@@ -1198,7 +1243,7 @@ void BoxCollisionGate(D3DXVECTOR3 PlayerMin, D3DXVECTOR3 PlayerMax, D3DXVECTOR3 
 				PlayerMax.x > GateMin.x &&
 				PlayerMin.y < GateMax.y &&
 				PlayerMax.y > GateMin.y)
-			{
+			{//+X
 				bHit = true;
 
 				if (pTransferGate[GateIndex].ParentTransAngle == TRANS_ANGLE_MAX)
@@ -1209,6 +1254,8 @@ void BoxCollisionGate(D3DXVECTOR3 PlayerMin, D3DXVECTOR3 PlayerMax, D3DXVECTOR3 
 					ESCAPEMOVE.z = pTransferGate[ParentIndex].pos.z;
 
 					pPlayer->move = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+					EscapeRot_Player.y = -D3DX_PI*0.5f;
+					EscapeRot_Camera.y = -D3DX_PI * 0.5f;
 				}
 			}
 			else if (PlayerMin.z < GateMax.z &&
@@ -1217,7 +1264,7 @@ void BoxCollisionGate(D3DXVECTOR3 PlayerMin, D3DXVECTOR3 PlayerMax, D3DXVECTOR3 
 				PlayerMin.x < GateMax.x &&
 				PlayerMin.y < GateMax.y &&
 				PlayerMax.y > GateMin.y)
-			{
+			{//-X
 				bHit = true;
 
 				if (pTransferGate[GateIndex].ParentTransAngle == TRANS_ANGLE_MAX)
@@ -1228,6 +1275,8 @@ void BoxCollisionGate(D3DXVECTOR3 PlayerMin, D3DXVECTOR3 PlayerMax, D3DXVECTOR3 
 					ESCAPEMOVE.z = pTransferGate[ParentIndex].pos.z;
 
 					pPlayer->move = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+					EscapeRot_Player.y = D3DX_PI * 0.5f;
+					EscapeRot_Camera.y = D3DX_PI * 0.5f;
 				}
 			}
 			//---------------------------------------Z方向
@@ -1237,7 +1286,7 @@ void BoxCollisionGate(D3DXVECTOR3 PlayerMin, D3DXVECTOR3 PlayerMax, D3DXVECTOR3 
 				PlayerMin.z < GateMax.z &&
 				PlayerMin.y < GateMax.y &&
 				PlayerMax.y > GateMin.y)
-			{
+			{//+Z
 				bHit = true;
 
 				if (pTransferGate[GateIndex].ParentTransAngle == TRANS_ANGLE_MAX)
@@ -1246,6 +1295,8 @@ void BoxCollisionGate(D3DXVECTOR3 PlayerMin, D3DXVECTOR3 PlayerMax, D3DXVECTOR3 
 					ESCAPEMOVE.z = ParentGateMin.z - (PlayerMax.z - pPlayer->pos.z) - 0.1f;
 					ESCAPEMOVE.x = pTransferGate[ParentIndex].pos.x;
 					ESCAPEMOVE.y = pTransferGate[ParentIndex].pos.y;
+					EscapeRot_Player.y = D3DX_PI;
+					EscapeRot_Camera.y = 0.0f;
 
 					pPlayer->move = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 				}
@@ -1256,7 +1307,7 @@ void BoxCollisionGate(D3DXVECTOR3 PlayerMin, D3DXVECTOR3 PlayerMax, D3DXVECTOR3 
 				PlayerMax.z > GateMin.z &&
 				PlayerMin.y < GateMax.y &&
 				PlayerMax.y > GateMin.y)
-			{
+			{//-ｚ
 				bHit = true;
 
 				if (pTransferGate[GateIndex].ParentTransAngle == TRANS_ANGLE_MAX)
@@ -1266,6 +1317,8 @@ void BoxCollisionGate(D3DXVECTOR3 PlayerMin, D3DXVECTOR3 PlayerMax, D3DXVECTOR3 
 					ESCAPEMOVE.y = pTransferGate[ParentIndex].pos.y;
 
 					pPlayer->move = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+					EscapeRot_Player.y = 0.0f;
+					EscapeRot_Camera.y = D3DX_PI;
 				}
 			}
 
@@ -1297,65 +1350,56 @@ void BoxCollisionGate(D3DXVECTOR3 PlayerMin, D3DXVECTOR3 PlayerMax, D3DXVECTOR3 
 
 				pPlayer->PlayerState = PLAYERSTATE_1P_TELEPOR;
 
-
 				if (pTransferGate[GateIndex].ParentTransAngle == TRANS_ANGLE_MAX_X)
 				{//+X
-
 					ESCAPEMOVE.x = ParentGateMax.x + (PlayerMax.x - pPlayer->pos.x) + 11.1f;
 					ESCAPEMOVE.y = pTransferGate[ParentIndex].pos.y;
 					ESCAPEMOVE.z = pTransferGate[ParentIndex].pos.z;
 
 					pPlayer->move = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-
+					EscapeRot_Player.y = -D3DX_PI * 0.5f;
+					EscapeRot_Camera.y = -D3DX_PI * 0.5f;
 				}
 				else if (pTransferGate[GateIndex].ParentTransAngle == TRANS_ANGLE_MIN_X)
 				{//-X
-
 					ESCAPEMOVE.x = ParentGateMin.x + (PlayerMin.x - pPlayer->pos.x) - 11.1f;
 					ESCAPEMOVE.y = pTransferGate[ParentIndex].pos.y;
 					ESCAPEMOVE.z = pTransferGate[ParentIndex].pos.z;
 
 					pPlayer->move = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-
+					EscapeRot_Player.y = D3DX_PI * 0.5f;
+					EscapeRot_Camera.y = D3DX_PI * 0.5f;
 				}
 				else if (pTransferGate[GateIndex].ParentTransAngle == TRANS_ANGLE_MAX_Z)
 				{//+Z
-
 					ESCAPEMOVE.z = ParentGateMax.z - (PlayerMin.z - pPlayer->pos.z) + 11.1f;
-
 					ESCAPEMOVE.x = pTransferGate[ParentIndex].pos.x;
 					ESCAPEMOVE.y = pTransferGate[ParentIndex].pos.y;
 
 					pPlayer->move = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 
-					//pCamera->rot.y = 0.0f;
+					EscapeRot_Player.y = D3DX_PI;
+					EscapeRot_Camera.y = 0.0f;
 				}
 				else if (pTransferGate[GateIndex].ParentTransAngle == TRANS_ANGLE_MIN_Z)
 				{//-Z
-
 					ESCAPEMOVE.z = ParentGateMin.z - (PlayerMax.z - pPlayer->pos.z) - 11.1f;
 					ESCAPEMOVE.x = pTransferGate[ParentIndex].pos.x;
 					ESCAPEMOVE.y = pTransferGate[ParentIndex].pos.y;
 
 					pPlayer->move = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 
-					//pCamera->rot.y = 3.14f;
+					EscapeRot_Player.y = 0.0f;
+					EscapeRot_Camera.y = D3DX_PI;
 				}
 
-				SetGameFade(0, ESCAPEMOVE);
+				SetGameFade(0, ESCAPEMOVE, EscapeRot_Camera, EscapeRot_Player);
 
 				if (pTransferGate[ParentIndex].bCompulsionTrans == true)
 				{//プレイヤー２も転移
-					SetGameFade(1, ESCAPEMOVE);
+					SetGameFade(1, ESCAPEMOVE, EscapeRot_Camera, EscapeRot_Player);
 				}
-
-
-
-
 			}
-
-
-
 		}
 		else if (PlayerIndex == 1)
 		{//2Pの時
@@ -1383,14 +1427,16 @@ void BoxCollisionGate(D3DXVECTOR3 PlayerMin, D3DXVECTOR3 PlayerMax, D3DXVECTOR3 
 					ESCAPEMOVE.y = pTransferGate[ParentIndex].pos.y;
 					ESCAPEMOVE.z = pTransferGate[ParentIndex].pos.z;
 					pPlayer2->move = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+					EscapeRot_Player.y =  -D3DX_PI * 0.5f;
+					EscapeRot_Camera.y =  -D3DX_PI * 0.5f;
 				}
 			}
 			else if (PlayerMin.z < GateMax.z &&
-				PlayerMax.z > GateMin.z &&
-				PlayerMin.x - pPlayer2->pos.x + pPlayer2->oldPos.x >= GateMax.x &&
-				PlayerMin.x < GateMax.x &&
-				PlayerMin.y < GateMax.y &&
-				PlayerMax.y > GateMin.y)
+					PlayerMax.z > GateMin.z &&
+					PlayerMin.x - pPlayer2->pos.x + pPlayer2->oldPos.x >= GateMax.x &&
+					PlayerMin.x < GateMax.x &&
+					PlayerMin.y < GateMax.y &&
+					PlayerMax.y > GateMin.y)
 			{
 
 				bHit = true;
@@ -1402,6 +1448,8 @@ void BoxCollisionGate(D3DXVECTOR3 PlayerMin, D3DXVECTOR3 PlayerMax, D3DXVECTOR3 
 					ESCAPEMOVE.z = pTransferGate[ParentIndex].pos.z;
 
 					pPlayer2->move = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+					EscapeRot_Player.y =  D3DX_PI * 0.5f;
+					EscapeRot_Camera.y =  D3DX_PI * 0.5f;
 				}
 			}
 			//---------------------------------------Z方向
@@ -1411,7 +1459,7 @@ void BoxCollisionGate(D3DXVECTOR3 PlayerMin, D3DXVECTOR3 PlayerMax, D3DXVECTOR3 
 				PlayerMin.z < GateMax.z &&
 				PlayerMin.y < GateMax.y &&
 				PlayerMax.y > GateMin.y)
-			{
+			{//+Z
 				bHit = true;
 
 				if (pTransferGate[GateIndex].ParentTransAngle == TRANS_ANGLE_MAX)
@@ -1419,6 +1467,9 @@ void BoxCollisionGate(D3DXVECTOR3 PlayerMin, D3DXVECTOR3 PlayerMax, D3DXVECTOR3 
 					ESCAPEMOVE.z = ParentGateMin.z - (PlayerMax.z - pPlayer2->pos.z) - 0.1f;
 					ESCAPEMOVE.x = pTransferGate[ParentIndex].pos.x;
 					ESCAPEMOVE.y = pTransferGate[ParentIndex].pos.y;
+
+					EscapeRot_Player.y = D3DX_PI;
+					EscapeRot_Camera.y = 0.0f;
 
 					pPlayer2->move = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 				}
@@ -1429,7 +1480,7 @@ void BoxCollisionGate(D3DXVECTOR3 PlayerMin, D3DXVECTOR3 PlayerMax, D3DXVECTOR3 
 				PlayerMax.z > GateMin.z &&
 				PlayerMin.y < GateMax.y &&
 				PlayerMax.y > GateMin.y)
-			{
+			{//-Z
 				bHit = true;
 
 				if (pTransferGate[GateIndex].ParentTransAngle == TRANS_ANGLE_MAX)
@@ -1437,6 +1488,9 @@ void BoxCollisionGate(D3DXVECTOR3 PlayerMin, D3DXVECTOR3 PlayerMax, D3DXVECTOR3 
 					ESCAPEMOVE.z = ParentGateMax.z - (PlayerMin.z - pPlayer2->pos.z) + 0.1f;
 					ESCAPEMOVE.x = pTransferGate[ParentIndex].pos.x;
 					ESCAPEMOVE.y = pTransferGate[ParentIndex].pos.y;
+
+					EscapeRot_Player.y = 0.0f;
+					EscapeRot_Camera.y = D3DX_PI;
 
 					pPlayer2->move = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 				}
@@ -1470,8 +1524,6 @@ void BoxCollisionGate(D3DXVECTOR3 PlayerMin, D3DXVECTOR3 PlayerMax, D3DXVECTOR3 
 
 				pPlayer2->PlayerState = PLAYERSTATE_2P_TELEPOR;
 
-
-
 				if (pTransferGate[GateIndex].ParentTransAngle == TRANS_ANGLE_MAX_X)
 				{//+X
 					ESCAPEMOVE.x = ParentGateMax.x + (PlayerMax.x - pPlayer2->pos.x) + 11.1f;
@@ -1479,6 +1531,8 @@ void BoxCollisionGate(D3DXVECTOR3 PlayerMin, D3DXVECTOR3 PlayerMax, D3DXVECTOR3 
 					ESCAPEMOVE.z = pTransferGate[ParentIndex].pos.z;
 
 					pPlayer2->move = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+					EscapeRot_Player.y = -D3DX_PI*0.5f;
+					EscapeRot_Camera.y = -D3DX_PI * 0.5f;
 				}
 				else if (pTransferGate[GateIndex].ParentTransAngle == TRANS_ANGLE_MIN_X)
 				{//-X
@@ -1487,6 +1541,8 @@ void BoxCollisionGate(D3DXVECTOR3 PlayerMin, D3DXVECTOR3 PlayerMax, D3DXVECTOR3 
 					ESCAPEMOVE.z = pTransferGate[ParentIndex].pos.z;
 
 					pPlayer2->move = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+					EscapeRot_Player.y = D3DX_PI*0.5f;
+					EscapeRot_Camera.y = D3DX_PI * 0.5f;
 				}
 				else if (pTransferGate[GateIndex].ParentTransAngle == TRANS_ANGLE_MAX_Z)
 				{//+Z
@@ -1496,7 +1552,8 @@ void BoxCollisionGate(D3DXVECTOR3 PlayerMin, D3DXVECTOR3 PlayerMax, D3DXVECTOR3 
 
 					pPlayer2->move = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 
-					//pCamera->rot.y = 0.0f;
+					EscapeRot_Player.y = D3DX_PI;
+					EscapeRot_Camera.y = 0.0f;
 				}
 				else if (pTransferGate[GateIndex].ParentTransAngle == TRANS_ANGLE_MIN_Z)
 				{//-Z
@@ -1506,25 +1563,24 @@ void BoxCollisionGate(D3DXVECTOR3 PlayerMin, D3DXVECTOR3 PlayerMax, D3DXVECTOR3 
 
 					pPlayer2->move = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 
-					//pCamera->rot.y = 3.14f;
+					EscapeRot_Player.y = 0.0f;
+					EscapeRot_Camera.y = D3DX_PI;
 				}
 
 
-				SetGameFade(1, ESCAPEMOVE);
+				SetGameFade(1, ESCAPEMOVE, EscapeRot_Camera,EscapeRot_Player);
 
 				if (pTransferGate[ParentIndex].bCompulsionTrans == true)
 				{//プレイヤー1も転移
-					SetGameFade(0, ESCAPEMOVE);
+					SetGameFade(0, ESCAPEMOVE, EscapeRot_Camera,EscapeRot_Player);
 				}
 			}
-
-
 		}
 	}
 	else if (pTransferGate[ParentIndex].bActiomTrans == true)
 	{//アクションで転移
 
-	//1Pのとき
+		//1Pのとき
 		if (PlayerIndex == 0)
 		{
 			//接触したか
@@ -1532,8 +1588,6 @@ void BoxCollisionGate(D3DXVECTOR3 PlayerMin, D3DXVECTOR3 PlayerMax, D3DXVECTOR3 
 
 			Player* pPlayer;
 			pPlayer = GetPlayer();
-
-
 
 			if (GateMin.x<=pPlayer->pos.x&&pPlayer->pos.x<=GateMax.x)
 			{
@@ -1551,9 +1605,7 @@ void BoxCollisionGate(D3DXVECTOR3 PlayerMin, D3DXVECTOR3 PlayerMax, D3DXVECTOR3 
 
 				if (pPlayer->bAction == true)
 				{
-
 					pPlayer->PlayerState = PLAYERSTATE_1P_TELEPOR;
-
 
 					if (pTransferGate[GateIndex].ParentTransAngle == TRANS_ANGLE_MAX_X)
 					{//+X
@@ -1563,7 +1615,8 @@ void BoxCollisionGate(D3DXVECTOR3 PlayerMin, D3DXVECTOR3 PlayerMax, D3DXVECTOR3 
 						ESCAPEMOVE.z = pTransferGate[ParentIndex].pos.z;
 
 						pPlayer->move = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-
+						EscapeRot_Player.y = -D3DX_PI * 0.5f;
+						EscapeRot_Camera.y = -D3DX_PI * 0.5f;
 					}
 					else if (pTransferGate[GateIndex].ParentTransAngle == TRANS_ANGLE_MIN_X)
 					{//-X
@@ -1573,7 +1626,8 @@ void BoxCollisionGate(D3DXVECTOR3 PlayerMin, D3DXVECTOR3 PlayerMax, D3DXVECTOR3 
 						ESCAPEMOVE.z = pTransferGate[ParentIndex].pos.z;
 
 						pPlayer->move = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-
+						EscapeRot_Player.y = D3DX_PI*0.5f;
+						EscapeRot_Camera.y = D3DX_PI * 0.5f;
 					}
 					else if (pTransferGate[GateIndex].ParentTransAngle == TRANS_ANGLE_MAX_Z)
 					{//+Z
@@ -1585,7 +1639,8 @@ void BoxCollisionGate(D3DXVECTOR3 PlayerMin, D3DXVECTOR3 PlayerMax, D3DXVECTOR3 
 
 						pPlayer->move = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 
-						//pCamera->rot.y = 0.0f;
+						EscapeRot_Player.y = D3DX_PI;
+						EscapeRot_Camera.y = 0.0f;
 					}
 					else if (pTransferGate[GateIndex].ParentTransAngle == TRANS_ANGLE_MIN_Z)
 					{//-Z
@@ -1596,14 +1651,15 @@ void BoxCollisionGate(D3DXVECTOR3 PlayerMin, D3DXVECTOR3 PlayerMax, D3DXVECTOR3 
 
 						pPlayer->move = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 
-						//pCamera->rot.y = 3.14f;
+						EscapeRot_Player.y = 0.0f;
+						EscapeRot_Camera.y = D3DX_PI;
 					}
 
-					SetGameFade(0, ESCAPEMOVE);
+					SetGameFade(0, ESCAPEMOVE, EscapeRot_Camera, EscapeRot_Player);
 
 					if (pTransferGate[ParentIndex].bCompulsionTrans == true)
 					{//プレイヤー２も転移
-						SetGameFade(1, ESCAPEMOVE);
+						SetGameFade(1, ESCAPEMOVE, EscapeRot_Camera, EscapeRot_Player);
 					}
 				}
 			}
@@ -1616,7 +1672,6 @@ void BoxCollisionGate(D3DXVECTOR3 PlayerMin, D3DXVECTOR3 PlayerMax, D3DXVECTOR3 
 			//接触したか
 			bool bHit = false;
 
-
 			if (GateMin.x <= pPlayer2->pos.x && pPlayer2->pos.x <= GateMax.x)
 			{
 				if (GateMin.y <= (pPlayer2->pos.y + PlayerCenterCorre) && (pPlayer2->pos.y + PlayerCenterCorre) <= GateMax.y)
@@ -1628,16 +1683,12 @@ void BoxCollisionGate(D3DXVECTOR3 PlayerMin, D3DXVECTOR3 PlayerMax, D3DXVECTOR3 
 				}
 			}
 
-			
-
 			if (bHit == true)
 			{//接触判定時
 
 				if (pPlayer2->bAction == true)
 				{
 					pPlayer2->PlayerState = PLAYERSTATE_2P_TELEPOR;
-
-
 
 					if (pTransferGate[GateIndex].ParentTransAngle == TRANS_ANGLE_MAX_X)
 					{//+X
@@ -1646,6 +1697,8 @@ void BoxCollisionGate(D3DXVECTOR3 PlayerMin, D3DXVECTOR3 PlayerMax, D3DXVECTOR3 
 						ESCAPEMOVE.z = pTransferGate[ParentIndex].pos.z;
 
 						pPlayer2->move = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+						EscapeRot_Player.y = -D3DX_PI*0.5f;
+						EscapeRot_Camera.y = -D3DX_PI * 0.5f;
 					}
 					else if (pTransferGate[GateIndex].ParentTransAngle == TRANS_ANGLE_MIN_X)
 					{//-X
@@ -1654,6 +1707,8 @@ void BoxCollisionGate(D3DXVECTOR3 PlayerMin, D3DXVECTOR3 PlayerMax, D3DXVECTOR3 
 						ESCAPEMOVE.z = pTransferGate[ParentIndex].pos.z;
 
 						pPlayer2->move = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+						EscapeRot_Player.y = D3DX_PI*0.5f;
+						EscapeRot_Camera.y = D3DX_PI * 0.5f;
 					}
 					else if (pTransferGate[GateIndex].ParentTransAngle == TRANS_ANGLE_MAX_Z)
 					{//+Z
@@ -1663,7 +1718,8 @@ void BoxCollisionGate(D3DXVECTOR3 PlayerMin, D3DXVECTOR3 PlayerMax, D3DXVECTOR3 
 
 						pPlayer2->move = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 
-						//pCamera->rot.y = 0.0f;
+						EscapeRot_Player.y = D3DX_PI;
+						EscapeRot_Camera.y = 0.0f;
 					}
 					else if (pTransferGate[GateIndex].ParentTransAngle == TRANS_ANGLE_MIN_Z)
 					{//-Z
@@ -1673,15 +1729,15 @@ void BoxCollisionGate(D3DXVECTOR3 PlayerMin, D3DXVECTOR3 PlayerMax, D3DXVECTOR3 
 
 						pPlayer2->move = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 
-						//pCamera->rot.y = 3.14f;
+						EscapeRot_Player.y = 0.0f;
+						EscapeRot_Camera.y = D3DX_PI;
 					}
 
-
-					SetGameFade(1, ESCAPEMOVE);
+					SetGameFade(1, ESCAPEMOVE, EscapeRot_Camera, EscapeRot_Player);
 
 					if (pTransferGate[ParentIndex].bCompulsionTrans == true)
 					{//プレイヤー1も転移
-						SetGameFade(0, ESCAPEMOVE);
+						SetGameFade(0, ESCAPEMOVE, EscapeRot_Camera, EscapeRot_Player);
 					}
 				}
 			}
@@ -1804,13 +1860,13 @@ void SphereCollisionZone(D3DXVECTOR3 PlayerPos, int PlayerIndex, int ZoneIndex)
 				RunWater(0);
 			}
 		}
-		SPEECHBUBBLE* pSpeachBubble = GetSpeechBubble();
 		bool pSpawnKey = GetSpawnKey();
+		SPEECHBUBBLE* pSpeachBubble = GetSpeechBubble();
+
 		if ((pActionZone[ZoneIndex].ActionType == ACTION_TYPE_LEVER_1
 			|| pActionZone[ZoneIndex].ActionType == ACTION_TYPE_LEVER_2)
 			&& pSpawnKey == true)
 		{//鍵がスポーンしたら削除
-
 			pActionZone[ZoneIndex].bUse = false;
 			pSpeachBubble[ZoneIndex].bUse = false;
 
@@ -1864,7 +1920,13 @@ void SphereCollisionZone(D3DXVECTOR3 PlayerPos, int PlayerIndex, int ZoneIndex)
 				}
 			}
 		}
-		
+		if (pActionZone[ZoneIndex].ActionType == ACTION_TYPE_EYETRAP && bIn == true)
+		{//視界トラップ（1P）
+			if (GetJoypadTrigger(JOYKEY_X, 0) == true)
+			{//視界トラップ作動
+				SetEyeTrap(0);
+			}
+		}
 	}
 	else if (PlayerIndex == 1)
 	{//2Pの時
@@ -1938,6 +2000,7 @@ void SphereCollisionZone(D3DXVECTOR3 PlayerPos, int PlayerIndex, int ZoneIndex)
 			{
 				g_bLever2 = false;
 			}
+
 		}
 		if ((pActionZone[ZoneIndex].ActionType == ACTION_TYPE_KEY_1
 			|| pActionZone[ZoneIndex].ActionType == ACTION_TYPE_KEY_2
@@ -1947,8 +2010,8 @@ void SphereCollisionZone(D3DXVECTOR3 PlayerPos, int PlayerIndex, int ZoneIndex)
 			if (GetJoypadTrigger(JOYKEY_X, 1) == true)
 			{//鍵のギミック作動
 				g_nHaveKey++;
-				pActionZone[ZoneIndex].bUse = false;
 				pSpeachBubble[ZoneIndex].bUse = false;
+				pActionZone[ZoneIndex].bUse = false;
 				switch (pActionZone[ZoneIndex].ActionType)
 				{
 				case ACTION_TYPE_KEY_1:
@@ -1963,6 +2026,13 @@ void SphereCollisionZone(D3DXVECTOR3 PlayerPos, int PlayerIndex, int ZoneIndex)
 					GetKey(MODELTYPE_KEY3);
 					break;
 				}
+			}
+		}
+		if (pActionZone[ZoneIndex].ActionType == ACTION_TYPE_EYETRAP && bIn == true)
+		{//視界トラップ（2P）
+			if (GetJoypadTrigger(JOYKEY_X, 1) == true)
+			{//視界トラップ作動
+				SetEyeTrap(1);
 			}
 		}
 	}

@@ -53,20 +53,25 @@ void InitTransferGate(void)
 
     //-----基本はボタンで移動かつみんなで移動になるかも
 
-    //---通過方向
+    //*外から倉庫へ*
+    //--外
     SetTransferGate(D3DXVECTOR3(100.0f, 0.0f, 0.0f), D3DXVECTOR3(-50.0f, 0.0f, -60.0f), D3DXVECTOR3(50.0f, 100.0f, 60.0f), 0, 1, TRANS_ANGLE_MIN_X, D3DXCOLOR(1.0f, 0.0f, 0.0f, 0.7f),false,true);
-    SetTransferGate(D3DXVECTOR3(-50.0f, 0.0f, -1000.0f), D3DXVECTOR3(-50.0f, 0.0f, -60.0f), D3DXVECTOR3(50.0f, 100.0f, 60.0f), 1, 0, TRANS_ANGLE_MIN_X, D3DXCOLOR(1.0f, 0.0f, 0.0f, 0.7f),false, true);
+    //--倉庫左
+    SetTransferGate(D3DXVECTOR3(-50.0f, 0.0f, -1000.0f), D3DXVECTOR3(-50.0f, 0.0f, -60.0f), D3DXVECTOR3(50.0f, 100.0f, 60.0f), 1, 0, TRANS_ANGLE_MAX_X, D3DXCOLOR(1.0f, 0.0f, 0.0f, 0.7f),false, true);
 
-    //---通過方向
-    SetTransferGate(D3DXVECTOR3(-600.0f, 0.0f, -2100.0f), D3DXVECTOR3(-50.0f, 0.0f, -60.0f), D3DXVECTOR3(50.0f, 100.0f, 60.0f), 2, 3, TRANS_ANGLE_MIN_Z, D3DXCOLOR(1.0f, 0.0f, 0.0f, 0.7f), false, true);
-    SetTransferGate(D3DXVECTOR3(-600.0f, 0.0f, 100.0f), D3DXVECTOR3(-50.0f, 0.0f, -60.0f), D3DXVECTOR3(50.0f, 100.0f, 60.0f), 3, 2, TRANS_ANGLE_MIN_Z, D3DXCOLOR(1.0f, 0.0f, 0.0f, 0.7f), false, true);
+    //*倉庫下から十字路へ？？*
+    //倉庫下
+    SetTransferGate(D3DXVECTOR3(-600.0f, 0.0f, -2100.0f), D3DXVECTOR3(-50.0f, 0.0f, -60.0f), D3DXVECTOR3(50.0f, 100.0f, 60.0f), 2, 3, TRANS_ANGLE_MIN_Z, D3DXCOLOR(1.0f, 1.0f, 0.0f, 0.7f), false, true);
+    //十字路
+    SetTransferGate(D3DXVECTOR3(-600.0f, 0.0f, 100.0f), D3DXVECTOR3(-50.0f, 0.0f, -60.0f), D3DXVECTOR3(50.0f, 100.0f, 60.0f), 3, 2, TRANS_ANGLE_MIN_Z, D3DXCOLOR(1.0f, 1.0f, 0.0f, 0.7f), false, true);
 
-    ////--出現方向指定
-    //SetTransferGate(D3DXVECTOR3(200.0f, 100.0f, -300.0f), D3DXVECTOR3(-100.0f, 0.0f, -60.0f), D3DXVECTOR3(100.0f, 100.0f, 60.0f), 2, 3, TRANS_ANGLE_MAX_Z, D3DXCOLOR(1.0f, 1.0f, 0.0f, 0.7f),false, true);
-    //SetTransferGate(D3DXVECTOR3(200.0f, 0.0f, 300.0f), D3DXVECTOR3(-100.0f, 0.0f, -60.0f), D3DXVECTOR3(100.0f, 100.0f, 60.0f), 3, 2, TRANS_ANGLE_MIN_Z, D3DXCOLOR(1.0f, 1.0f, 0.0f, 0.7f), false, true);
+    //*とりあえず真ん中からリビング*
+    SetTransferGate(D3DXVECTOR3(200.0f, 0.0f, 0.0f), D3DXVECTOR3(-50.0f, 0.0f, -60.0f), D3DXVECTOR3(50.0f, 100.0f, 60.0f), 4, 5, TRANS_ANGLE_MIN_Z, D3DXCOLOR(0.0f, 1.0f, 1.0f, 0.7f),false, true);
+    SetTransferGate(D3DXVECTOR3(2930, 104.0f, -1530.0f), D3DXVECTOR3(-50.0f, 0.0f, -60.0f), D3DXVECTOR3(50.0f, 100.0f, 60.0f), 5, 4, TRANS_ANGLE_MAX_Z, D3DXCOLOR(0.0f, 1.0f, 1.0f, 0.7f), false, true);
     
 
-    ////---通過方向
+    //*真ん中から浴室？？*
+    // 
     //SetTransferGate(D3DXVECTOR3(-2000.0f, 0.0f, -700.0f), D3DXVECTOR3(-100.0f, 0.0f, -60.0f), D3DXVECTOR3(100.0f, 100.0f, 60.0f), 4, 5, TRANS_ANGLE_MIN_X, D3DXCOLOR(1.0f, 0.0f, 1.0f, 0.7f), true, true);
     //SetTransferGate(D3DXVECTOR3(-2000.0f, 0.0f, 700.0f), D3DXVECTOR3(-100.0f, 0.0f, -60.0f), D3DXVECTOR3(100.0f, 100.0f, 60.0f), 5, 4, TRANS_ANGLE_MAX_Z, D3DXCOLOR(1.0f, 0.0f, 1.0f, 0.7f), true, true);
 
@@ -243,7 +248,7 @@ TRANSFERGATE* GetTransferGate(void)
 //=============================
 // 転移門設定処理
 //=============================
-//-----------------------------自分座標-----------------最小----------------最大---------自分の番号----転移先の番号--矯正転移かどうか--行動ボタンで転移かどうか
+//-----------------------------自分座標-----------------最小----------------最大---------自分の番号----転移先の番号--強制転移かどうか--行動ボタンで転移かどうか
 void SetTransferGate(D3DXVECTOR3 Pos, D3DXVECTOR3 GateMin, D3DXVECTOR3 GateMax, int nGateIndex, int nParentIndex, TRANSANGLE ParentTransAngle, D3DXCOLOR GateColor, bool bCompulsionTrans, bool bActionTrans)
 {    
     //デバイスの取得

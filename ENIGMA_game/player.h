@@ -14,8 +14,9 @@
 #define BRENDFLAME	(15.0f)//モーションブレンドのフレーム数
 
 
-#define VIEWPOS (D3DXVECTOR3 (22.0f,70.0f,0.0f))
+#define VIEWPOS (D3DXVECTOR3 (20.0f,70.0f,0.0f))
 
+#define NUM_TEXTURE_1P (10)
 
 #define MOVESPEED		(0.7f)//移動速度(0.15)
 
@@ -41,8 +42,8 @@
 #define MAXLIFE		(300)
 
 //プレイヤーサイズ(当たり判定用)
-#define PLAYERMIN	(D3DXVECTOR3(-27.0f,0.0f,-27.0f))
-#define PLAYERMAX	(D3DXVECTOR3(27.0f,85.0f,27.0f))
+#define PLAYERMIN	(D3DXVECTOR3(-23.0f,0.0f,-23.0f))
+#define PLAYERMAX	(D3DXVECTOR3(23.0f,85.0f,23.0f))
 
 #define GRAVITY	(0.9f)//重力
 

@@ -41,14 +41,14 @@ CHARACTERSET
 	PARTSSET
 		INDEX = 0					# 上半身
 		PARENT = -1					# (親)NULL
-		POS = 0.0 46.0 0.0
+		POS = 0.0 49.0 0.0
 		ROT = 0.0 0.0 0.0
 	END_PARTSSET
 
 	PARTSSET
 		INDEX = 1					# 下半身
 		PARENT = 0					# (親)NULL
-		POS = 0.0 -8.0 0.0
+		POS = 0.0 0.0 0.0
 		ROT = 0.0 0.0 0.0
 	END_PARTSSET
 
@@ -104,14 +104,14 @@ CHARACTERSET
 	PARTSSET
 		INDEX = 9					# 右腿
 		PARENT = 1					# (親)体
-		POS = -6.0 -2.0 0.0
+		POS = -6.0 -12.0 0.0
 		ROT = 0.0 0.0 0.0
 	END_PARTSSET
 
 	PARTSSET
 		INDEX = 10					# 右脛
 		PARENT = 9					# (親)右腿
-		POS = 0.0 -13.0 0.0
+		POS = 0.0 -14.0 0.0
 		ROT = 0.0 0.0 0.0
 	END_PARTSSET
 
@@ -125,14 +125,14 @@ CHARACTERSET
 	PARTSSET
 		INDEX = 12					# 左腿
 		PARENT = 1					# (親)体
-		POS = 6.0 -2.0 0.0
+		POS = 6.0 -12.0 0.0
 		ROT = 0.0 0.0 0.0
 	END_PARTSSET
 
 	PARTSSET
 		INDEX = 13					# 左脛
 		PARENT = 12					# (親)左腿
-		POS = 0.0 -13.0 0.0
+		POS = 0.0 -14.0 0.0
 		ROT = 0.0 0.0 0.0
 	END_PARTSSET
 

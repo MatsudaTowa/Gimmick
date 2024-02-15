@@ -446,7 +446,7 @@ void SetModel(D3DXVECTOR3 pos, D3DXVECTOR3 rot, ModelType nType)
 	}
 }
 //=============================================
-//Œ®Šl“¾ˆ—
+//Œ®æ“¾
 //=============================================
 void GetKey(ModelType nType)
 {

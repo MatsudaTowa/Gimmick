@@ -47,16 +47,16 @@ void InitDebugModel(void)
     g_DelModelPos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
     
     // 変数の初期化
-    for (int nCntZone = 0; nCntZone < MAXDEBUGMODEL; nCntZone++)
+    for (int nCntModel = 0; nCntModel < MAXDEBUGMODEL; nCntModel++)
     {
-        g_DebugModel[nCntZone].pos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-        g_DebugModel[nCntZone].ZoneMin = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-        g_DebugModel[nCntZone].ZoneMax = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-        g_DebugModel[nCntZone].nZoneIndex = -1;
-        //   g_DebugModel[nCntZone].nParentIndex = -1;
-      //  g_DebugModel[nCntZone].ActionType = ACTION_TYPE_MAX;
-       // g_DebugModel[nCntZone].bPossibility = false;
-        g_DebugModel[nCntZone].bUse = false;
+        g_DebugModel[nCntModel].pos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+        g_DebugModel[nCntModel].ZoneMin = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+        g_DebugModel[nCntModel].ZoneMax = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+        g_DebugModel[nCntModel].nZoneIndex = -1;
+        //   g_DebugModel[nCntModel].nParentIndex = -1;
+      //  g_DebugModel[nCntModel].ActionType = ACTION_TYPE_MAX;
+       // g_DebugModel[nCntModel].bPossibility = false;
+        g_DebugModel[nCntModel].bUse = false;
     }
 
 
@@ -108,19 +108,19 @@ void InitDebugModel(void)
 //=============================
 void UninitDebugModel(void)
 {
-    for (int nCntZone = 0; nCntZone < MAXDEBUGMODEL; nCntZone++)
+    for (int nCntModel = 0; nCntModel < MAXDEBUGMODEL; nCntModel++)
     {
         //メッシュの破棄
-        if (g_pMeshDebugModel[nCntZone] != NULL)
+        if (g_pMeshDebugModel[nCntModel] != NULL)
         {
-            g_pMeshDebugModel[nCntZone]->Release();
-            g_pMeshDebugModel[nCntZone] = NULL;
+            g_pMeshDebugModel[nCntModel]->Release();
+            g_pMeshDebugModel[nCntModel] = NULL;
         }
         //マテリアルの破棄
-        if (g_pBuffMatDebugModel[nCntZone] != NULL)
+        if (g_pBuffMatDebugModel[nCntModel] != NULL)
         {
-            g_pBuffMatDebugModel[nCntZone]->Release();
-            g_pBuffMatDebugModel[nCntZone] = NULL;
+            g_pBuffMatDebugModel[nCntModel]->Release();
+            g_pBuffMatDebugModel[nCntModel] = NULL;
         }
     }
 }
@@ -162,44 +162,44 @@ void UpdateDebugModel(void)
         g_NUM_Model--;
     }
 
-    for (int nCntZone = 0; nCntZone < MAXDEBUGMODEL; nCntZone++)
+    for (int nCntModel = 0; nCntModel < MAXDEBUGMODEL; nCntModel++)
     {
-        if (g_DebugModel[nCntZone].bUse == true)
+        if (g_DebugModel[nCntModel].bUse == true)
         {
-            if (nCntZone == 0)
+            if (nCntModel == 0)
             {//注視点1
-                g_DebugModel[nCntZone].pos = D3DXVECTOR3(pViewMtx[1].ViewPosMtx._41, pViewMtx[1].ViewPosMtx._42, pViewMtx[1].ViewPosMtx._43);
+                g_DebugModel[nCntModel].pos = D3DXVECTOR3(pViewMtx[1].ViewPosMtx._41, pViewMtx[1].ViewPosMtx._42, pViewMtx[1].ViewPosMtx._43);
             }
-            else if(nCntZone == 1)
+            else if(nCntModel == 1)
             {//注視点2
-                g_DebugModel[nCntZone].pos = D3DXVECTOR3(pViewMtx2[1].ViewPosMtx._41, pViewMtx2[1].ViewPosMtx._42, pViewMtx2[1].ViewPosMtx._43);
+                g_DebugModel[nCntModel].pos = D3DXVECTOR3(pViewMtx2[1].ViewPosMtx._41, pViewMtx2[1].ViewPosMtx._42, pViewMtx2[1].ViewPosMtx._43);
             }
-            else if (nCntZone == 2)
+            else if (nCntModel == 2)
             {//カメラ1
-                g_DebugModel[nCntZone].pos = pCamera[0].posV;
+                g_DebugModel[nCntModel].pos = pCamera[0].posV;
             }
-            else if (nCntZone == 3)
+            else if (nCntModel == 3)
             {//カメラ2
-                g_DebugModel[nCntZone].pos = pCamera[1].posV;
+                g_DebugModel[nCntModel].pos = pCamera[1].posV;
             }
 
-            else if (nCntZone == 4)
+            else if (nCntModel == 4)
             {//削除ピン
 
                 if (pMapObject[g_SelectNum].bUse == true)
                 {
-                    g_DebugModel[nCntZone].pos = pMapObject[g_SelectNum].pos;
+                    g_DebugModel[nCntModel].pos = pMapObject[g_SelectNum].pos;
                 }
 
                
             }
 
-            else if (nCntZone == 5)
+            else if (nCntModel == 5)
             {//削除ピン
 
                 if (pMapObject[g_SelectNum].bUse == true)
                 {
-                    g_DebugModel[nCntZone].pos = pMapObject[g_SelectNum].pos;
+                    g_DebugModel[nCntModel].pos = pMapObject[g_SelectNum].pos;
                 }
 
 
@@ -216,8 +216,8 @@ void UpdateDebugModel(void)
 
 
 
-        //    D3DXVECTOR3 DebugModelMin = g_DebugModel[nCntZone].pos + g_DebugModel[nCntZone].ZoneMin;
-        //    D3DXVECTOR3 DebugModelMax = g_DebugModel[nCntZone].pos + g_DebugModel[nCntZone].ZoneMax;
+        //    D3DXVECTOR3 DebugModelMin = g_DebugModel[nCntModel].pos + g_DebugModel[nCntModel].ZoneMin;
+        //    D3DXVECTOR3 DebugModelMax = g_DebugModel[nCntModel].pos + g_DebugModel[nCntModel].ZoneMax;
 
         //    //ラインの位置
         //    // 上下の辺
@@ -266,17 +266,17 @@ void DrawDebugModel(void)
 
     D3DXMATERIAL* pMat;//マテリアルデータへのポインタ
 
-    for (int nCntZone = 0; nCntZone < MAXDEBUGMODEL; nCntZone++)
+    for (int nCntModel = 0; nCntModel < MAXDEBUGMODEL; nCntModel++)
     {
-        if (g_DebugModel[nCntZone].bUse == true)
+        if (g_DebugModel[nCntModel].bUse == true)
         {
 
 
             //ワールドマトリックスの初期化
-            D3DXMatrixIdentity(&g_DebugModel[nCntZone].mtxWorld);
+            D3DXMatrixIdentity(&g_DebugModel[nCntModel].mtxWorld);
 
             // モデルのサイズを変更
-            D3DXMatrixScaling(&g_DebugModel[nCntZone].mtxWorld, g_DebugModel[nCntZone].SizeMag.x, g_DebugModel[nCntZone].SizeMag.y, g_DebugModel[nCntZone].SizeMag.z);
+            D3DXMatrixScaling(&g_DebugModel[nCntModel].mtxWorld, g_DebugModel[nCntModel].SizeMag.x, g_DebugModel[nCntModel].SizeMag.y, g_DebugModel[nCntModel].SizeMag.z);
 
             ////向きを反映
             //D3DXMatrixRotationYawPitchRoll(&mtxRot, g_Player.rot.y, g_Player.rot.x, g_Player.rot.z);
@@ -284,18 +284,18 @@ void DrawDebugModel(void)
             //D3DXMatrixMultiply(&g_Player.mtxWorld, &g_Player.mtxWorld, &mtxRot);
 
             //位置を反映
-            D3DXMatrixTranslation(&mtxTrans, g_DebugModel[nCntZone].pos.x, g_DebugModel[nCntZone].pos.y, g_DebugModel[nCntZone].pos.z);
+            D3DXMatrixTranslation(&mtxTrans, g_DebugModel[nCntModel].pos.x, g_DebugModel[nCntModel].pos.y, g_DebugModel[nCntModel].pos.z);
 
-            D3DXMatrixMultiply(&g_DebugModel[nCntZone].mtxWorld, &g_DebugModel[nCntZone].mtxWorld, &mtxTrans);
+            D3DXMatrixMultiply(&g_DebugModel[nCntModel].mtxWorld, &g_DebugModel[nCntModel].mtxWorld, &mtxTrans);
 
             //ワールドマトリックスの設定
-            pDevice->SetTransform(D3DTS_WORLD, &g_DebugModel[nCntZone].mtxWorld);
+            pDevice->SetTransform(D3DTS_WORLD, &g_DebugModel[nCntModel].mtxWorld);
 
             //現在のマテリアルを取得
             pDevice->GetMaterial(&matDef);
 
             //マテリアルデータへのポインタを取得
-            pMat = (D3DXMATERIAL*)g_pBuffMatDebugModel[nCntZone]->GetBufferPointer();
+            pMat = (D3DXMATERIAL*)g_pBuffMatDebugModel[nCntModel]->GetBufferPointer();
 
             for (int nCntMat = 0; nCntMat < (int)g_dwNumMatDebugModel; nCntMat++)
             {
@@ -316,7 +316,7 @@ void DrawDebugModel(void)
                 pDevice->SetMaterial(&pMat[nCntMat].MatD3D);
 
                 // ディフューズカラーを変更（例: 赤い色）
-                pMat[nCntMat].MatD3D.Diffuse = D3DXCOLOR(g_DebugModel[nCntZone].ZoneColor.r * g_DebugModel[nCntZone].SizeMag.x, g_DebugModel[nCntZone].ZoneColor.g * g_DebugModel[nCntZone].SizeMag.x, g_DebugModel[nCntZone].ZoneColor.b * g_DebugModel[nCntZone].SizeMag.x, g_DebugModel[nCntZone].ZoneColor.a);
+                pMat[nCntMat].MatD3D.Diffuse = D3DXCOLOR(g_DebugModel[nCntModel].ZoneColor.r * g_DebugModel[nCntModel].SizeMag.x, g_DebugModel[nCntModel].ZoneColor.g * g_DebugModel[nCntModel].SizeMag.x, g_DebugModel[nCntModel].ZoneColor.b * g_DebugModel[nCntModel].SizeMag.x, g_DebugModel[nCntModel].ZoneColor.a);
 
 
 
@@ -329,7 +329,6 @@ void DrawDebugModel(void)
 
 
 }
-//=============================
 
 
 //=============================
@@ -352,38 +351,38 @@ void SetDebugModelSphere(float Radius,D3DXCOLOR ZoneColor,bool Beacon)
     //デバイスの取得
     LPDIRECT3DDEVICE9 pDevice = GetDevice();//----------------書き換え済み
 
-    for (int nCntZone = 0; nCntZone < MAXDEBUGMODEL; nCntZone++)
+    for (int nCntModel = 0; nCntModel < MAXDEBUGMODEL; nCntModel++)
     {
-        if (g_DebugModel[nCntZone].bUse == false)
+        if (g_DebugModel[nCntModel].bUse == false)
         {
-           // g_DebugModel[nCntZone].pos = Pos;
-            g_DebugModel[nCntZone].Radius = Radius;
+           // g_DebugModel[nCntModel].pos = Pos;
+            g_DebugModel[nCntModel].Radius = Radius;
 
-            g_DebugModel[nCntZone].ZoneMin = D3DXVECTOR3(-Radius, -Radius, -Radius);
-            g_DebugModel[nCntZone].ZoneMax = D3DXVECTOR3(Radius, Radius, Radius);
-            g_DebugModel[nCntZone].ZoneColor = ZoneColor;
-            g_DebugModel[nCntZone].EscapeZoneColor = ZoneColor;
+            g_DebugModel[nCntModel].ZoneMin = D3DXVECTOR3(-Radius, -Radius, -Radius);
+            g_DebugModel[nCntModel].ZoneMax = D3DXVECTOR3(Radius, Radius, Radius);
+            g_DebugModel[nCntModel].ZoneColor = ZoneColor;
+            g_DebugModel[nCntModel].EscapeZoneColor = ZoneColor;
 
             if (Beacon == false)
             {
                 //サイズ変動
-                g_DebugModel[nCntZone].SizeMag.x = g_DebugModel[nCntZone].ZoneMax.x / 10.0f;
-                g_DebugModel[nCntZone].SizeMag.y = g_DebugModel[nCntZone].ZoneMax.y / 10.0f;
-                g_DebugModel[nCntZone].SizeMag.z = g_DebugModel[nCntZone].ZoneMax.z / 10.0f;
+                g_DebugModel[nCntModel].SizeMag.x = g_DebugModel[nCntModel].ZoneMax.x / 10.0f;
+                g_DebugModel[nCntModel].SizeMag.y = g_DebugModel[nCntModel].ZoneMax.y / 10.0f;
+                g_DebugModel[nCntModel].SizeMag.z = g_DebugModel[nCntModel].ZoneMax.z / 10.0f;
             }
             else
             {
                 //サイズ変動
-                g_DebugModel[nCntZone].SizeMag.x = g_DebugModel[nCntZone].ZoneMax.x / 20.0f;
-                g_DebugModel[nCntZone].SizeMag.y = g_DebugModel[nCntZone].ZoneMax.y;
-                g_DebugModel[nCntZone].SizeMag.z = g_DebugModel[nCntZone].ZoneMax.z / 20.0f;
+                g_DebugModel[nCntModel].SizeMag.x = g_DebugModel[nCntModel].ZoneMax.x / 20.0f;
+                g_DebugModel[nCntModel].SizeMag.y = g_DebugModel[nCntModel].ZoneMax.y*20.0f;
+                g_DebugModel[nCntModel].SizeMag.z = g_DebugModel[nCntModel].ZoneMax.z / 20.0f;
             }
 
 
 
-        //    g_DebugModel[nCntZone].ActionType = ActionType;//転移先転移方向
-        //   g_DebugModel[nCntZone].bPossibility = true;
-            g_DebugModel[nCntZone].bUse = true;
+        //    g_DebugModel[nCntModel].ActionType = ActionType;//転移先転移方向
+        //   g_DebugModel[nCntModel].bPossibility = true;
+            g_DebugModel[nCntModel].bUse = true;
 
 
             //ファイルの読み込み
@@ -391,16 +390,55 @@ void SetDebugModelSphere(float Radius,D3DXCOLOR ZoneColor,bool Beacon)
                 D3DXMESH_SYSTEMMEM,
                 pDevice,
                 NULL,
-                &g_pBuffMatDebugModel[nCntZone],
+                &g_pBuffMatDebugModel[nCntModel],
                 NULL,
                 &g_dwNumMatDebugModel,
-                &g_pMeshDebugModel[nCntZone]);
+                &g_pMeshDebugModel[nCntModel]);
 
 
             break;
         }
     }
 }
+
+//=============================
+//被りモデルを削除する処理
+//=============================
+void DeleteCoveredModel(void)
+{
+    MAPOBJECT* pMapObject;
+    pMapObject = GetMapObject();
+
+    for (int nCntModel = 0; nCntModel < MAX_MODEL; nCntModel++)
+    {
+        if (pMapObject[nCntModel].bUse == true)
+        {
+            for (int nCnt2 = 0; nCnt2 < MAX_MODEL; nCnt2++)
+            {
+                if (nCnt2 != nCntModel)
+                {//自分自身じゃないとき
+                    if (pMapObject[nCntModel].nType == MODELTYPE_SAFE && pMapObject[nCnt2].nType == MODELTYPE_SAFE)
+                    {
+                        int test;
+                        test = 2;
+                    }
+
+
+
+                    if (pMapObject[nCnt2].bUse == true)
+                    {
+                        if (pMapObject[nCntModel].nType == pMapObject[nCnt2].nType && pMapObject[nCntModel].pos == pMapObject[nCnt2].pos && pMapObject[nCntModel].Maxpos == pMapObject[nCnt2].Maxpos)
+                        {//3つが同じとき(タイプとposとMaxPos)
+                            pMapObject[nCnt2].bUse = false;
+                            g_NUM_Model--;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
 ////=============================
 ////四角
 ////=============================
@@ -410,27 +448,27 @@ void SetDebugModelSphere(float Radius,D3DXCOLOR ZoneColor,bool Beacon)
 //    //デバイスの取得
 //    LPDIRECT3DDEVICE9 pDevice = GetDevice();//----------------書き換え済み
 //
-//    for (int nCntZone = 0; nCntZone < MAXDEBUGMODEL; nCntZone++)
+//    for (int nCntModel = 0; nCntModel < MAXDEBUGMODEL; nCntModel++)
 //    {
-//        if (g_DebugModel[nCntZone].bUse == false)
+//        if (g_DebugModel[nCntModel].bUse == false)
 //        {
-//            // g_DebugModel[nCntZone].pos = Pos;
-//         //   g_DebugModel[nCntZone].Radius = Radius;
+//            // g_DebugModel[nCntModel].pos = Pos;
+//         //   g_DebugModel[nCntModel].Radius = Radius;
 //
-//            g_DebugModel[nCntZone].ZoneMin = Min;
-//            g_DebugModel[nCntZone].ZoneMax = Max;
-//            g_DebugModel[nCntZone].ZoneColor = ZoneColor;
-//            g_DebugModel[nCntZone].EscapeZoneColor = ZoneColor;
+//            g_DebugModel[nCntModel].ZoneMin = Min;
+//            g_DebugModel[nCntModel].ZoneMax = Max;
+//            g_DebugModel[nCntModel].ZoneColor = ZoneColor;
+//            g_DebugModel[nCntModel].EscapeZoneColor = ZoneColor;
 //
 //            //サイズ変動
-//            g_DebugModel[nCntZone].SizeMag.x = g_DebugModel[nCntZone].ZoneMax.x;
-//            g_DebugModel[nCntZone].SizeMag.y = g_DebugModel[nCntZone].ZoneMax.y;
-//            g_DebugModel[nCntZone].SizeMag.z = g_DebugModel[nCntZone].ZoneMax.z;
+//            g_DebugModel[nCntModel].SizeMag.x = g_DebugModel[nCntModel].ZoneMax.x;
+//            g_DebugModel[nCntModel].SizeMag.y = g_DebugModel[nCntModel].ZoneMax.y;
+//            g_DebugModel[nCntModel].SizeMag.z = g_DebugModel[nCntModel].ZoneMax.z;
 //
 //
-//            //    g_DebugModel[nCntZone].ActionType = ActionType;//転移先転移方向
-//            //   g_DebugModel[nCntZone].bPossibility = true;
-//            g_DebugModel[nCntZone].bUse = true;
+//            //    g_DebugModel[nCntModel].ActionType = ActionType;//転移先転移方向
+//            //   g_DebugModel[nCntModel].bPossibility = true;
+//            g_DebugModel[nCntModel].bUse = true;
 //
 //
 //            //ファイルの読み込み
@@ -438,10 +476,10 @@ void SetDebugModelSphere(float Radius,D3DXCOLOR ZoneColor,bool Beacon)
 //                D3DXMESH_SYSTEMMEM,
 //                pDevice,
 //                NULL,
-//                &g_pBuffMatDebugModel[nCntZone],
+//                &g_pBuffMatDebugModel[nCntModel],
 //                NULL,
 //                &g_dwNumMatDebugModel,
-//                &g_pMeshDebugModel[nCntZone]);
+//                &g_pMeshDebugModel[nCntModel]);
 //
 //
 //            break;

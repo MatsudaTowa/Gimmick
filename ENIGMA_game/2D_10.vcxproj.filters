@@ -356,6 +356,9 @@
     <ClInclude Include="password.h">
       <Filter>ソース ファイル\--++|    GAME   |++--\MoneyboxGimmick</Filter>
     </ClInclude>
+    <ClInclude Include="model.h">
+      <Filter>ソース ファイル\--++|    GAME   |++--\//3D_Model//</Filter>
+    </ClInclude>
     <ClInclude Include="itemUI.h">
       <Filter>ソース ファイル\--++|    GAME   |++--\//ITEM//\Item_UI_</Filter>
     </ClInclude>
@@ -375,10 +378,7 @@
       <Filter>ソース ファイル\--++|    GAME   |++--\//Stage%28Arrangements%29//\HITCOLLISION＿MISTAKE_PREVENTION</Filter>
     </ClInclude>
     <ClInclude Include="eyetrap.h">
-      <Filter>ソース ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="model.h">
-      <Filter>ソース ファイル\--++|    GAME   |++--\//GAME_SYSTEM//</Filter>
+      <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

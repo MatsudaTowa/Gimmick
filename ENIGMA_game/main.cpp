@@ -316,7 +316,11 @@ HRESULT Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindows)
 	d3dpp.SwapEffect = D3DSWAPEFFECT_DISCARD;//ダブルバッファの切り替え（映像信号に同期）
 	d3dpp.EnableAutoDepthStencil = TRUE;//デプスバッファとステンシルバッファを作成
 
-	d3dpp.AutoDepthStencilFormat = D3DFMT_D16;//デパスバッファとして１６ビットを使う----------------------------------------------------------------------
+	//d3dpp.AutoDepthStencilFormat = D3DFMT_D16;//デパスバッファとして16ビットを使う----------------------------------------------------------------------
+	d3dpp.AutoDepthStencilFormat = D3DFMT_D24X8;//デパスバッファとして24ビットを使う----------------------------------------------------------------------
+
+
+
 	d3dpp.Windowed = bWindows;//ウィンドウモード
 	d3dpp.FullScreen_RefreshRateInHz = D3DPRESENT_RATE_DEFAULT;//リフレッシュレート
 	d3dpp.PresentationInterval = D3DPRESENT_INTERVAL_DEFAULT;//インターバル
@@ -333,7 +337,6 @@ HRESULT Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindows)
 				return E_FAIL;
 			}
 		}
-		
 	}
 
 	//レンダーステートの設定//-----------------------------------------------------------------
@@ -670,7 +673,7 @@ void Draw(void)
 			break;
 		}
 			
-		DrawFPS();
+	//	DrawFPS();
 		DrawDebugText();
 
 		
@@ -786,20 +789,20 @@ double GetDeltaTimer(void)
 	return delta;
 }
 
-//=============================
-//FPS表示処理
-//=============================
-void DrawFPS(void)
-{
-	RECT rect = { 0,0,SCREEN_WIDE,SCREEN_HEIGHT};
-	char aStr[1024];
-	//文字列に代入
-	wsprintf(&aStr[0], "FPS:%d", g_nCountFPS);
-
-	//テキストの描画
-	g_pFont->DrawText(NULL, &aStr[0], -1, &rect, DT_LEFT, D3DCOLOR_RGBA(255, 15, 15, 255));
-
-}
+////=============================
+////FPS表示処理
+////=============================
+//void DrawFPS(void)
+//{
+//	RECT rect = { 0,0,SCREEN_WIDE,SCREEN_HEIGHT};
+//	char aStr[1024];
+//	//文字列に代入
+//	wsprintf(&aStr[0], "FPS:%d", g_nCountFPS);
+//
+//	//テキストの描画
+//	g_pFont->DrawText(NULL, &aStr[0], -1, &rect, DT_LEFT, D3DCOLOR_RGBA(255, 15, 15, 255));
+//
+//}
 //=============================
 //デバッグコメント表示処理
 //=============================
@@ -842,7 +845,7 @@ void DrawDebugText(void)
 
 
 	DrawTextSet(D3DXVECTOR3(750.0f, 0.0f, 0.0f), 0, FONT_AKABARASINDELERA, D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f), "フレーム--%d", pPlayer->NowFrameCntDOWN);
-	DrawTextSet(D3DXVECTOR3(950.0f, 700.0f, 0.0f), 0, FONT_AKABARASINDELERA, D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f), "１Pの位置--,%d,%d,%d", Xpos, Ypos, Zpos);
+	DrawTextSet(D3DXVECTOR3(950.0f, 670.0f, 0.0f), 0, FONT_AKABARASINDELERA, D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f), "１Pの位置--,%d,%d,%d", Xpos, Ypos, Zpos);
 
 }
 

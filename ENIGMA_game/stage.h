@@ -10,7 +10,7 @@
 
 #include"main.h"
 
-#define NUMSTAGE	(64)//壁の数
+#define NUMSTAGE	(128)//壁の数
 #define STAGETEXNUM	(5)//テクスチャの数
 
 #define STAGESIZE	(3000.0f)
@@ -65,5 +65,8 @@ void SetWallVertices(VERTEX_3D* pVtx, float bes, float ver);
 
 // 壁の位置と回転に準拠した後の頂点座標を計算する関数
 void CalculateTransformedWallVertices(D3DXVECTOR3 Pos, D3DXVECTOR3 rot, float bes, float ver, VERTEX_3D* pVtxint,int Index);
+
+void ExclusionCollision_Stage(void);
+
 
 #endif

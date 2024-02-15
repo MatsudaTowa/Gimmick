@@ -14,7 +14,10 @@
 //*****************************************************************************
 typedef enum
 {
-	SOUND_LABEL_BGM000 = 0,		// タイトルBGM----仮
+	SOUND_LABEL_BGM000 = 0,		// タイトルBGM
+	SOUND_LABEL_BGM001 = 1,		// クリアBGM
+	SOUND_LABEL_BGM002 = 2,		// ゲームオーバーBGM
+	SOUND_LABEL_BGM003 = 3,		// エニグマBGM
 	SOUND_LABEL_SE_SHOT,		// 弾発射音--仮
 	SOUND_LABEL_MAX,
 } SOUND_LABEL;

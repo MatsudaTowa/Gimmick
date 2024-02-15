@@ -38,6 +38,7 @@ typedef enum
 	ACTION_TYPE_KEY_1, //鍵ギミック
 	ACTION_TYPE_KEY_2, //鍵ギミック
 	ACTION_TYPE_KEY_3, //鍵ギミック
+	ACTION_TYPE_EYETRAP, //視界トラップ
 	ACTION_TYPE_MAX,//--進行方向に転移
 }ACTIONTYPE;
 

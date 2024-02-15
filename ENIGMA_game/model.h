@@ -58,7 +58,6 @@ typedef struct
 	LPDIRECT3DTEXTURE9 pTexture;
 	int nShadow;
 	int nCntMat;
-	int nKeyIndex; //Œ®ˆÈŠO‚Í‚O,Œ®‚ÍnCnt‚ğŠ„‚èU‚Á‚Ä‚­
 	ModelType nType;
 	bool bUse;
 	bool bCollision;//“–‚½‚è”»’è‚ ‚é‚©
@@ -71,11 +70,13 @@ void UpdateModel(void);
 void DrawModel(void);
 void SetModel(D3DXVECTOR3 pos, D3DXVECTOR3 rot,ModelType nType);
 void GetKey(ModelType nType);
-
 MAPOBJECT* GetMapObject(void);
 
 //“–‚½‚è”»’èœŠOˆ—
 void ExclusionCollision(void);
+
+
+
 
 #endif // _POLYGON_H_ //’è‹`‚³‚ê‚Ä‚È‚©‚Á‚½‚ç
 

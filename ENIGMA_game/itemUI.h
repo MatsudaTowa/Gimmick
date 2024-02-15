@@ -66,12 +66,12 @@ void InitItem_UI(void);
 void UninitItem_UI(void);
 void UpdateItem_UI(bool Player1InputOK, bool Player2InputOK);
 void DrawItem_UI(void);
-void DrawHaveKey(int nHaveKey);
+
 
 
 void SetItem_UI(D3DXVECTOR3 pos, ITEM_UI_TYPE ItemUIType, ITEMTYPE ItemType,int PosNum,int PlayerNum);
 
-
+void DrawHaveKey(int nHaveKey);
 
 
 

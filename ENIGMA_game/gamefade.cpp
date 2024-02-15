@@ -8,6 +8,7 @@
 #include "gamefade.h"
 #include "player.h"
 #include "player2.h"
+#include "camera.h"
 //#include "sound.h"
 
 //グローバル変数宣言
@@ -20,7 +21,8 @@ LPDIRECT3DVERTEXBUFFER9 g_pVtxBuffGameFade = NULL; //頂点バッファへのポインタ
 //int g_GameFadeCnt[MAXGAMEFADE] = {};//ゲーム画面への移行時かすかに色が残る問題を対策
 
 D3DXVECTOR3 g_EscapeMove[MAXGAMEFADE];
-
+D3DXVECTOR3 g_EscapeRot_Camera[MAXGAMEFADE];
+D3DXVECTOR3 g_EscapeRot_Player[MAXGAMEFADE];
 
 bool g_PlayerBlack = false;
 bool g_Player2Black = false;
@@ -54,6 +56,8 @@ void InitGameFade(void)
 	for (int FadeCnt = 0; FadeCnt < MAXGAMEFADE; FadeCnt++)
 	{
 		g_EscapeMove[FadeCnt] = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+		g_EscapeRot_Camera[FadeCnt] = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+		g_EscapeRot_Player[FadeCnt] = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 
 		//変数の初期化
 		g_colorGameFade[FadeCnt].a = 0.0f;
@@ -140,6 +144,8 @@ void UpdateGameFade(void)
 	Player_2P* pPlayer2;
 	pPlayer2 = GetPlayer_2P();
 
+	Camera* pCamera;
+	pCamera = GetCamera();
 
 	for (int FadeCnt = 0; FadeCnt < MAXGAMEFADE; FadeCnt++)
 	{
@@ -171,26 +177,34 @@ void UpdateGameFade(void)
 					if (FadeCnt==0)
 					{
 						pPlayer->pos = g_EscapeMove[FadeCnt];
+						pCamera[0].rot.x = 0.0f;
+						pCamera[0].rot.z = 0.0f;
+
+						pCamera[0].rot.y = g_EscapeRot_Camera[FadeCnt].y;
+
+
+						pPlayer->rot = g_EscapeRot_Player[FadeCnt];
+
 						pPlayer->PlayerState = PLAYERSTATE_1P_NOMAL;
 
 					}
 					else if(FadeCnt == 1)
 					{
 						pPlayer2->pos = g_EscapeMove[FadeCnt];
-						pPlayer2->PlayerState = PLAYERSTATE_2P_NOMAL;
+						pCamera[1].rot.x = 0.0f;
+						pCamera[1].rot.z = 0.0f;
+						pCamera[1].rot.y = g_EscapeRot_Camera[FadeCnt].y;
+						
+						pPlayer2->rot = g_EscapeRot_Player[FadeCnt];
 
+
+						pPlayer2->PlayerState = PLAYERSTATE_2P_NOMAL;
+						//pPlayer2->rot = g_EscapeRot[FadeCnt];
 					}
 
 
 					g_GameFade[FadeCnt] = GAMEFADE_IN;	//ゲーム内フェードイン状態
 				}
-
-			//	if (g_GameFadeCnt[FadeCnt] == 1)
-			//	{//色が薄く残る問題を解決
-			//		//モード設定(次の画面に移行)
-			////		Setmode(g_ModeNext);
-			//		g_GameFadeCnt[FadeCnt] = 0;
-			//	}
 			}
 
 			if (FadeCnt == 0)
@@ -267,7 +281,7 @@ void DrawGameFade(void)
 //=============================
 //ゲーム内フェードの設定処理
 //=============================
-void SetGameFade(int PlayerNum, D3DXVECTOR3 ESCAPEMOVE)
+void SetGameFade(int PlayerNum, D3DXVECTOR3 ESCAPEMOVE, D3DXVECTOR3 EscapeRot_Camera, D3DXVECTOR3 EscapeRot_Player)
 {
 //	for (int FadeCnt = 0; FadeCnt < MAXGAMEFADE; FadeCnt++)
 	//{
@@ -278,7 +292,8 @@ void SetGameFade(int PlayerNum, D3DXVECTOR3 ESCAPEMOVE)
 			g_colorGameFade[PlayerNum] = D3DXCOLOR(0.0f, 0.0f, 0.0f, 0.0f);			//黒いポリゴン(透明)にしておく
 			g_GameFade[PlayerNum] = GAMEFADE_OUT;											//ゲーム内フェードアウト状態に
 			g_EscapeMove[PlayerNum]= ESCAPEMOVE;//移動量
-
+			g_EscapeRot_Camera[PlayerNum] = EscapeRot_Camera;
+			g_EscapeRot_Player[PlayerNum] = EscapeRot_Player;
 		//	g_ModeNext = mode_next;										//次の画面(モード)を設定
 
 		}

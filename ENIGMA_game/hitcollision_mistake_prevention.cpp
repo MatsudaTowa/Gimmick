@@ -42,13 +42,29 @@ void InitCollision_Pre(void)
 
     //---------------------座標------------------------最小--------------------最大---------色-
     // ペアで２つごとに記入--色は単色で(合成色を他のに使用したい)
-        //
-        //---****備考--行動ボタン転移は、転位方向(TRANS_ANGLE～)を「TRANS_ANGLE_MAX」にできない。方向を指定するべし
-        //
+        
 
-        //-----基本はボタンで移動かつみんなで移動になるかも
+    //十字路の壁        
+    SetCollision_Pre(D3DXVECTOR3(50.0f, 0.0f, -2745.0f), D3DXVECTOR3(-400.0f, 0.0f, -105.0f), D3DXVECTOR3(400.0f, 300.0f, 105.0f), D3DXCOLOR(5.0f, 0.0f, 0.0f, 0.5f));
+    SetCollision_Pre(D3DXVECTOR3(50.0f, 0.0f, -3055.0f), D3DXVECTOR3(-400.0f, 0.0f, -105.0f), D3DXVECTOR3(400.0f, 300.0f, 105.0f), D3DXCOLOR(5.0f, 0.0f, 0.0f, 0.5f));
 
-    SetCollision_Pre(D3DXVECTOR3(1000.0f, 0.0f, 1000.0f), D3DXVECTOR3(-300.0f, 0.0f, -300.0f), D3DXVECTOR3(300.0f, 600.0f, 300.0f), D3DXCOLOR(5.0f, 5.0f, 0.0f, 5.0f));
+    SetCollision_Pre(D3DXVECTOR3(-1250.0f, 0.0f, -2745.0f), D3DXVECTOR3(-400.0f, 0.0f, -105.0f), D3DXVECTOR3(400.0f, 300.0f, 105.0f), D3DXCOLOR(5.0f, 0.0f, 0.0f, 0.5f));
+    SetCollision_Pre(D3DXVECTOR3(-1250.0f, 0.0f, -3055.0f), D3DXVECTOR3(-400.0f, 0.0f, -105.0f), D3DXVECTOR3(400.0f, 300.0f, 105.0f), D3DXCOLOR(5.0f, 0.0f, 0.0f, 0.5f));
+
+    SetCollision_Pre(D3DXVECTOR3(-445.0f, 0.0f, -2250.0f), D3DXVECTOR3(-105.0f, 0.0f, -400.0f), D3DXVECTOR3(105.0f, 300.0f, 400.0f), D3DXCOLOR(5.0f, 0.0f, 0.0f, 0.5f));
+    SetCollision_Pre(D3DXVECTOR3(-755.0f, 0.0f, -2250.0f), D3DXVECTOR3(-105.0f, 0.0f, -400.0f), D3DXVECTOR3(105.0f, 300.0f, 400.0f), D3DXCOLOR(5.0f, 0.0f, 0.0f, 0.5f));
+
+    SetCollision_Pre(D3DXVECTOR3(-445.0f, 0.0f, -3550.0f), D3DXVECTOR3(-105.0f, 0.0f, -400.0f), D3DXVECTOR3(105.0f, 300.0f, 400.0f), D3DXCOLOR(5.0f, 0.0f, 0.0f, 0.5f));
+    SetCollision_Pre(D3DXVECTOR3(-755.0f, 0.0f, -3550.0f), D3DXVECTOR3(-105.0f, 0.0f, -400.0f), D3DXVECTOR3(105.0f, 300.0f, 400.0f), D3DXCOLOR(5.0f, 0.0f, 0.0f, 0.5f));
+
+
+
+    //十字路の壁(通路端)        
+    SetCollision_Pre(D3DXVECTOR3(-1640.0f, 0.0f, -2900.0f), D3DXVECTOR3(-100.0f, 0.0f, -100.0f), D3DXVECTOR3(100.0f, 600.0f, 100.0f), D3DXCOLOR(5.0f, 0.0f, 5.0f, 0.5f));
+    SetCollision_Pre(D3DXVECTOR3(440.0f, 0.0f, -2900.0f), D3DXVECTOR3(-100.0f, 0.0f, -100.0f), D3DXVECTOR3(100.0f, 600.0f, 100.0f), D3DXCOLOR(5.0f, 0.0f, 5.0f, 0.5f));
+
+    SetCollision_Pre(D3DXVECTOR3(-600.0f, 0.0f, -4000.0f), D3DXVECTOR3(-100.0f, 0.0f, -100.0f), D3DXVECTOR3(100.0f, 600.0f, 100.0f), D3DXCOLOR(5.0f, 0.0f, 5.0f, 0.5f));
+    SetCollision_Pre(D3DXVECTOR3(-600.0f, 0.0f, -1800.0f), D3DXVECTOR3(-100.0f, 0.0f, -100.0f), D3DXVECTOR3(100.0f, 600.0f, 100.0f), D3DXCOLOR(5.0f, 0.0f, 5.0f, 0.5f));
 
 
 }

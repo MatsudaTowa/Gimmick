@@ -10,12 +10,20 @@
 #include "main.h"
 
 //=============================================
-//お風呂のお湯の構想体の定義
+//マクロ定義
+//=============================================
+#define NUM_TRAP	(2) //プレイヤー分
+#define BLIND_TIME	(120) //継続時間
+
+//=============================================
+//画面に対するトラップの定義
 //=============================================
 typedef struct
 {
 	D3DXVECTOR3 pos;
 	D3DXVECTOR3 rot;
+	float fAlpha; //アルファ値
+	int nBlindCnt; //継続カウント
 	bool bUse;
 }EyeTrap;
 
@@ -23,5 +31,6 @@ void InitEyeTrap(void);
 void UninitEyeTrap(void);
 void UpdateEyeTrap(void);
 void DrawEyeTrap(void);
+void SetEyeTrap(int nPlayer);
 
 #endif

@@ -43,7 +43,7 @@
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v142</PlatformToolset>
-    <CharacterSet>Unicode</CharacterSet>
+    <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
@@ -152,6 +152,7 @@
     <ClCompile Include="Actionzone.cpp" />
     <ClCompile Include="advanced_motion_model.cpp" />
     <ClCompile Include="bathgimmick.cpp" />
+    <ClCompile Include="eyetrap.cpp" />
     <ClCompile Include="hitcollision_mistake_prevention.cpp" />
     <ClCompile Include="simple_motion_model.cpp" />
     <ClCompile Include="camera.cpp" />
@@ -187,7 +188,6 @@
     <ClCompile Include="text.cpp" />
     <ClCompile Include="title.cpp" />
     <ClCompile Include="transfergate.cpp" />
-    <ClCompile Include="eyetrap.cpp" />
     <ClCompile Include="Tutorial.cpp" />
     <ClCompile Include="stage.cpp" />
   </ItemGroup>
@@ -195,6 +195,7 @@
     <ClInclude Include="Actionzone.h" />
     <ClInclude Include="advanced_motion_model.h" />
     <ClInclude Include="bathgimmick.h" />
+    <ClInclude Include="eyetrap.h" />
     <ClInclude Include="hitcollision_mistake_prevention.h" />
     <ClInclude Include="simple_motion_model.h" />
     <ClInclude Include="camera.h" />
@@ -230,7 +231,6 @@
     <ClInclude Include="text.h" />
     <ClInclude Include="title.h" />
     <ClInclude Include="transfergate.h" />
-    <ClInclude Include="eyetrap.h" />
     <ClInclude Include="Tutorial.h" />
     <ClInclude Include="stage.h" />
   </ItemGroup>

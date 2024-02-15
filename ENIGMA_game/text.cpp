@@ -109,6 +109,24 @@ void DrawTextSet(D3DXVECTOR3 DrawPos, int FontSize, FONT Font, D3DXCOLOR RGBA, c
 		TEXT(g_FontInfo[Font].pFontName),//--読み込んだフォントの名前(プロパティのタイトルで分かる)
 		&g_pFont_Comment[Font]);
 
+	//D3DXCreateFontの引数の意味
+	
+	//D3DXCreateFont(pDevice,                /* デバイス */
+	//	16,                            /* 文字の高さ */
+	//	0,                            /* 文字幅 */
+	//	FW_NORMAL,                    /* フォントの太さ */
+	//	1,                            /* MIPMAPのレベル */
+	//	FALSE,                        /* イタリックか？ */
+	//	DEFAULT_CHARSET,            /* 文字セット */
+	//	OUT_DEFAULT_PRECIS,            /* 出力精度 */
+	//	DEFAULT_QUALITY,            /* 出力品質 */
+	//	DEFAULT_PITCH | FF_SWISS,    /* フォントピッチとファミリ */
+	//	L"ＭＳ Ｐゴシック",                    /* フォント名 */
+	//	&lpFont)         /* Direct3Dフォントへのポインタへのアドレス */
+
+
+
+
 	// 可変長引数の処理-------
 	va_list args;				 //可変長引数の引数リストを指定する
 	va_start(args, Text);		 //va_list を初期化--＞//可変長引数の一つ前の引数を指定
@@ -116,7 +134,7 @@ void DrawTextSet(D3DXVECTOR3 DrawPos, int FontSize, FONT Font, D3DXCOLOR RGBA, c
 	va_end(args);				 //va_start マクロによって開始された可変長引数リストを終了するために使用
 
 	// テキストの描画
-	g_pFont_Comment[Font]->DrawText(NULL, aStr, -1, &rect, DT_LEFT | DT_WORDBREAK, RGBA);
+	g_pFont_Comment[Font]->DrawText(NULL, aStr, -1, &rect, DT_LEFT/* | DT_WORDBREAK*/, RGBA);
 
 
 

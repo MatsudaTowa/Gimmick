@@ -34,6 +34,9 @@ DWORD g_aSizeAudio[SOUND_LABEL_MAX] = {};					// オーディオデータサイズ
 SOUNDINFO g_aSoundInfo[SOUND_LABEL_MAX] =
 {
 	{"data/SOUND/BGM/Title000.wav", -1},	 // タイトルBGM//-1がループ/0が一回きり
+	{"data/SOUND/BGM/Clear000.wav", -1},	 // クリアBGM
+	{"data/SOUND/BGM/GameOver000.wav", -1},	 // ゲームオーバーBGM
+	{"data/SOUND/BGM/Eniguma000.wav", -1},	 // エニグマBGM
 	{"data/SOUND/SE/LobotWalk001.wav",0},//着地
 };
 

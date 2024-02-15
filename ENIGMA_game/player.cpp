@@ -39,6 +39,7 @@ DWORD dwNumMatModel[MAX_PARTS] = {};//マテリアルの数
 MODEL g_Model;//モデル全体
 //--------------------------------------------------------------------------
 
+LPDIRECT3DTEXTURE9 g_apTexture_1P[NUM_TEXTURE_1P] = {}; //テクスチャポインタ
 
 //追尾注視点
 View g_View[2];
@@ -590,16 +591,20 @@ void UpdatePlayer(void)
 
 
 
-	//------------------------------------------------------------------------------------注視点接触
-	 //--------------------------------試験
-	//for (int i = 0; i < MAXGATE; i++)
-	//{
-	//	D3DXVECTOR3 GateMin = D3DXVECTOR3(pTransferGate[i].pos + pTransferGate[i].GateMin);
-	//	D3DXVECTOR3 GateMax = D3DXVECTOR3(pTransferGate[i].pos + pTransferGate[i].GateMax);
 
-	//	//障害物検知
-	//	AdjustPlayerPositionToCollision_VIEWPOS(D3DXVECTOR3(g_Player.pos.x, (g_Player.pos.y + g_View[1].ViewPos.y), g_Player.pos.z), 0, GateMin, GateMax);
-	//}
+
+	for (int nWall = 0; nWall < NUMSTAGE; nWall++)
+	{
+		if (pStage[nWall].bUse == true)
+		{
+			D3DXVECTOR3 StageMin = D3DXVECTOR3(pStage[nWall].posStage + pStage[nWall].MinPos);
+			D3DXVECTOR3 StageMax = D3DXVECTOR3(pStage[nWall].posStage + pStage[nWall].MaxPos);
+
+			//障害物検知
+			AdjustPlayerPositionToCollision_VIEWPOS(D3DXVECTOR3(g_Player.pos.x, (g_Player.pos.y + g_View[1].ViewPos.y), g_Player.pos.z), 0, StageMin, StageMax);
+
+		}
+	}
 
 	for (int i = 0; i < MAX_MODEL; i++)
 	{
@@ -621,21 +626,6 @@ void UpdatePlayer(void)
 	
 
 
-	//STAGE* pStage;
-	//pStage = GetStage();
-
-	for (int nWall = 0; nWall < NUMSTAGE; nWall++)
-	{
-		if (pStage[nWall].bUse == true)
-		{
-			D3DXVECTOR3 StageMin = D3DXVECTOR3(pStage[nWall].posStage + pStage[nWall].MinPos);
-			D3DXVECTOR3 StageMax = D3DXVECTOR3(pStage[nWall].posStage + pStage[nWall].MaxPos);
-
-			//障害物検知
-			AdjustPlayerPositionToCollision_VIEWPOS(D3DXVECTOR3(g_Player.pos.x, (g_Player.pos.y + g_View[1].ViewPos.y), g_Player.pos.z), 0, StageMin, StageMax);
-
-		}
-	}
 
 
 
@@ -806,8 +796,9 @@ void DrawPlayer(int CameraLoopNum)
 				}
 
 				//テクスチャの設定
-				pDevice->SetTexture(0, NULL);//今回は設定しない
-
+				//pDevice->SetTexture(0, NULL);//今回は設定しない
+				//テクスチャの設定
+				pDevice->SetTexture(0, g_apTexture_1P[nCntMat]);
 				//モデル(パーツ)の描画
 				g_pMeshModel[nCnt]->DrawSubset(nCntMat);
 
@@ -1328,8 +1319,8 @@ void LoadSet(void)
 
 	//data\\motion_runningman.txt
 
-//	pFile = fopen("data\\motion_Player.txt", "r");
-	pFile = fopen("data\\motion_runningman.txt", "r");
+	pFile = fopen("data\\motion_PlayerModel.txt", "r");
+//	pFile = fopen("data\\motion_runningman.txt", "r");
 
 	if (pFile != NULL)
 	{//ファイルが開いたら
@@ -1363,6 +1354,25 @@ void LoadSet(void)
 					&dwNumMatModel[nEscapeCntModel],
 					&g_pMeshModel[nEscapeCntModel]);
 				//----------------------------------------
+				
+				//D3DXMATERIAL* pMat;
+
+				D3DXMATERIAL* pMat;
+
+				//マテリアルデータへのポインタを取得
+				pMat = (D3DXMATERIAL*)g_pBuffMatModel[nEscapeCntModel]->GetBufferPointer();
+
+				for (int nCntMat = 0; nCntMat < (int)dwNumMatModel[nEscapeCntModel]; nCntMat++)
+				{
+					if (pMat[nCntMat].pTextureFilename != NULL)
+					{
+						//テクスチャの読み込み
+						D3DXCreateTextureFromFile(pDevice,
+							pMat[nCntMat].pTextureFilename,
+							&g_apTexture_1P[nCntMat]
+						);
+					}
+				}
 
 				nEscapeCntModel++;//モデル格納後インクリ
 

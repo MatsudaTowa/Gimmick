@@ -35,6 +35,7 @@ DWORD dwNumMatModel_2P[MAX_PARTS_2P] = {};//マテリアルの数
 
 MODEL_2P g_Model_2P;//モデル全体
 //--------------------------------------------------------------------------
+LPDIRECT3DTEXTURE9 g_apTexture_2P[NUM_TEXTURE_2P] = {}; //テクスチャポインタ
 
 
 ///-------------------------------------------------------------------------追尾注視点
@@ -575,19 +576,20 @@ void UpdatePlayer_2P(void)
 	}
 
 
-	//--------------------注視点接触
- //--------------------------------試験
-	//for (int i = 0; i < MAXGATE; i++)
-	//{
-	//	D3DXVECTOR3 GateMin = D3DXVECTOR3(pTransferGate[i].pos + pTransferGate[i].GateMin);
-	//	D3DXVECTOR3 GateMax = D3DXVECTOR3(pTransferGate[i].pos + pTransferGate[i].GateMax);
 
-	//	//障害物検知
-	//	AdjustPlayerPositionToCollision_VIEWPOS(D3DXVECTOR3(g_Player_2P.pos.x, (g_Player_2P.pos.y + g_View_2P[1].ViewPos.y), g_Player_2P.pos.z), 1, GateMin, GateMax);
-	//}
-	//----------------------------------------------------------------------------モデル接触
-//	MAPOBJECT* pMapObject;
-	//pMapObject = GetMapObject();
+	for (int nWall = 0; nWall < NUMSTAGE; nWall++)
+	{
+		if (pStage[nWall].bUse == true)
+		{
+			D3DXVECTOR3 StageMin = D3DXVECTOR3(pStage[nWall].posStage + pStage[nWall].MinPos);
+			D3DXVECTOR3 StageMax = D3DXVECTOR3(pStage[nWall].posStage + pStage[nWall].MaxPos);
+
+			//障害物検知
+			AdjustPlayerPositionToCollision_VIEWPOS(D3DXVECTOR3(g_Player_2P.pos.x, (g_Player_2P.pos.y + g_View_2P[1].ViewPos.y), g_Player_2P.pos.z), 0, StageMin, StageMax);
+
+		}
+	}
+
 
 	for (int i = 0; i < MAX_MODEL; i++)
 	{
@@ -607,19 +609,7 @@ void UpdatePlayer_2P(void)
 		}
 	}
 
-	for (int nWall = 0; nWall < NUMSTAGE; nWall++)
-	{
-		if (pStage[nWall].bUse == true)
-		{
-			D3DXVECTOR3 StageMin = D3DXVECTOR3(pStage[nWall].posStage + pStage[nWall].MinPos);
-			D3DXVECTOR3 StageMax = D3DXVECTOR3(pStage[nWall].posStage + pStage[nWall].MaxPos);
-
-			//障害物検知
-			AdjustPlayerPositionToCollision_VIEWPOS(D3DXVECTOR3(g_Player_2P.pos.x, (g_Player_2P.pos.y + g_View_2P[1].ViewPos.y), g_Player_2P.pos.z), 0, StageMin, StageMax);
-
-		}
-	}
-
+	
 
 	//状態遷移
 	//プレイヤー被弾振動管理
@@ -772,7 +762,10 @@ void DrawPlayer_2P(int CameraLoopNum)
 				}
 
 				//テクスチャの設定
-				pDevice->SetTexture(0, NULL);//今回は設定しない
+				//pDevice->SetTexture(0, NULL);//今回は設定しない
+
+				//テクスチャの設定
+				pDevice->SetTexture(0, g_apTexture_2P[nCntMat]);
 
 				//モデル(パーツ)の描画
 				g_pMeshModel_2P[nCnt]->DrawSubset(nCntMat);
@@ -1282,7 +1275,8 @@ void LoadSet_2P(void)
 	//pFile = fopen("data\\motion_LOBOT01.txt", "r");
 
 	//pFile = fopen("data\\motionEnigma.txt", "r");
-	pFile = fopen("data\\motion_runningman.txt", "r");
+	pFile = fopen("data\\motion_PlayerModel_2P.txt", "r");
+	//pFile = fopen("data\\motion_runningman.txt", "r");
 
 	if (pFile != NULL)
 	{//ファイルが開いたら
@@ -1316,6 +1310,22 @@ void LoadSet_2P(void)
 					&dwNumMatModel_2P[nEscapeCntModel],
 					&g_pMeshModel_2P[nEscapeCntModel]);
 				//----------------------------------------
+				D3DXMATERIAL* pMat;
+
+				//マテリアルデータへのポインタを取得
+				pMat = (D3DXMATERIAL*)g_pBuffMatModel_2P[nEscapeCntModel]->GetBufferPointer();
+
+				for (int nCntMat = 0; nCntMat < (int)dwNumMatModel_2P[nEscapeCntModel]; nCntMat++)
+				{
+					if (pMat[nCntMat].pTextureFilename != NULL)
+					{
+						//テクスチャの読み込み
+						D3DXCreateTextureFromFile(pDevice,
+							pMat[nCntMat].pTextureFilename,
+							&g_apTexture_2P[nCntMat]
+						);
+					}
+				}
 
 				nEscapeCntModel++;//モデル格納後インクリ
 

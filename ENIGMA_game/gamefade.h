@@ -29,7 +29,7 @@ void UninitGameFade(void);
 void UpdateGameFade(void);
 void DrawGameFade(void);
 
-void SetGameFade(int PlayerNum,D3DXVECTOR3 ESCAPEMOVE);
+void SetGameFade(int PlayerNum,D3DXVECTOR3 ESCAPEMOVE,D3DXVECTOR3 EscapeRot,D3DXVECTOR3 EscapeRot_Player);
 
 GAMEFADE GetGameFade(void);
 

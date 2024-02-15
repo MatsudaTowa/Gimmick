@@ -20,13 +20,13 @@
 
 #define MAXCAMERA	(3)//カメラの台数--1多いのは後ろに一つ全画面で動いてる
 
-#define CAMERALENGTH (75.0f)//通常時の対象との距離--1
+#define CAMERALENGTH (72.0f)//通常時の対象との距離--1
 //#define CAMERALENGTH2 (75.0f)//通常時の対象との距離-2
 
 
 //カメラサイズ(当たり判定用)
-#define CAMERAMIN	(D3DXVECTOR3(-5.0f,-5.0f,-5.0f))
-#define CAMERAMAX	(D3DXVECTOR3(5.0f,5.0f,5.0f))
+#define CAMERAMIN	(D3DXVECTOR3(-3.0f,-3.0f,-3.0f))
+#define CAMERAMAX	(D3DXVECTOR3(3.0f,3.0f,3.0f))
 
 
 

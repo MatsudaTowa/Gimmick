@@ -458,15 +458,6 @@ void DrawItem_UI(void)
 
 	DrawTextSet(D3DXVECTOR3(110.0f, 560.0f, 0.0f), 25, FONT_AKABARASINDELERA, D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f), "2所持数%dポインタ位置%d", g_ItemNum2, g_PointNum[1]);
 }
-
-//=============================
-//キー取得
-//=============================
-void DrawHaveKey(int nHaveKey)
-{
-	DrawTextSet(D3DXVECTOR3(SCREEN_WIDE - 70.0f, -5.0f, 0), 85, FONT_AKABARASINDELERA, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), "%d", nHaveKey);
-}
-
 //=============================
 //アイテムUIの設定処理
 //=============================
@@ -497,7 +488,6 @@ void SetItem_UI(D3DXVECTOR3 pos, ITEM_UI_TYPE ItemUIType, ITEMTYPE ItemType, int
 				pVtx[1].pos = D3DXVECTOR3(g_ItemUI[nCntItem_UI].pos.x + ITEMUISIZE2, g_ItemUI[nCntItem_UI].pos.y - ITEMUISIZE2, 0.0f);
 				pVtx[2].pos = D3DXVECTOR3(g_ItemUI[nCntItem_UI].pos.x - ITEMUISIZE2, g_ItemUI[nCntItem_UI].pos.y + ITEMUISIZE2, 0.0f);
 				pVtx[3].pos = D3DXVECTOR3(g_ItemUI[nCntItem_UI].pos.x + ITEMUISIZE2, g_ItemUI[nCntItem_UI].pos.y + ITEMUISIZE2, 0.0f);
-
 			}
 			else
 			{
@@ -523,6 +513,14 @@ void SetItem_UI(D3DXVECTOR3 pos, ITEM_UI_TYPE ItemUIType, ITEMTYPE ItemType, int
 	}
 	//頂点バッファをアンロックする
 	g_pVtxBuffItem_UI->Unlock();
+}
+
+//=============================
+//鍵取得数描画
+//=============================
+void DrawHaveKey(int nHaveKey)
+{
+	DrawTextSet(D3DXVECTOR3(SCREEN_WIDE - 70.0f, -5.0f, 0), 85, FONT_AKABARASINDELERA, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), "%d", nHaveKey);
 }
 
 //=============================

@@ -111,41 +111,105 @@ void InitStage(void)
 
 	//壁
 	//スポーン地点、先
-	SetStage(D3DXVECTOR3(-0600.0f, 0100.0f, -1890.0f), D3DXVECTOR3(0.00f, +0.00f, 0.00f), 0100.0f, 0300.0f, TEXTYPE_00);//テスト仕様スポーン地後
-	SetStage(D3DXVECTOR3(-0600.0f, 0100.0f, -3910.0f), D3DXVECTOR3(0.00f, +3.14f, 0.00f), 0100.0f, 0300.0f, TEXTYPE_00);//テスト仕様スポーン地前
-	SetStage(D3DXVECTOR3(+0450.0f, 0100.0f, -2900.0f), D3DXVECTOR3(0.00f, +1.57f, 0.00f), 0100.0f, 0300.0f, TEXTYPE_00);//テスト仕様スポーン地左
-	SetStage(D3DXVECTOR3(-1650.0f, 0100.0f, -2900.0f), D3DXVECTOR3(0.00f, -1.57f, 0.00f), 0100.0f, 0300.0f, TEXTYPE_00);//テスト仕様スポーン地左
+	SetStage(D3DXVECTOR3(-0600.0f, 0000.0f, -1890.0f), D3DXVECTOR3(0.00f, +0.00f, 0.00f), 0100.0f, 0300.0f, TEXTYPE_00);//テスト仕様スポーン地後
+	SetStage(D3DXVECTOR3(-0600.0f, 0000.0f, -3910.0f), D3DXVECTOR3(0.00f, +3.14f, 0.00f), 0100.0f, 0300.0f, TEXTYPE_00);//テスト仕様スポーン地前
+	SetStage(D3DXVECTOR3(+0450.0f, 0000.0f, -2900.0f), D3DXVECTOR3(0.00f, +1.57f, 0.00f), 0100.0f, 0300.0f, TEXTYPE_00);//テスト仕様スポーン地左
+	SetStage(D3DXVECTOR3(-1650.0f, 0000.0f, -2900.0f), D3DXVECTOR3(0.00f, -1.57f, 0.00f), 0100.0f, 0300.0f, TEXTYPE_00);//テスト仕様スポーン地左
 
 	//通路左右壁
-	SetStage(D3DXVECTOR3(-0550.0f, 0100.0f, -2250.0f), D3DXVECTOR3(0.00f, +1.57f, 0.00f), 0400.0f, 0300.0f, TEXTYPE_00);//テスト仕様スポーン地後左
-	SetStage(D3DXVECTOR3(-0650.0f, 0100.0f, -2250.0f), D3DXVECTOR3(0.00f, -1.57f, 0.00f), 0400.0f, 0300.0f, TEXTYPE_00);//テスト仕様スポーン地後右
+	SetStage(D3DXVECTOR3(-0550.0f, 0000.0f, -2250.0f), D3DXVECTOR3(0.00f, +1.57f, 0.00f), 0400.0f, 0300.0f, TEXTYPE_00);//テスト仕様スポーン地後左
+	SetStage(D3DXVECTOR3(-0650.0f, 0000.0f, -2250.0f), D3DXVECTOR3(0.00f, -1.57f, 0.00f), 0400.0f, 0300.0f, TEXTYPE_00);//テスト仕様スポーン地後右
 
-	SetStage(D3DXVECTOR3(-0550.0f, 0100.0f, -3550.0f), D3DXVECTOR3(0.00f, +1.57f, 0.00f), 0400.0f, 0300.0f, TEXTYPE_00);//テスト仕様スポーン地前左
-	SetStage(D3DXVECTOR3(-0650.0f, 0100.0f, -3550.0f), D3DXVECTOR3(0.00f, -1.57f, 0.00f), 0400.0f, 0300.0f, TEXTYPE_00);//テスト仕様スポーン地前右
+	SetStage(D3DXVECTOR3(-0550.0f, 0000.0f, -3550.0f), D3DXVECTOR3(0.00f, +1.57f, 0.00f), 0400.0f, 0300.0f, TEXTYPE_00);//テスト仕様スポーン地前左
+	SetStage(D3DXVECTOR3(-0650.0f, 0000.0f, -3550.0f), D3DXVECTOR3(0.00f, -1.57f, 0.00f), 0400.0f, 0300.0f, TEXTYPE_00);//テスト仕様スポーン地前右
 
-	SetStage(D3DXVECTOR3(-1250.0f, 0100.0f, -2950.0f), D3DXVECTOR3(0.00f, +3.14f, 0.00f), 0400.0f, 0300.0f, TEXTYPE_00);//テスト仕様スポーン地右前
-	SetStage(D3DXVECTOR3(-1250.0f, 0100.0f, -2850.0f), D3DXVECTOR3(0.00f, +0.00f, 0.00f), 0400.0f, 0300.0f, TEXTYPE_00);//テスト仕様スポーン地右後
+	SetStage(D3DXVECTOR3(-1250.0f, 0000.0f, -2950.0f), D3DXVECTOR3(0.00f, +3.14f, 0.00f), 0400.0f, 0300.0f, TEXTYPE_00);//テスト仕様スポーン地右前
+	SetStage(D3DXVECTOR3(-1250.0f, 0000.0f, -2850.0f), D3DXVECTOR3(0.00f, +0.00f, 0.00f), 0400.0f, 0300.0f, TEXTYPE_00);//テスト仕様スポーン地右後
 
-	SetStage(D3DXVECTOR3(+0050.0f, 0100.0f, -2950.0f), D3DXVECTOR3(0.00f, +3.14f, 0.00f), 0400.0f, 0300.0f, TEXTYPE_00);//テスト仕様スポーン地左前
-	SetStage(D3DXVECTOR3(+0050.0f, 0100.0f, -2850.0f), D3DXVECTOR3(0.00f, +0.00f, 0.00f), 0400.0f, 0300.0f, TEXTYPE_00);//テスト仕様スポーン地左後
+	SetStage(D3DXVECTOR3(+0050.0f, 0000.0f, -2950.0f), D3DXVECTOR3(0.00f, +3.14f, 0.00f), 0400.0f, 0300.0f, TEXTYPE_00);//テスト仕様スポーン地左前
+	SetStage(D3DXVECTOR3(+0050.0f, 0000.0f, -2850.0f), D3DXVECTOR3(0.00f, +0.00f, 0.00f), 0400.0f, 0300.0f, TEXTYPE_00);//テスト仕様スポーン地左後
 
 	//中央部屋壁
-	SetStage(D3DXVECTOR3(-0750.0f, 0100.0f, -2650.0f), D3DXVECTOR3(0.00f, +0.00f, 0.00f), 0100.0f, 0300.0f, TEXTYPE_00);//テスト仕様スポーン地先右後
-	SetStage(D3DXVECTOR3(-0450.0f, 0100.0f, -2650.0f), D3DXVECTOR3(0.00f, +0.00f, 0.00f), 0100.0f, 0300.0f, TEXTYPE_00);//テスト仕様スポーン地先左後
+	SetStage(D3DXVECTOR3(-0750.0f, 0000.0f, -2650.0f), D3DXVECTOR3(0.00f, +0.00f, 0.00f), 0100.0f, 0300.0f, TEXTYPE_00);//テスト仕様スポーン地先右後
+	SetStage(D3DXVECTOR3(-0450.0f, 0000.0f, -2650.0f), D3DXVECTOR3(0.00f, +0.00f, 0.00f), 0100.0f, 0300.0f, TEXTYPE_00);//テスト仕様スポーン地先左後
 
-	SetStage(D3DXVECTOR3(-0750.0f, 0100.0f, -3150.0f), D3DXVECTOR3(0.00f, +3.14f, 0.00f), 0100.0f, 0300.0f, TEXTYPE_00);//テスト仕様スポーン地前右奥
-	SetStage(D3DXVECTOR3(-0450.0f, 0100.0f, -3150.0f), D3DXVECTOR3(0.00f, +3.14f, 0.00f), 0100.0f, 0300.0f, TEXTYPE_00);//テスト仕様スポーン地前左奥
+	SetStage(D3DXVECTOR3(-0750.0f, 0000.0f, -3150.0f), D3DXVECTOR3(0.00f, +3.14f, 0.00f), 0100.0f, 0300.0f, TEXTYPE_00);//テスト仕様スポーン地前右奥
+	SetStage(D3DXVECTOR3(-0450.0f, 0000.0f, -3150.0f), D3DXVECTOR3(0.00f, +3.14f, 0.00f), 0100.0f, 0300.0f, TEXTYPE_00);//テスト仕様スポーン地前左奥
 
-	SetStage(D3DXVECTOR3(-0850.0f, 0100.0f, -2750.0f), D3DXVECTOR3(0.00f, -1.57f, 0.00f), 0100.0f, 0300.0f, TEXTYPE_00);//テスト仕様スポーン地右手前
-	SetStage(D3DXVECTOR3(-0350.0f, 0100.0f, -2750.0f), D3DXVECTOR3(0.00f, +1.57f, 0.00f), 0100.0f, 0300.0f, TEXTYPE_00);//テスト仕様スポーン地左手前
+	SetStage(D3DXVECTOR3(-0850.0f, 0000.0f, -2750.0f), D3DXVECTOR3(0.00f, -1.57f, 0.00f), 0100.0f, 0300.0f, TEXTYPE_00);//テスト仕様スポーン地右手前
+	SetStage(D3DXVECTOR3(-0350.0f, 0000.0f, -2750.0f), D3DXVECTOR3(0.00f, +1.57f, 0.00f), 0100.0f, 0300.0f, TEXTYPE_00);//テスト仕様スポーン地左手前
 
-	SetStage(D3DXVECTOR3(-0850.0f, 0100.0f, -3050.0f), D3DXVECTOR3(0.00f, -1.57f, 0.00f), 0100.0f, 0300.0f, TEXTYPE_00);//テスト仕様スポーン地右奥
-	SetStage(D3DXVECTOR3(-0350.0f, 0100.0f, -3050.0f), D3DXVECTOR3(0.00f, +1.57f, 0.00f), 0100.0f, 0300.0f, TEXTYPE_00);//テスト仕様スポーン地左奥
+	SetStage(D3DXVECTOR3(-0850.0f, 0000.0f, -3050.0f), D3DXVECTOR3(0.00f, -1.57f, 0.00f), 0100.0f, 0300.0f, TEXTYPE_00);//テスト仕様スポーン地右奥
+	SetStage(D3DXVECTOR3(-0350.0f, 0000.0f, -3050.0f), D3DXVECTOR3(0.00f, +1.57f, 0.00f), 0100.0f, 0300.0f, TEXTYPE_00);//テスト仕様スポーン地左奥
 
 	//水回り-------------------------------------------------------------------------------------------------------------------------------------
-	SetStage(D3DXVECTOR3(+0000.0f, 0100.0f, +0000.0f), D3DXVECTOR3(0.00f, +1.57f, 0.00f), 0100.0f, 0300.0f, TEXTYPE_00);//テスト仕様スポーン地左奥
+	//天井
+	SetStage(D3DXVECTOR3(+3250.0f, 0200.0f, -0250.0f), D3DXVECTOR3(-1.57f, +0.00f, 0.00f), 0400.0f, 0400.0f, TEXTYPE_00);//テスト仕様
+
+	//壁
+	SetStage(D3DXVECTOR3(+3300.0f, 0000.0f, +0060.0f), D3DXVECTOR3(0.00f, +0.00f, 0.00f), 0400.0f, 0300.0f, TEXTYPE_00);//テスト仕様スポーン地手前壁
+	SetStage(D3DXVECTOR3(+3300.0f, 0000.0f, -0630.0f), D3DXVECTOR3(0.00f, +3.14f, 0.00f), 0400.0f, 0300.0f, TEXTYPE_00);//テスト仕様
+	SetStage(D3DXVECTOR3(+2900.0f, 0000.0f, -0300.0f), D3DXVECTOR3(0.00f, -1.57f, 0.00f), 0400.0f, 0300.0f, TEXTYPE_00);//テスト仕様
+	SetStage(D3DXVECTOR3(+3650.0f, 0000.0f, -0300.0f), D3DXVECTOR3(0.00f, +1.57f, 0.00f), 0400.0f, 0300.0f, TEXTYPE_00);//テスト仕様
+	SetStage(D3DXVECTOR3(+3500.0f, 0000.0f, -0400.0f), D3DXVECTOR3(0.00f, +1.57f, 0.00f), 0250.0f, 0300.0f, TEXTYPE_00);//テスト仕様
+	
+	SetStage(D3DXVECTOR3(+3600.0f, 0000.0f, -0150.0f), D3DXVECTOR3(0.00f, +3.14f, 0.00f), 0100.0f, 0300.0f, TEXTYPE_00);//テスト仕様
+	
+	SetStage(D3DXVECTOR3(+3550.0f, 0000.0f, -0050.0f), D3DXVECTOR3(0.00f, +0.00f, 0.00f), 0150.0f, 0300.0f, TEXTYPE_00);//テスト仕様
+	
+	SetStage(D3DXVECTOR3(+3150.0f, 0000.0f, -0250.0f), D3DXVECTOR3(0.00f, +3.14f, 0.00f), 0250.0f, 0300.0f, TEXTYPE_00);//テスト仕様
+	SetStage(D3DXVECTOR3(+3150.0f, 0000.0f, -0250.0f), D3DXVECTOR3(0.00f, +0.00f, 0.00f), 0250.0f, 0300.0f, TEXTYPE_00);//テスト仕様
+	
+	SetStage(D3DXVECTOR3(+3400.0f, 0000.0f, +0050.0f), D3DXVECTOR3(0.00f, +1.57f, 0.00f), 0100.0f, 0300.0f, TEXTYPE_00);//テスト仕様
+	
+	SetStage(D3DXVECTOR3(+3500.0f, 0250.0f, -0050.0f), D3DXVECTOR3(0.00f, +1.57f, 0.00f), 0100.0f, 0100.0f, TEXTYPE_00);//テスト仕様
+	SetStage(D3DXVECTOR3(+3500.0f, 0250.0f, -0050.0f), D3DXVECTOR3(0.00f, -1.57f, 0.00f), 0100.0f, 0100.0f, TEXTYPE_00);//テスト仕様
+	
+	SetStage(D3DXVECTOR3(+3200.0f, 0220.0f, -0454.0f), D3DXVECTOR3(0.00f, -1.57f, 0.00f), 0200.0f, 0100.0f, TEXTYPE_00);//テスト仕様
+	SetStage(D3DXVECTOR3(+3200.0f, 0220.0f, -0454.0f), D3DXVECTOR3(0.00f, +1.57f, 0.00f), 0200.0f, 0100.0f, TEXTYPE_00);//テスト仕様
+	
+	//両面設置のためすり抜け
+	SetStage(D3DXVECTOR3(+3200.0f, 0020.0f, -0327.0f), D3DXVECTOR3(0.00f, -1.57f, 0.00f), 0075.0f, 0100.0f, TEXTYPE_00);//テスト仕様
+	SetStage(D3DXVECTOR3(+3200.0f, 0020.0f, -0327.0f), D3DXVECTOR3(0.00f, +1.57f, 0.00f), 0075.0f, 0100.0f, TEXTYPE_00);//テスト仕様
+	
+	//両面設置のためすり抜け
+	SetStage(D3DXVECTOR3(+3200.0f, 0020.0f, -0590.0f), D3DXVECTOR3(0.00f, +1.57f, 0.00f), 0075.0f, 0100.0f, TEXTYPE_00);//テスト仕様
+	SetStage(D3DXVECTOR3(+3200.0f, 0020.0f, -0590.0f), D3DXVECTOR3(0.00f, -1.57f, 0.00f), 0075.0f, 0100.0f, TEXTYPE_00);//テスト仕様
+	
+
+	//リビング--------------------------------------------------------------------------------------------------------------------------------------------
+	//天井
+	SetStage(D3DXVECTOR3(+3200.0f, 0300.0f, -1900.0f), D3DXVECTOR3(-1.57f, +0.00f, 0.00f), 0500.0f, 0700.0f, TEXTYPE_00);//テスト仕様
 
 
+	//壁
+	SetStage(D3DXVECTOR3(+3150.0f, 0100.0f, -1700.0f), D3DXVECTOR3(0.00f, +3.14f, 0.00f), 0050.0f, 0200.0f, TEXTYPE_00);//テスト仕様入ってすぐの壁空間右側
+	SetStage(D3DXVECTOR3(+3400.0f, 0100.0f, -1700.0f), D3DXVECTOR3(0.00f, +3.14f, 0.00f), 0100.0f, 0200.0f, TEXTYPE_00);//テスト仕様入ってすぐの壁空間左側
+	SetStage(D3DXVECTOR3(+3500.0f, 0100.0f, -1500.0f), D3DXVECTOR3(0.00f, +1.57f, 0.00f), 0200.0f, 0200.0f, TEXTYPE_00);//テスト仕様入ってすぐの左側壁
+	SetStage(D3DXVECTOR3(+3400.0f, 0100.0f, -1900.0f), D3DXVECTOR3(0.00f, +0.00f, 0.00f), 0300.0f, 0200.0f, TEXTYPE_00);//テスト仕様入ってすぐの壁反対側
+	SetStage(D3DXVECTOR3(+3100.0f, 0100.0f, -1800.0f), D3DXVECTOR3(0.00f, +1.57f, 0.00f), 0100.0f, 0200.0f, TEXTYPE_00);//テスト仕様入ってすぐの壁反対側とのつなぎ横
+	SetStage(D3DXVECTOR3(+3100.0f, 0100.0f, -1340.0f), D3DXVECTOR3(0.00f, -1.57f, 0.00f), 0100.0f, 0200.0f, TEXTYPE_00);//テスト仕様入って左キッチンへの左
+	SetStage(D3DXVECTOR3(+3300.0f, 0100.0f, -1300.0f), D3DXVECTOR3(0.00f, +0.00f, 0.00f), 0200.0f, 0200.0f, TEXTYPE_00);//テスト仕様キッチン入り左壁
+
+	SetStage(D3DXVECTOR3(+2750.0f, 0100.0f, -1900.0f), D3DXVECTOR3(0.00f, -1.57f, 0.00f), 0700.0f, 0200.0f, TEXTYPE_00);//テスト仕様入って左キッチンへの左
+
+	SetStage(D3DXVECTOR3(+2900.0f, 0100.0f, -1440.0f), D3DXVECTOR3(0.00f, +0.00f, 0.00f), 0200.0f, 0200.0f, TEXTYPE_00);//テスト仕様キッチン入り左壁
+	
+	SetStage(D3DXVECTOR3(+3200.0f, 0100.0f, -2550.0f), D3DXVECTOR3(0.00f, +3.14f, 0.00f), 0500.0f, 0200.0f, TEXTYPE_00);//テスト仕様キッチン入り左壁
+
+	SetStage(D3DXVECTOR3(+3700.0f, 0100.0f, -2200.0f), D3DXVECTOR3(0.00f, +1.57f, 0.00f), 0350.0f, 0200.0f, TEXTYPE_00);//テスト仕様入ってすぐの壁反対側とのつなぎ横
+
+	SetStage(D3DXVECTOR3(+3250.0f, 0100.0f, -1800.0f), D3DXVECTOR3(0.00f, +3.14f, 0.00f), 0100.0f, 0200.0f, TEXTYPE_01);//テスト仕様階段奥行き
+	SetStage(D3DXVECTOR3(+3300.0f, 0100.0f, -1750.0f), D3DXVECTOR3(0.00f, +1.57f, 0.00f), 0050.0f, 0200.0f, TEXTYPE_00);//テスト仕様階段
+	SetStage(D3DXVECTOR3(+3200.0f, 0100.0f, -1750.0f), D3DXVECTOR3(0.00f, -1.57f, 0.00f), 0050.0f, 0200.0f, TEXTYPE_00);//テスト仕様階段
+
+	//床
+	SetStage(D3DXVECTOR3(+3200.0f, 0100.0f, -1900.0f), D3DXVECTOR3(1.57f, +0.00f, 0.00f), 0500.0f, 0700.0f, TEXTYPE_00);//テスト仕様
+
+
+
+	//当たり判定除外
+	ExclusionCollision_Stage();
 }
 //=============================
 //壁の終了処理
@@ -218,9 +282,6 @@ void DrawStage(void)
 			pDevice->DrawPrimitive(D3DPT_TRIANGLESTRIP,//プリミティブの種類
 				nWall * 4,//描画する最初の頂点インデックス
 				2);//描画するプリミティブ数
-
-
-
 		}
 	}
 }
@@ -235,8 +296,7 @@ void SetStage(D3DXVECTOR3 Pos,D3DXVECTOR3 rot, float bes, float ver, TEXTYPE Tex
 
 	D3DXMATRIX mtxRot, mtxTrans;//計算用マトリックス
 
-
-//頂点バッファをロックし、頂点情報へのポインタを取得
+	//頂点バッファをロックし、頂点情報へのポインタを取得
 	g_pVtxBuffStage->Lock(0, 0, (void**)&pVtx, 0);
 
 	for (int nWall = 0; nWall < NUMSTAGE; nWall++)
@@ -339,6 +399,21 @@ void CalculateTransformedWallVertices(D3DXVECTOR3 Pos, D3DXVECTOR3 rot, float be
 	g_Stage[index].MaxPos = MaxPos;
 	g_Stage[index].MinPos = MinPos;
 
-	g_Stage[index].MaxPos += D3DXVECTOR3(3.0f, 3.0f, 3.0f);
-	g_Stage[index].MinPos -= D3DXVECTOR3(3.0f, 3.0f, 3.0f);
+	g_Stage[index].MaxPos += D3DXVECTOR3(1.5f, 3.0f, 1.5f);
+	g_Stage[index].MinPos -= D3DXVECTOR3(1.5f, 3.0f, 1.5f);
+}
+
+
+//=============================================
+//当たり判定除外処理
+//=============================================
+void ExclusionCollision_Stage(void)
+{
+	//11-30
+	for (int i = 11; i <= 30; i++)
+	{
+		g_Stage[i].bCollision = false;
+	//	g_Stage[i].bUse = false;
+	}
+
 }
