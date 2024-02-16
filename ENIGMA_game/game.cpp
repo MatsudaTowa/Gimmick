@@ -913,6 +913,124 @@ void BoxCollisionPlayer(D3DXVECTOR3 PlayerMin, D3DXVECTOR3 PlayerMax, D3DXVECTOR
 
 }
 
+//===================================
+//エネミー箱型当たり判定
+//===================================
+void BoxCollisionEnemy(D3DXVECTOR3 PlayerMin, D3DXVECTOR3 PlayerMax, D3DXVECTOR3 HitMin, D3DXVECTOR3 HitMax)
+{//当たり判定
+
+		bool OverPenetration = true;//過貫通疑惑を判定
+
+		ENEMYMODEL* pEnemy;
+		pEnemy = GetEnemy();
+
+		//---------------------------------------X方向
+		if (PlayerMin.z < HitMax.z &&
+			PlayerMax.z > HitMin.z &&
+			PlayerMax.x - pEnemy->pos.x + pEnemy->oldPos.x <= HitMin.x &&
+			PlayerMax.x > HitMin.x &&
+			PlayerMin.y < HitMax.y &&
+			PlayerMax.y > HitMin.y)
+		{
+			pEnemy->move.x = 0.0f;
+			pEnemy->pos.x = HitMin.x + (PlayerMin.x - pEnemy->pos.x) - 0.1f;
+
+			OverPenetration = false;
+		}
+
+		if (PlayerMin.z < HitMax.z &&
+			PlayerMax.z > HitMin.z &&
+			PlayerMin.x - pEnemy->pos.x + pEnemy->oldPos.x >= HitMax.x &&
+			PlayerMin.x < HitMax.x &&
+			PlayerMin.y < HitMax.y &&
+			PlayerMax.y > HitMin.y)
+		{
+			pEnemy->move.x = 0.0f;
+			pEnemy->pos.x = HitMax.x + (PlayerMax.x - pEnemy->pos.x) + 0.1f;
+			OverPenetration = false;
+		}
+
+		//---------------------------------------Z方向
+		if (PlayerMin.x < HitMax.x &&
+			PlayerMax.x > HitMin.x &&
+			PlayerMin.z - pEnemy->pos.z + pEnemy->oldPos.z >= HitMax.z &&
+			PlayerMin.z < HitMax.z &&
+			PlayerMin.y < HitMax.y &&
+			PlayerMax.y > HitMin.y)
+		{
+			pEnemy->move.z = 0.0f;
+			pEnemy->pos.z = HitMax.z - (PlayerMin.z - pEnemy->pos.z) + 0.1f;
+			OverPenetration = false;
+		}
+
+		if (PlayerMin.x < HitMax.x &&
+			PlayerMax.x > HitMin.x &&
+			PlayerMax.z - pEnemy->pos.z + pEnemy->oldPos.z <= HitMin.z &&
+			PlayerMax.z > HitMin.z &&
+			PlayerMin.y < HitMax.y &&
+			PlayerMax.y > HitMin.y)
+		{
+			pEnemy->move.z = 0.0f;
+			pEnemy->pos.z = HitMin.z - (PlayerMax.z - pEnemy->pos.z) - 0.1f;
+			OverPenetration = false;
+		}
+
+		//------------------------------------Y方向
+		if (PlayerMin.x < HitMax.x &&
+			PlayerMax.x > HitMin.x &&
+			PlayerMin.z < HitMax.z &&
+			PlayerMax.z > HitMin.z &&
+			PlayerMin.y - pEnemy->pos.y + pEnemy->oldPos.y >= HitMax.y &&
+			PlayerMin.y < HitMax.y)
+		{
+			pEnemy->move.y = 0.0f;
+			pEnemy->pos.y = HitMax.y + (PlayerMin.y - pEnemy->pos.y);
+
+			if (pEnemy->NowMotionDOWN == MOTIONTYPE_ENEMY_JUMP)
+			{
+				pEnemy->NowMotionDOWN = MOTIONTYPE_ENEMY_RANDING;
+			}
+			else if (pEnemy->NowMotionDOWN == MOTIONTYPE_ENEMY_MOVE)
+			{
+				pEnemy->NowMotionDOWN = MOTIONTYPE_ENEMY_MOVE;
+			}
+
+			pEnemy->bLandingNow = true;
+			OverPenetration = false;
+		}
+
+
+		if (OverPenetration == false)
+		{
+
+		}
+
+#if _DEBUG
+	// 上下の辺
+	SetLine(D3DXVECTOR3(HitMin.x, HitMax.y, HitMin.z), D3DXVECTOR3(HitMax.x, HitMax.y, HitMin.z), D3DXCOLOR(0.0f, 1.0f, 1.0f, 1.0f));
+	SetLine(D3DXVECTOR3(HitMin.x, HitMin.y, HitMin.z), D3DXVECTOR3(HitMax.x, HitMin.y, HitMin.z), D3DXCOLOR(0.0f, 1.0f, 1.0f, 1.0f));
+
+	SetLine(D3DXVECTOR3(HitMin.x, HitMax.y, HitMax.z), D3DXVECTOR3(HitMax.x, HitMax.y, HitMax.z), D3DXCOLOR(0.0f, 1.0f, 1.0f, 1.0f));
+	SetLine(D3DXVECTOR3(HitMin.x, HitMin.y, HitMax.z), D3DXVECTOR3(HitMax.x, HitMin.y, HitMax.z), D3DXCOLOR(0.0f, 1.0f, 1.0f, 1.0f));
+
+	// 側面の辺																											
+	SetLine(D3DXVECTOR3(HitMin.x, HitMin.y, HitMin.z), D3DXVECTOR3(HitMin.x, HitMax.y, HitMin.z), D3DXCOLOR(0.0f, 1.0f, 1.0f, 1.0f));
+	SetLine(D3DXVECTOR3(HitMax.x, HitMin.y, HitMin.z), D3DXVECTOR3(HitMax.x, HitMax.y, HitMin.z), D3DXCOLOR(0.0f, 1.0f, 1.0f, 1.0f));
+
+	SetLine(D3DXVECTOR3(HitMin.x, HitMin.y, HitMax.z), D3DXVECTOR3(HitMin.x, HitMax.y, HitMax.z), D3DXCOLOR(0.0f, 1.0f, 1.0f, 1.0f));
+	SetLine(D3DXVECTOR3(HitMax.x, HitMin.y, HitMax.z), D3DXVECTOR3(HitMax.x, HitMax.y, HitMax.z), D3DXCOLOR(0.0f, 1.0f, 1.0f, 1.0f));
+
+
+	// その他の辺																									   
+	SetLine(D3DXVECTOR3(HitMin.x, HitMin.y, HitMin.z), D3DXVECTOR3(HitMin.x, HitMin.y, HitMax.z), D3DXCOLOR(0.0f, 1.0f, 1.0f, 1.0f));
+	SetLine(D3DXVECTOR3(HitMax.x, HitMax.y, HitMin.z), D3DXVECTOR3(HitMax.x, HitMax.y, HitMax.z), D3DXCOLOR(0.0f, 1.0f, 1.0f, 1.0f));
+
+	SetLine(D3DXVECTOR3(HitMin.x, HitMax.y, HitMin.z), D3DXVECTOR3(HitMin.x, HitMax.y, HitMax.z), D3DXCOLOR(0.0f, 1.0f, 1.0f, 1.0f));
+	SetLine(D3DXVECTOR3(HitMax.x, HitMin.y, HitMin.z), D3DXVECTOR3(HitMax.x, HitMin.y, HitMax.z), D3DXCOLOR(0.0f, 1.0f, 1.0f, 1.0f));
+#endif
+
+}
+
 ////===================================
 ////カメラ箱型当たり判定---モデル
 ////===================================

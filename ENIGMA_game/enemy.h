@@ -18,6 +18,9 @@
 #define MAX_WORD2_ENEMY	(300)//最大文字数
 #define MAX_MOTION_ENEMY	(30)//モーション最大数
 #define MAXKEY_ENEMY	(240)//最大キー数
+//エネミーサイズ(当たり判定用)
+#define ENEMYMIN	(D3DXVECTOR3(-123.0f,0.0f,-123.0f))
+#define ENEMYMAX	(D3DXVECTOR3(123.0f,185.0f,123.0f))
 #define ENEMY_FILE_NAME	"data\\motionEnigma.txt" //エネミーのファイルネーム
 
 
@@ -41,7 +44,13 @@ typedef enum
 typedef struct
 {
 	D3DXVECTOR3 pos;	//位置
+	D3DXVECTOR3 oldPos;//古い位置
 	D3DXVECTOR3 rot;	//向き
+	D3DXVECTOR3 move;   //エネミーの移動
+	float rotmove;//向き移動
+
+	float fRotDest;//目的の向き
+
 
 	D3DXMATRIX mtxWorld;//ワールドマトリックス
 
@@ -111,7 +120,9 @@ typedef struct
 {
 	//モーションの位置計算に運用、最後にMODELのDrawPosSに入れる
 	D3DXVECTOR3 Pos;	//位置
+
 	D3DXVECTOR3 Rot;	//向き
+
 	int INDEX;//自分の番号
 	int PEARENT;		//自分の親
 
