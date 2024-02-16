@@ -21,7 +21,7 @@
 #include "bathgimmick.h"
 #include "steam.h"
 #include "password.h"
-
+#include "enemy.h"
 #include "shadow.h"
 #include "meshfield.h"
 #include "sky.h"
@@ -127,6 +127,7 @@ void InitGame(void)
 
 	InitPlayer();
 	InitPlayer_2P();
+	InitEnemy();
 	
 	InitSky();
 
@@ -199,6 +200,7 @@ void UninitGame(void)
 	UninitStage();
 	UninitPlayer();
 	UninitPlayer_2P();
+	UninitEnemy();
 	UninitShadow();
 	UninitMoneybox();
 	UninitMoneyboxDigit();
@@ -347,6 +349,7 @@ void UpdateGame(void)
 
 		UpdatePlayer();
 		UpdatePlayer_2P();
+		UpdateEnemy();
 
 		//--------------------プレイヤー
 
@@ -459,6 +462,7 @@ void DrawGame(void)
 		//特殊
 		DrawPlayer(nCnt);
 		DrawPlayer_2P(nCnt);
+		DrawEnemy();
 
 		DrawTransferGate();
 	
