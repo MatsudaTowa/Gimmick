@@ -8,7 +8,9 @@
 
 #include "game.h"
 
+//=============================================
 //マクロ定義
+//=============================================
 #define _ENEMY_H_//二重インクルード防止のマクロ定義
 
 #define BRENDFLAME_ENEMY	(15.0f)//モーションブレンドのフレーム数
@@ -21,11 +23,22 @@
 //エネミーサイズ(当たり判定用)
 #define ENEMYMIN	(D3DXVECTOR3(-50.0f,0.0f,-50.0f))
 #define ENEMYMAX	(D3DXVECTOR3(50.0f,185.0f,50.0f))
+#define MAX_ENEMY_SPEED	(10)
 #define ENEMY_FILE_NAME	"data\\motionEnigma.txt" //エネミーのファイルネーム
 
 
 
 #define NUM_TEXTURE_ENEMY	(20)
+
+//敵の行動パターン
+typedef enum
+{
+	ACTIONPATTERN_ENEMY_STANDBY = 0,
+	ACTIONPATTERN_ENEMY_WALK,
+	ACTIONPATTERN_ENEMY_CHASE,
+	ACTIONPATTERN_ENEMY_ATTACK,
+	ACTIONPATTERN_ENEMY_MAX,
+}ACTIONPATTERN_ENEMY;
 
 //モーション種別
 typedef enum
@@ -53,6 +66,7 @@ typedef struct
 
 	float fRotDest;//目的の向き
 
+	ACTIONPATTERN_ENEMY ActionPattern; //行動パターン
 
 	D3DXMATRIX mtxWorld;//ワールドマトリックス
 
@@ -156,6 +170,7 @@ typedef struct
 void InitEnemy(void);//プレイヤーの初期化処理
 void UninitEnemy(void);//プレイヤーの終了処理
 void UpdateEnemy(void);//プレイヤーの更新処理
+void ActionEnemy(ACTIONPATTERN_ENEMY ActionPattern); //アクションパターンによって処理変更
 void DrawEnemy(void);//プレイヤーの描画処理
 
 ENEMYMODEL* GetEnemy(void);

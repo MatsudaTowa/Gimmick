@@ -936,6 +936,8 @@ void BoxCollisionEnemy(D3DXVECTOR3 PlayerMin, D3DXVECTOR3 PlayerMax, D3DXVECTOR3
 			pEnemy->pos.x = HitMin.x + (PlayerMin.x - pEnemy->pos.x) - 0.1f;
 
 			OverPenetration = false;
+
+			ActionEnemy(ACTIONPATTERN_ENEMY_WALK);
 		}
 
 		if (PlayerMin.z < HitMax.z &&
@@ -948,6 +950,8 @@ void BoxCollisionEnemy(D3DXVECTOR3 PlayerMin, D3DXVECTOR3 PlayerMax, D3DXVECTOR3
 			pEnemy->move.x = 0.0f;
 			pEnemy->pos.x = HitMax.x + (PlayerMax.x - pEnemy->pos.x) + 0.1f;
 			OverPenetration = false;
+			ActionEnemy(ACTIONPATTERN_ENEMY_WALK);
+
 		}
 
 		//---------------------------------------Z方向
@@ -961,6 +965,8 @@ void BoxCollisionEnemy(D3DXVECTOR3 PlayerMin, D3DXVECTOR3 PlayerMax, D3DXVECTOR3
 			pEnemy->move.z = 0.0f;
 			pEnemy->pos.z = HitMax.z - (PlayerMin.z - pEnemy->pos.z) + 0.1f;
 			OverPenetration = false;
+			ActionEnemy(ACTIONPATTERN_ENEMY_WALK);
+
 		}
 
 		if (PlayerMin.x < HitMax.x &&
@@ -973,6 +979,8 @@ void BoxCollisionEnemy(D3DXVECTOR3 PlayerMin, D3DXVECTOR3 PlayerMax, D3DXVECTOR3
 			pEnemy->move.z = 0.0f;
 			pEnemy->pos.z = HitMin.z - (PlayerMax.z - pEnemy->pos.z) - 0.1f;
 			OverPenetration = false;
+			ActionEnemy(ACTIONPATTERN_ENEMY_WALK);
+
 		}
 
 		//------------------------------------Y方向

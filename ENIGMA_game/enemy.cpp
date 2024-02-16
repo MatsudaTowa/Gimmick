@@ -1,3 +1,9 @@
+//=========================================================
+//
+// “G‚Ìˆ—[enemy.cpp]
+// Author seiya kagaya
+//
+//=========================================================
 #include "enemy.h"
 #include "stage.h"
 #include "hitcollision_mistake_prevention.h"
@@ -9,6 +15,9 @@
 #include "game.h"
 
 
+//=========================================================
+//ƒOƒ[ƒoƒ‹•Ï”
+//=========================================================
 ENEMYMODEL g_Enemy;//ƒvƒŒƒCƒ„[‘S‘Ì
 
 ///-------------------------------------------------------------------------ƒ‚ƒfƒ‹
@@ -22,13 +31,6 @@ LPDIRECT3DTEXTURE9 g_apTextureModel_Enemy[NUM_TEXTURE_ENEMY] = {}; //ƒeƒNƒXƒ`ƒƒƒ
 
 MODEL_ENEMY g_Enemy3;//ƒ‚ƒfƒ‹‘S‘Ì
 //--------------------------------------------------------------------------
-
-////ƒ‚ƒfƒ‹\‘¢‘Ì--------------------------------
-//typedef struct
-//{
-//	const char* pFilePass;	// MODELƒtƒ@ƒCƒ‹ƒpƒX
-//
-//} MODELENEMYINFO;
 
 //=============================
 //ƒGƒlƒ~[‰Šú‰»ˆ—
@@ -50,6 +52,8 @@ void InitEnemy(void)
 	g_Enemy.rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);	//Œü‚«
 
 	g_Enemy.move = D3DXVECTOR3(-5.0f, 0.0f, 0.0f);	//•àsƒXƒs[ƒh
+
+	g_Enemy.ActionPattern = ACTIONPATTERN_ENEMY_WALK;
 
 	g_Enemy.rotmove = 0.0f;
 
@@ -146,15 +150,32 @@ void UpdateEnemy(void)
 	D3DXMATRIX mtxRot, mtxTrans, mtxParent;//ŒvZ—pƒ}ƒgƒŠƒbƒNƒX	
 
 
-		//‚Æ‚è‚ ‚¦‚¸‘Ò‹@
-	g_Enemy.NowMotionDOWN = MOTIONTYPE_ENEMY_STANDBY;
+	//	//‚Æ‚è‚ ‚¦‚¸‘Ò‹@
+	//g_Enemy.NowMotionDOWN = MOTIONTYPE_ENEMY_STANDBY;
 
+	//int Random = ((float)rand() / RAND_MAX) * 2;
+	//if (Random == 0)
+	//{
+	//	g_Enemy.move = D3DXVECTOR3(-5.0f, 0.0f, 0.0f);
+	//}
+	//else if (Random == 1)
+	//{
+	//	g_Enemy.move = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+	//}
 	//ŒÃ‚¢pos‚ğ‘ã“ü
 	g_Enemy.oldPos = g_Enemy.pos;
 
 	//ˆÊ’u‚ğXV
 	g_Enemy.pos += g_Enemy.move;
 
+	if (g_Enemy.move != D3DXVECTOR3(0.0f,0.0f,0.0f))
+	{
+		g_Enemy.NowMotionDOWN = MOTIONTYPE_ENEMY_MOVE;
+	}
+	else if (g_Enemy.move == D3DXVECTOR3(0.0f, 0.0f, 0.0f))
+	{
+		g_Enemy.NowMotionDOWN = MOTIONTYPE_ENEMY_MOVE;
+	}
 	//ã‰º‚Ìƒ‚[ƒVƒ‡ƒ“
 	LowerBodyEnemy3();
 	//	UpperBodyMotion();
@@ -255,6 +276,43 @@ void UpdateEnemy(void)
 	}
 }
 
+//===================================
+//ƒGƒlƒ~[s“®ˆ—
+//===================================
+void ActionEnemy(ACTIONPATTERN_ENEMY ActionPattern)
+{
+	if (ActionPattern == ACTIONPATTERN_ENEMY_STANDBY)
+	{//Ã~ó‘Ô
+		g_Enemy.move = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+		g_Enemy.NowMotionDOWN = MOTIONTYPE_ENEMY_STANDBY;
+	}
+	else if (ActionPattern == ACTIONPATTERN_ENEMY_WALK)
+	{
+		int nTurn = ((float)rand() / RAND_MAX) * 4;
+		int nMoveX = ((float)rand() / RAND_MAX) * MAX_ENEMY_SPEED;
+		int nMoveZ = ((float)rand() / RAND_MAX) * MAX_ENEMY_SPEED;
+		if (nTurn == 0)
+		{
+			nMoveX *= -1;
+		}
+		if (nTurn == 1)
+		{
+			nMoveZ *= -1;
+		}
+		if (nTurn == 2)
+		{
+			nMoveX *= -1;
+			nMoveZ *= -1;
+		}
+
+		g_Enemy.move = D3DXVECTOR3((float)nMoveX, 0.0f, (float)nMoveZ);
+		g_Enemy.NowMotionDOWN = MOTIONTYPE_ENEMY_MOVE;
+
+	}
+	LowerBodyEnemy3();
+
+}
+
 //=============================
 //ƒGƒlƒ~[•`‰æˆ—
 //=============================
@@ -347,16 +405,25 @@ void DrawEnemy(void)
 	}
 }
 
+//=============================
+//ƒGƒlƒ~[î•ñæ“¾ˆ—
+//=============================
 ENEMYMODEL* GetEnemy(void)
 {
 	return &g_Enemy;
 }
 
+//===================================
+//ƒ‚ƒfƒ‹æ“¾ˆ—
+//===================================
 MODEL_ENEMY* GetEnemyModel(void)
 {
 	return &g_Enemy3;
 }
 
+//=============================
+//ƒGƒlƒ~[ƒƒbƒVƒ…î•ñæ“¾ˆ—
+//=============================
 LPD3DXMESH* GetMesh_Enemy(void)
 {
 	return &g_pMeshModel_Enemy[0];
@@ -436,6 +503,9 @@ D3DXVECTOR3 ConversionEnemyRot3(D3DXVECTOR3 fRot, int nCnt)
 
 }
 
+//===================================
+//ƒeƒLƒXƒg‚©‚çƒLƒƒƒ‰‚Ìî•ñ‚ğ“Ç‚İ‚Şˆ—----------------------------------------------------------------
+//===================================
 void LoadSetEnemy3(void)
 {
 	LPDIRECT3DDEVICE9 pDevice = GetDevice();
@@ -681,6 +751,9 @@ void LoadSetEnemy3(void)
 
 }
 
+//===================================
+//‰º”¼gƒ‚[ƒVƒ‡ƒ“//˜
+//===================================
 void LowerBodyEnemy3(void)
 {
 	if (g_Enemy.NowMotionDOWN != g_Enemy.OldMotionDOWN)
@@ -899,6 +972,9 @@ void LowerBodyEnemy3(void)
 	
 }
 
+//===================================
+//ƒGƒlƒ~[İ’èˆ—
+//===================================
 void SetModel_Enemy(D3DXVECTOR3 pos, D3DXVECTOR3 rot)
 {
 	g_Enemy.pos = pos;	//ˆÊ’u
