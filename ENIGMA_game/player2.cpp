@@ -12,7 +12,7 @@
 #include "camera.h"
 #include "line.h"
 #include "transfergate.h"
-
+#include "enemy.h"
 //#include "sound.h"
 
 #include <stdio.h>//ヘッダーファイルをインクルード
@@ -273,7 +273,10 @@ void UpdatePlayer_2P(void)
 	//プレイヤー同士当たり判定
 	BoxCollisionPlayer(PlayerMin_2P, PlayerMax_2P, PlayerMin, PlayerMax,2);
 
-
+	//エネミー
+	ENEMYMODEL* pEnemy;
+	pEnemy = GetEnemy();
+	BoxCollisionPlayer(PlayerMin_2P, PlayerMax_2P, pEnemy->MinPos, pEnemy->MaxPos, 2);
 	//アイテム------------------------------------------------------------------------------------------------------------------------------------------------
 	ITEM* pItem;
 	pItem = GetItem();

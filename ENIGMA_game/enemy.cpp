@@ -40,13 +40,16 @@ void InitEnemy(void)
 
 	g_Enemy.OldMotionDOWN = MOTIONTYPE_ENEMY_MAX;
 
-	g_Enemy.pos = D3DXVECTOR3(0.0f, 10.0f, 0.0f);	//位置
+	g_Enemy.pos = D3DXVECTOR3(-50.0f, 0.0f, -500.0f);	//位置
+	g_Enemy.MinPos = D3DXVECTOR3(g_Enemy.pos + ENEMYMIN);	//位置
+	g_Enemy.MaxPos = D3DXVECTOR3(g_Enemy.pos + ENEMYMAX);	//位置
+	g_Enemy.pos = D3DXVECTOR3(-50.0f, 0.0f, -500.0f);	//位置
 
 	g_Enemy.oldPos = g_Enemy.pos;	//過去の位置
 
 	g_Enemy.rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);	//向き
 
-	g_Enemy.move = D3DXVECTOR3(5.0f, 0.0f, 0.0f);	//歩行スピード
+	g_Enemy.move = D3DXVECTOR3(-5.0f, 0.0f, 0.0f);	//歩行スピード
 
 	g_Enemy.rotmove = 0.0f;
 
@@ -110,7 +113,7 @@ void InitEnemy(void)
 	}
 
 	//ここでセット
-	SetModel_Enemy(D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 3.14f, 0.0f));
+	SetModel_Enemy(D3DXVECTOR3(-50.0f, 0.0f, -500.0f), D3DXVECTOR3(0.0f, 3.14f, 0.0f));
 }
 
 //=============================
@@ -194,8 +197,8 @@ void UpdateEnemy(void)
 
 	//--------------------------------------------------------------------------------------------------------------------------------------------------//当たり判定ここから
 	//プレイヤーのサイズ
-	D3DXVECTOR3 EnemyMin = D3DXVECTOR3(g_Enemy.pos + ENEMYMIN);
-	D3DXVECTOR3 EnemyMax = D3DXVECTOR3(g_Enemy.pos + ENEMYMAX);
+	g_Enemy.MinPos = D3DXVECTOR3(g_Enemy.pos + ENEMYMIN);
+	g_Enemy.MaxPos = D3DXVECTOR3(g_Enemy.pos + ENEMYMAX);
 
 	MAPOBJECT* pMapObject;
 	pMapObject = GetMapObject();
@@ -210,7 +213,7 @@ void UpdateEnemy(void)
 				D3DXVECTOR3 ModelMax = D3DXVECTOR3(pMapObject[i].pos + pMapObject[i].Maxpos);
 
 				//判定
-				BoxCollisionEnemy(EnemyMin, EnemyMax, ModelMin, ModelMax);
+				BoxCollisionEnemy(g_Enemy.MinPos, g_Enemy.MaxPos, ModelMin, ModelMax);
 			}
 		}
 	}
@@ -228,7 +231,7 @@ void UpdateEnemy(void)
 				D3DXVECTOR3 StageMax = D3DXVECTOR3(pStage[nWall].posStage + pStage[nWall].MaxPos);
 
 				//プレイヤー同士当たり判定
-				BoxCollisionEnemy(EnemyMin, EnemyMax, StageMin, StageMax);
+				BoxCollisionEnemy(g_Enemy.MinPos, g_Enemy.MaxPos, StageMin, StageMax);
 			}
 		}
 	}
@@ -246,7 +249,7 @@ void UpdateEnemy(void)
 			D3DXVECTOR3 ColisionPreMax = D3DXVECTOR3(pColisionPre[i].pos + pColisionPre[i].Max);
 
 			//プレイヤー同士当たり判定
-			BoxCollisionEnemy(EnemyMin, EnemyMax, ColisionPreMin, ColisionPreMax);
+			BoxCollisionEnemy(g_Enemy.MinPos, g_Enemy.MaxPos, ColisionPreMin, ColisionPreMax);
 
 		}
 	}

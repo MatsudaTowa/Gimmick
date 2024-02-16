@@ -14,7 +14,7 @@
 #include "transfergate.h"
 #include "Actionzone.h"
 #include "bathgimmick.h"
-
+#include "enemy.h"
 
 //#include "sound.h"
 
@@ -276,6 +276,11 @@ void UpdatePlayer(void)
 
 	//プレイヤー同士当たり判定
 	BoxCollisionPlayer(PlayerMin, PlayerMax, PlayerMin_2P, PlayerMax_2P,1);
+
+	//エネミー
+	ENEMYMODEL* pEnemy;
+	pEnemy = GetEnemy();
+	BoxCollisionPlayer(PlayerMin, PlayerMax, pEnemy->MinPos, pEnemy->MaxPos, 1);
 
 
 
