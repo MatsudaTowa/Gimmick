@@ -326,9 +326,6 @@
     <ClInclude Include="gamefade.h">
       <Filter>ソース ファイル\--++|    GAME   |++--\//GAME_SYSTEM//\GAMEFADE</Filter>
     </ClInclude>
-    <ClInclude Include="limittime.h">
-      <Filter>ソース ファイル\--++|    GAME   |++--\//GAME_SYSTEM//\LIMITTIME</Filter>
-    </ClInclude>
     <ClInclude Include="screenui.h">
       <Filter>ソース ファイル\--++|    GAME   |++--\//GAME_SYSTEM//\SCREEN_UI</Filter>
     </ClInclude>
@@ -385,6 +382,9 @@
     </ClInclude>
     <ClInclude Include="enemy.h">
       <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="limittime.h">
+      <Filter>ソース ファイル\--++|    GAME   |++--\//GAME_SYSTEM//\LIMITTIME</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

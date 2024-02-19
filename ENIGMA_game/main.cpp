@@ -447,14 +447,13 @@ HRESULT Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindows)
 
 
 ////----------------------------------------------------------------------------------------------------------------------------------ここまで共通
-//
-	//モード設定
-	Setmode(g_mode);
+
 
 	//フェードの初期化処理
 	InitFade(MODE(FADE_NONE));
 
-
+	//モード設定
+	Setmode(g_mode);
 	//特別
 	//InitPlayer();
 

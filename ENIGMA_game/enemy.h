@@ -23,7 +23,7 @@
 //エネミーサイズ(当たり判定用)
 #define ENEMYMIN	(D3DXVECTOR3(-50.0f,0.0f,-50.0f))
 #define ENEMYMAX	(D3DXVECTOR3(50.0f,185.0f,50.0f))
-#define MAX_ENEMY_SPEED	(10)
+#define MAX_ENEMY_SPEED	(5)
 #define ENEMY_FILE_NAME	"data\\motionEnigma.txt" //エネミーのファイルネーム
 
 

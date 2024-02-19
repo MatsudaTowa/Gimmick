@@ -124,6 +124,7 @@ void InitModel(void)
 		for (int nCntVtx = 0; nCntVtx < nNumVtx; nCntVtx++)
 		{
 			//’¸“_À•W‚Ì‘ã“ü
+
 			D3DXVECTOR3 vtx = *(D3DXVECTOR3*)pVtxBuff;
 
 			if (vtx.x > g_aModel[nCnt].Maxpos.x)

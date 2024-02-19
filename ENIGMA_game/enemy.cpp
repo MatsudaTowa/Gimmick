@@ -140,6 +140,14 @@ void UninitEnemy(void)
 			g_pBuffMatModel_Enemy[nCntModel] = NULL;
 		}
 	}
+	for (int nNumTex = 0; nNumTex < NUM_TEXTURE_ENEMY; nNumTex++)
+	{
+		if (g_apTextureModel_Enemy[nNumTex] != NULL)
+		{
+			g_apTextureModel_Enemy[nNumTex]->Release();
+			g_apTextureModel_Enemy[nNumTex] = NULL;
+		}
+	}
 }
 
 //=============================
@@ -289,8 +297,8 @@ void ActionEnemy(ACTIONPATTERN_ENEMY ActionPattern)
 	else if (ActionPattern == ACTIONPATTERN_ENEMY_WALK)
 	{
 		int nTurn = ((float)rand() / RAND_MAX) * 4;
-		int nMoveX = ((float)rand() / RAND_MAX) * MAX_ENEMY_SPEED;
-		int nMoveZ = ((float)rand() / RAND_MAX) * MAX_ENEMY_SPEED;
+		int nMoveX = MAX_ENEMY_SPEED;
+		int nMoveZ = MAX_ENEMY_SPEED;
 		if (nTurn == 0)
 		{
 			nMoveX *= -1;
@@ -304,6 +312,9 @@ void ActionEnemy(ACTIONPATTERN_ENEMY ActionPattern)
 			nMoveX *= -1;
 			nMoveZ *= -1;
 		}
+
+		float Angle = atan2f((float)nMoveX, (float)nMoveZ);//•ûŠp
+		g_Enemy.rot.y = (Angle - (1.0f * D3DX_PI));
 
 		g_Enemy.move = D3DXVECTOR3((float)nMoveX, 0.0f, (float)nMoveZ);
 		g_Enemy.NowMotionDOWN = MOTIONTYPE_ENEMY_MOVE;
