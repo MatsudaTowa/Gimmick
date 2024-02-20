@@ -10,6 +10,7 @@
 #include "model.h"
 #include "main.h"
 #include "input.h"
+#include "enemy_view.h"
 #include <stdio.h>//ヘッダーファイルをインクルード
 #include <string.h>//文字列を扱う変数
 #include "game.h"
@@ -117,7 +118,7 @@ void InitEnemy(void)
 	}
 
 	//ここでセット
-	SetModel_Enemy(D3DXVECTOR3(-50.0f, 0.0f, -500.0f), D3DXVECTOR3(0.0f, 3.14f, 0.0f));
+	SetModel_Enemy(D3DXVECTOR3(-50.0f, 0.0f, -500.0f), D3DXVECTOR3(0.0f, D3DX_PI, 0.0f));
 }
 
 //=============================
@@ -991,6 +992,9 @@ void SetModel_Enemy(D3DXVECTOR3 pos, D3DXVECTOR3 rot)
 	g_Enemy.pos = pos;	//位置
 	g_Enemy.rot = rot;	//向き
 	g_Enemy.bUse = true;
-
+	SetEnemy_View(D3DXVECTOR3(g_Enemy.pos.x,g_Enemy.pos.y,g_Enemy.pos.z + 50.0f)
+		,100.0f
+		,true
+		,D3DXCOLOR(1.0f,0.0f,1.0f,0.7f));
 	LoadSetEnemy3();//---------------------------------------------------------こいつがロード
 }

@@ -153,6 +153,7 @@
     <ClCompile Include="advanced_motion_model.cpp" />
     <ClCompile Include="bathgimmick.cpp" />
     <ClCompile Include="enemy.cpp" />
+    <ClCompile Include="enemy_view.cpp" />
     <ClCompile Include="eyetrap.cpp" />
     <ClCompile Include="hitcollision_mistake_prevention.cpp" />
     <ClCompile Include="simple_motion_model.cpp" />
@@ -197,6 +198,7 @@
     <ClInclude Include="advanced_motion_model.h" />
     <ClInclude Include="bathgimmick.h" />
     <ClInclude Include="enemy.h" />
+    <ClInclude Include="enemy_view.h" />
     <ClInclude Include="eyetrap.h" />
     <ClInclude Include="hitcollision_mistake_prevention.h" />
     <ClInclude Include="simple_motion_model.h" />

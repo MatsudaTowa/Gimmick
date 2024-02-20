@@ -14,6 +14,7 @@
 #include "light.h"
 #include "stage.h"
 #include "model.h"
+#include "enemy_view.h"
 #include "player.h"
 #include "player2.h"
 #include "moneybox.h"
@@ -127,6 +128,7 @@ void InitGame(void)
 
 	InitPlayer();
 	InitPlayer_2P();
+	InitEnemy_View();
 	InitEnemy();
 	
 	InitSky();
@@ -201,6 +203,7 @@ void UninitGame(void)
 	UninitPlayer();
 	UninitPlayer_2P();
 	UninitEnemy();
+	UninitEnemy_View();
 	UninitShadow();
 	UninitMoneybox();
 	UninitMoneyboxDigit();
@@ -349,7 +352,9 @@ void UpdateGame(void)
 
 		UpdatePlayer();
 		UpdatePlayer_2P();
+		UpdateEnemy_View();
 		UpdateEnemy();
+
 
 		//--------------------プレイヤー
 
@@ -459,6 +464,14 @@ void DrawGame(void)
 
 		DrawAdvancedModel();
 
+#if _DEBUG
+		DrawCollision_Pre();
+		DrawActionZone();
+		DrawLine();
+		DrawDebugModel();
+#endif
+		DrawEnemy_View();
+
 		//特殊
 		DrawPlayer(nCnt);
 		DrawPlayer_2P(nCnt);
@@ -466,13 +479,6 @@ void DrawGame(void)
 
 		DrawTransferGate();
 	
-
-#if _DEBUG
-		DrawCollision_Pre();
-		DrawActionZone();
-		DrawLine();
-		DrawDebugModel();
-#endif
 		//αテストを有効
 		pDevice->SetRenderState(D3DRS_ALPHATESTENABLE, TRUE);
 		pDevice->SetRenderState(D3DRS_ALPHAREF, 0);//基準値
@@ -2164,6 +2170,80 @@ void SphereCollisionZone(D3DXVECTOR3 PlayerPos, int PlayerIndex, int ZoneIndex)
 			{//視界トラップ作動
 				SetEyeTrap(1);
 			}
+		}
+	}
+}
+
+//===================================
+//行動エリア円形当たり判定(アクションゾーン)
+//===================================
+void SphereEnemyView(D3DXVECTOR3 PlayerPos, int PlayerIndex, int ZoneIndex)
+{
+	Camera* pCamera;
+	pCamera = GetCamera();
+
+	Player* pPlayer;
+	pPlayer = GetPlayer();
+
+	Player_2P* pPlayer2;
+	pPlayer2 = GetPlayer_2P();
+
+
+	ACTIONZONE* pActionZone;
+	pActionZone = GetActionZone();
+
+
+	float PlayerCenterCorre = 45.0f;
+
+	//接触したか
+	bool bIn = false;
+
+	//プレイヤーのposとエリアのposの差分を計算
+
+	//差分ベクトル格納
+	D3DXVECTOR3 diff;
+	//1Pのとき
+	if (PlayerIndex == 0)
+	{
+		PlayerPos.y += PlayerCenterCorre;//中心位置補正
+
+		//差分ベクトルを計算
+		diff = PlayerPos - pActionZone[ZoneIndex].pos;
+
+	}
+	else if (PlayerIndex == 1)
+	{//2Pの時
+		PlayerPos.y += PlayerCenterCorre;//中心位置補正
+
+		//差分ベクトルを計算
+		diff = PlayerPos - pActionZone[ZoneIndex].pos;
+	}
+
+
+
+	//各要素を二乗して入れる
+	float squaredLength = diff.x * diff.x + diff.y * diff.y + diff.z * diff.z;
+
+	//平方根を取る（直線差分）
+	float distance = sqrt(squaredLength);
+
+	if (distance < pActionZone[ZoneIndex].Radius)
+	{//差分の距離が半径より短い==円の中にいる時
+		bIn = true;//接触判定
+	}
+	
+	if (PlayerIndex == 0)
+	{
+		if (bIn == true)
+		{
+			ActionEnemy(ACTIONPATTERN_ENEMY_STANDBY);
+		}
+	}
+	else if (PlayerIndex == 1)
+	{
+		if (bIn == true)
+		{
+			ActionEnemy(ACTIONPATTERN_ENEMY_STANDBY);
 		}
 	}
 }

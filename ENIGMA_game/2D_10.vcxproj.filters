@@ -258,6 +258,9 @@
     <ClCompile Include="enemy.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
+    <ClCompile Include="enemy_view.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="input.h">
@@ -385,6 +388,9 @@
     </ClInclude>
     <ClInclude Include="limittime.h">
       <Filter>ソース ファイル\--++|    GAME   |++--\//GAME_SYSTEM//\LIMITTIME</Filter>
+    </ClInclude>
+    <ClInclude Include="enemy_view.h">
+      <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
