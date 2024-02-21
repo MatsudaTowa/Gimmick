@@ -34,8 +34,8 @@ void InitEnemy_View(void)
         g_Enemy_View[nCnt].bUse = false;
         g_Enemy_View[nCnt].bDrawOk = false;
     }
-    SetEnemy_View(D3DXVECTOR3(0.0f, 500.0f, 0.0f), 50,false, D3DXCOLOR(0.0f, 0.0f, 0.5f, 1.0f));
-    SetEnemy_View(D3DXVECTOR3(0.0f, 500.0f, 0.0f), 50,false, D3DXCOLOR(0.0f, 0.0f, 0.5f, 1.0f));
+    SetEnemy_View(D3DXVECTOR3(0.0f, 500.0f, 0.0f), 200,false, D3DXCOLOR(0.0f, 0.0f, 0.5f, 1.0f));
+    SetEnemy_View(D3DXVECTOR3(0.0f, 500.0f, 0.0f), 200,false, D3DXCOLOR(0.0f, 0.0f, 0.5f, 1.0f));
 
 }
 
@@ -105,15 +105,18 @@ void DrawEnemy_View(void)
                 if (g_Enemy_View[nCntZone].bFollowEnemy == true)
                 {
                     ENEMYMODEL* pEnemy = GetEnemy();
-                    //向きを反映
-                    D3DXMatrixRotationYawPitchRoll(&mtxRot, pEnemy->rot.y, pEnemy->rot.x, pEnemy->rot.z);
+                    ////向きを反映
+                    //D3DXMatrixRotationYawPitchRoll(&mtxRot, pEnemy->rot.y, pEnemy->rot.x, pEnemy->rot.z);
 
-                    D3DXMatrixMultiply(&g_Enemy_View[nCntZone].mtxWorld, &g_Enemy_View[nCntZone].mtxWorld, &mtxRot);
+                    //D3DXMatrixMultiply(&g_Enemy_View[nCntZone].mtxWorld, &g_Enemy_View[nCntZone].mtxWorld, &mtxRot);
 
                     //位置を反映
-                    D3DXMatrixTranslation(&mtxTrans, pEnemy->pos.x, pEnemy->pos.y, pEnemy->pos.z);
+                    D3DXMatrixTranslation(&mtxTrans, g_Enemy_View[nCntZone].pos.x, g_Enemy_View[nCntZone].pos.y, g_Enemy_View[nCntZone].pos.z);
 
                     D3DXMatrixMultiply(&g_Enemy_View[nCntZone].mtxWorld, &g_Enemy_View[nCntZone].mtxWorld, &mtxTrans);
+
+                    //エネミーを親として動かす
+                    D3DXMatrixMultiply(&g_Enemy_View[nCntZone].mtxWorld, &g_Enemy_View[nCntZone].mtxWorld, &pEnemy->mtxWorld);
                 }
                 else
                 {
@@ -160,13 +163,13 @@ void DrawEnemy_View(void)
 
 }
 
-////=========================================================
-////視野の情報取得
-////=========================================================
-//ENEMY_VIEW* GetEnemy_View(void)
-//{
-//	return &g_Enemy_View[0];
-//}
+//=========================================================
+//視野の情報取得
+//=========================================================
+ENEMYVIEW* GetEnemy_View(void)
+{
+	return &g_Enemy_View[0];
+}
 
 //=========================================================
 //視野セット

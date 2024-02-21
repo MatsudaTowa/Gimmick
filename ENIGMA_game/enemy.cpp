@@ -992,8 +992,8 @@ void SetModel_Enemy(D3DXVECTOR3 pos, D3DXVECTOR3 rot)
 	g_Enemy.pos = pos;	//à íu
 	g_Enemy.rot = rot;	//å¸Ç´
 	g_Enemy.bUse = true;
-	SetEnemy_View(D3DXVECTOR3(g_Enemy.pos.x,g_Enemy.pos.y,g_Enemy.pos.z + 50.0f)
-		,100.0f
+	SetEnemy_View(D3DXVECTOR3(g_Enemy.pos.x,g_Enemy.pos.y + 10.0f,g_Enemy.pos.z + 300.0f)
+		,150.0f
 		,true
 		,D3DXCOLOR(1.0f,0.0f,1.0f,0.7f));
 	LoadSetEnemy3();//---------------------------------------------------------Ç±Ç¢Ç¬Ç™ÉçÅ[Éh

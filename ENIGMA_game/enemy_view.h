@@ -57,7 +57,7 @@ void UninitEnemy_View(void);//敵の視野の終了処理
 void UpdateEnemy_View(void);//敵の視野の更新処理
 void DrawEnemy_View(void);//敵の視野の描画処理
 
-//ENEMY_VIEW* GetEnemy_View(void);
+ENEMYVIEW* GetEnemy_View(void);
 
 //-----------------------------自分座標-----------半径---------エネミーについてくかどうか-------色
 void SetEnemy_View(D3DXVECTOR3 Pos, float Radius,bool bFollowEnemy, D3DXCOLOR ZoneColor);

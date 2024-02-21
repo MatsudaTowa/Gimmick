@@ -469,8 +469,9 @@ void DrawGame(void)
 		DrawActionZone();
 		DrawLine();
 		DrawDebugModel();
-#endif
 		DrawEnemy_View();
+#endif
+
 
 		//特殊
 		DrawPlayer(nCnt);
@@ -2175,7 +2176,7 @@ void SphereCollisionZone(D3DXVECTOR3 PlayerPos, int PlayerIndex, int ZoneIndex)
 }
 
 //===================================
-//行動エリア円形当たり判定(アクションゾーン)
+//敵の視野に入った判定
 //===================================
 void SphereEnemyView(D3DXVECTOR3 PlayerPos, int PlayerIndex, int ZoneIndex)
 {
@@ -2189,8 +2190,8 @@ void SphereEnemyView(D3DXVECTOR3 PlayerPos, int PlayerIndex, int ZoneIndex)
 	pPlayer2 = GetPlayer_2P();
 
 
-	ACTIONZONE* pActionZone;
-	pActionZone = GetActionZone();
+	ENEMYVIEW* pEnemyView;
+	pEnemyView = GetEnemy_View();
 
 
 	float PlayerCenterCorre = 45.0f;
@@ -2208,7 +2209,7 @@ void SphereEnemyView(D3DXVECTOR3 PlayerPos, int PlayerIndex, int ZoneIndex)
 		PlayerPos.y += PlayerCenterCorre;//中心位置補正
 
 		//差分ベクトルを計算
-		diff = PlayerPos - pActionZone[ZoneIndex].pos;
+		diff = PlayerPos - pEnemyView[ZoneIndex].pos;
 
 	}
 	else if (PlayerIndex == 1)
@@ -2216,7 +2217,7 @@ void SphereEnemyView(D3DXVECTOR3 PlayerPos, int PlayerIndex, int ZoneIndex)
 		PlayerPos.y += PlayerCenterCorre;//中心位置補正
 
 		//差分ベクトルを計算
-		diff = PlayerPos - pActionZone[ZoneIndex].pos;
+		diff = PlayerPos - pEnemyView[ZoneIndex].pos;
 	}
 
 
@@ -2227,7 +2228,7 @@ void SphereEnemyView(D3DXVECTOR3 PlayerPos, int PlayerIndex, int ZoneIndex)
 	//平方根を取る（直線差分）
 	float distance = sqrt(squaredLength);
 
-	if (distance < pActionZone[ZoneIndex].Radius)
+	if (distance < pEnemyView[ZoneIndex].Radius)
 	{//差分の距離が半径より短い==円の中にいる時
 		bIn = true;//接触判定
 	}
@@ -2236,6 +2237,9 @@ void SphereEnemyView(D3DXVECTOR3 PlayerPos, int PlayerIndex, int ZoneIndex)
 	{
 		if (bIn == true)
 		{
+
+			pEnemyView[ZoneIndex].ZoneColor = D3DXCOLOR(1.0f, 5.0f, 2.0f, 0.2f);
+			pEnemyView[ZoneIndex].bDrawOk = false;
 			ActionEnemy(ACTIONPATTERN_ENEMY_STANDBY);
 		}
 	}
@@ -2243,6 +2247,9 @@ void SphereEnemyView(D3DXVECTOR3 PlayerPos, int PlayerIndex, int ZoneIndex)
 	{
 		if (bIn == true)
 		{
+
+			pEnemyView[ZoneIndex].ZoneColor = D3DXCOLOR(1.0f, 5.0f, 2.0f, 0.2f);
+			pEnemyView[ZoneIndex].bDrawOk = false;
 			ActionEnemy(ACTIONPATTERN_ENEMY_STANDBY);
 		}
 	}

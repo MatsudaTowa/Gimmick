@@ -13,6 +13,7 @@
 #include "line.h"
 #include "transfergate.h"
 #include "Actionzone.h"
+#include "enemy_view.h"
 #include "bathgimmick.h"
 #include "enemy.h"
 
@@ -369,6 +370,20 @@ void UpdatePlayer(void)
 		{
 			
 			SphereCollisionZone(g_Player.pos, 0, nCntZone);
+			//	break;
+		}
+	}
+
+	//“G‚ÌŽ‹–ì/-----------------------------------------------------------------------------------------------------------------------------------------
+	ENEMYVIEW* pEnemyView;
+	pEnemyView = GetEnemy_View();
+
+	for (int nCntZone = 0; nCntZone < MAX_ENEMYVIEW; nCntZone++)
+	{
+		if (pEnemyView[nCntZone].bUse == true && pEnemyView[nCntZone].bFollowEnemy == true)
+		{
+
+			SphereEnemyView(g_Player.pos, 0, nCntZone);
 			//	break;
 		}
 	}
