@@ -46,15 +46,16 @@ void InitEnemy(void)
 	g_Enemy.pos = D3DXVECTOR3(-50.0f, 0.0f, -500.0f);	//位置
 	g_Enemy.MinPos = D3DXVECTOR3(g_Enemy.pos + ENEMYMIN);	//位置
 	g_Enemy.MaxPos = D3DXVECTOR3(g_Enemy.pos + ENEMYMAX);	//位置
-	g_Enemy.pos = D3DXVECTOR3(-50.0f, 0.0f, -500.0f);	//位置
 
 	g_Enemy.oldPos = g_Enemy.pos;	//過去の位置
 
 	g_Enemy.rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);	//向き
 
-	g_Enemy.move = D3DXVECTOR3(-5.0f, 0.0f, 0.0f);	//歩行スピード
+	g_Enemy.move = D3DXVECTOR3(0.0f, 0.0f, 0.0f);	//歩行スピード
 
 	g_Enemy.ActionPattern = ACTIONPATTERN_ENEMY_WALK;
+
+	ActionEnemy(g_Enemy.ActionPattern);
 
 	g_Enemy.rotmove = 0.0f;
 
@@ -177,14 +178,14 @@ void UpdateEnemy(void)
 	//位置を更新
 	g_Enemy.pos += g_Enemy.move;
 
-	if (g_Enemy.move != D3DXVECTOR3(0.0f,0.0f,0.0f))
-	{
-		g_Enemy.NowMotionDOWN = MOTIONTYPE_ENEMY_MOVE;
-	}
-	else if (g_Enemy.move == D3DXVECTOR3(0.0f, 0.0f, 0.0f))
-	{
-		g_Enemy.NowMotionDOWN = MOTIONTYPE_ENEMY_MOVE;
-	}
+	//if (g_Enemy.move != D3DXVECTOR3(0.0f,0.0f,0.0f))
+	//{
+	//	g_Enemy.NowMotionDOWN = MOTIONTYPE_ENEMY_MOVE;
+	//}
+	//else if (g_Enemy.move == D3DXVECTOR3(0.0f, 0.0f, 0.0f))
+	//{
+	//	g_Enemy.NowMotionDOWN = MOTIONTYPE_ENEMY_MOVE;
+	//}
 	//上下のモーション
 	LowerBodyEnemy3();
 	//	UpperBodyMotion();
@@ -992,9 +993,9 @@ void SetModel_Enemy(D3DXVECTOR3 pos, D3DXVECTOR3 rot)
 	g_Enemy.pos = pos;	//位置
 	g_Enemy.rot = rot;	//向き
 	g_Enemy.bUse = true;
-	SetEnemy_View(D3DXVECTOR3(g_Enemy.pos.x,g_Enemy.pos.y + 10.0f,g_Enemy.pos.z + 300.0f)
-		,150.0f
+	SetEnemy_View(D3DXVECTOR3(g_Enemy.pos)
+		,250.0f
 		,true
-		,D3DXCOLOR(1.0f,0.0f,1.0f,0.7f));
+		,D3DXCOLOR(1.0f,0.0f,1.0f,0.4f));
 	LoadSetEnemy3();//---------------------------------------------------------こいつがロード
 }

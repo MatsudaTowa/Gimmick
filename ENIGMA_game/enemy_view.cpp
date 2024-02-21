@@ -70,8 +70,44 @@ void UpdateEnemy_View(void)
     {
         if (g_Enemy_View[nCntZone].bUse == true)
         {
+            ENEMYMODEL* pEnemy = GetEnemy();
+            g_Enemy_View[nCntZone].pos += pEnemy->move;
+            //D3DXMATRIX mtxRot, mtxTrans, mtxParent;//計算用マトリックス	
+
+            //for (int nCntZone = 0; nCntZone < MAX_ENEMYVIEW; nCntZone++)
+            //{
+
+            //    if (g_Enemy_View[nCntZone].bDrawOk == true)
+            //    {
+            //        //ワールドマトリックスの初期化
+            //        D3DXMatrixIdentity(&g_Enemy_View[nCntZone].mtxWorld);
+
+            //        // モデルのサイズを変更
+            //        D3DXMatrixScaling(&g_Enemy_View[nCntZone].mtxWorld, g_Enemy_View[nCntZone].SizeMag.x, g_Enemy_View[nCntZone].SizeMag.y, g_Enemy_View[nCntZone].SizeMag.z);
+
+
+            //        if (g_Enemy_View[nCntZone].bFollowEnemy == true)
+            //        {
+
+            //            ////向きを反映
+            //            //D3DXMatrixRotationYawPitchRoll(&mtxRot, pEnemy->rot.y, pEnemy->rot.x, pEnemy->rot.z);
+
+            //            //D3DXMatrixMultiply(&g_Enemy_View[nCntZone].mtxWorld, &g_Enemy_View[nCntZone].mtxWorld, &mtxRot);
+
+            //            //位置を反映
+            //            D3DXMatrixTranslation(&mtxTrans, g_Enemy_View[nCntZone].pos.x, g_Enemy_View[nCntZone].pos.y, g_Enemy_View[nCntZone].pos.z);
+
+            //            D3DXMatrixMultiply(&g_Enemy_View[nCntZone].mtxWorld, &g_Enemy_View[nCntZone].mtxWorld, &mtxTrans);
+
+            //            //エネミーを親として動かす
+            //            D3DXMatrixMultiply(&g_Enemy_View[nCntZone].mtxWorld, &g_Enemy_View[nCntZone].mtxWorld, &pEnemy->mtxWorld);
+            //        }
+            //    }
+
             D3DXVECTOR3 ActionZoneMin = g_Enemy_View[nCntZone].pos + g_Enemy_View[nCntZone].ZoneMin;
             D3DXVECTOR3 ActionZoneMax = g_Enemy_View[nCntZone].pos + g_Enemy_View[nCntZone].ZoneMax;
+
+            //}
         }
     }
 }
@@ -102,29 +138,29 @@ void DrawEnemy_View(void)
                 D3DXMatrixScaling(&g_Enemy_View[nCntZone].mtxWorld, g_Enemy_View[nCntZone].SizeMag.x, g_Enemy_View[nCntZone].SizeMag.y, g_Enemy_View[nCntZone].SizeMag.z);
 
 
-                if (g_Enemy_View[nCntZone].bFollowEnemy == true)
-                {
-                    ENEMYMODEL* pEnemy = GetEnemy();
-                    ////向きを反映
-                    //D3DXMatrixRotationYawPitchRoll(&mtxRot, pEnemy->rot.y, pEnemy->rot.x, pEnemy->rot.z);
+                //if (g_Enemy_View[nCntZone].bFollowEnemy == true)
+                //{
+                //    ENEMYMODEL* pEnemy = GetEnemy();
+                //    ////向きを反映
+                //    //D3DXMatrixRotationYawPitchRoll(&mtxRot, pEnemy->rot.y, pEnemy->rot.x, pEnemy->rot.z);
 
-                    //D3DXMatrixMultiply(&g_Enemy_View[nCntZone].mtxWorld, &g_Enemy_View[nCntZone].mtxWorld, &mtxRot);
+                //    //D3DXMatrixMultiply(&g_Enemy_View[nCntZone].mtxWorld, &g_Enemy_View[nCntZone].mtxWorld, &mtxRot);
 
+                //    //位置を反映
+                //    D3DXMatrixTranslation(&mtxTrans, g_Enemy_View[nCntZone].pos.x, g_Enemy_View[nCntZone].pos.y, g_Enemy_View[nCntZone].pos.z);
+
+                //    D3DXMatrixMultiply(&g_Enemy_View[nCntZone].mtxWorld, &g_Enemy_View[nCntZone].mtxWorld, &mtxTrans);
+
+                //    //エネミーを親として動かす
+                //    D3DXMatrixMultiply(&g_Enemy_View[nCntZone].mtxWorld, &g_Enemy_View[nCntZone].mtxWorld, &pEnemy->mtxWorld);
+                //}
+                //else
+                //{
                     //位置を反映
                     D3DXMatrixTranslation(&mtxTrans, g_Enemy_View[nCntZone].pos.x, g_Enemy_View[nCntZone].pos.y, g_Enemy_View[nCntZone].pos.z);
 
                     D3DXMatrixMultiply(&g_Enemy_View[nCntZone].mtxWorld, &g_Enemy_View[nCntZone].mtxWorld, &mtxTrans);
-
-                    //エネミーを親として動かす
-                    D3DXMatrixMultiply(&g_Enemy_View[nCntZone].mtxWorld, &g_Enemy_View[nCntZone].mtxWorld, &pEnemy->mtxWorld);
-                }
-                else
-                {
-                    //位置を反映
-                    D3DXMatrixTranslation(&mtxTrans, g_Enemy_View[nCntZone].pos.x, g_Enemy_View[nCntZone].pos.y, g_Enemy_View[nCntZone].pos.z);
-
-                    D3DXMatrixMultiply(&g_Enemy_View[nCntZone].mtxWorld, &g_Enemy_View[nCntZone].mtxWorld, &mtxTrans);
-                }
+                //}
                 
                 //ワールドマトリックスの設定
                 pDevice->SetTransform(D3DTS_WORLD, &g_Enemy_View[nCntZone].mtxWorld);

@@ -464,6 +464,11 @@ void DrawGame(void)
 
 		DrawAdvancedModel();
 
+		//特殊
+		DrawPlayer(nCnt);
+		DrawPlayer_2P(nCnt);
+		DrawEnemy();
+
 #if _DEBUG
 		DrawCollision_Pre();
 		DrawActionZone();
@@ -471,12 +476,6 @@ void DrawGame(void)
 		DrawDebugModel();
 		DrawEnemy_View();
 #endif
-
-
-		//特殊
-		DrawPlayer(nCnt);
-		DrawPlayer_2P(nCnt);
-		DrawEnemy();
 
 		DrawTransferGate();
 	
@@ -2242,6 +2241,10 @@ void SphereEnemyView(D3DXVECTOR3 PlayerPos, int PlayerIndex, int ZoneIndex)
 			pEnemyView[ZoneIndex].bDrawOk = false;
 			ActionEnemy(ACTIONPATTERN_ENEMY_STANDBY);
 		}
+		else
+		{
+			pEnemyView[ZoneIndex].bDrawOk = true;
+		}
 	}
 	else if (PlayerIndex == 1)
 	{
@@ -2251,6 +2254,10 @@ void SphereEnemyView(D3DXVECTOR3 PlayerPos, int PlayerIndex, int ZoneIndex)
 			pEnemyView[ZoneIndex].ZoneColor = D3DXCOLOR(1.0f, 5.0f, 2.0f, 0.2f);
 			pEnemyView[ZoneIndex].bDrawOk = false;
 			ActionEnemy(ACTIONPATTERN_ENEMY_STANDBY);
+		}
+		else
+		{
+			pEnemyView[ZoneIndex].bDrawOk = true;
 		}
 	}
 }
