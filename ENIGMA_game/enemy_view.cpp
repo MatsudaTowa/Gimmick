@@ -156,10 +156,8 @@ void DrawEnemy_View(void)
                 //}
                 //else
                 //{
-                    //位置を反映
-                    D3DXMatrixTranslation(&mtxTrans, g_Enemy_View[nCntZone].pos.x, g_Enemy_View[nCntZone].pos.y, g_Enemy_View[nCntZone].pos.z);
 
-                    D3DXMatrixMultiply(&g_Enemy_View[nCntZone].mtxWorld, &g_Enemy_View[nCntZone].mtxWorld, &mtxTrans);
+
                 //}
                 
                 //ワールドマトリックスの設定
@@ -184,7 +182,6 @@ void DrawEnemy_View(void)
 
                     //保存してたマテリアルを戻す
                     pDevice->SetMaterial(&matDef);
-
 
                     // マテリアルの設定
                     pDevice->SetMaterial(&pMat[nCntMat].MatD3D);
@@ -245,6 +242,7 @@ void SetEnemy_View(D3DXVECTOR3 Pos, float Radius, bool bFollowEnemy, D3DXCOLOR Z
                 NULL,
                 &g_dwNumMatEnemy_View,
                 &g_pMeshEnemy_View[nCntZone]);
+
 
 
             break;

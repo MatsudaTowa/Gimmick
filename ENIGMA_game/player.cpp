@@ -281,7 +281,7 @@ void UpdatePlayer(void)
 	//エネミー
 	ENEMYMODEL* pEnemy;
 	pEnemy = GetEnemy();
-	BoxCollisionPlayer(PlayerMin, PlayerMax, pEnemy->MinPos, pEnemy->MaxPos, 1);
+	BoxCollisionKill(PlayerMin, PlayerMax, pEnemy->MinPos, pEnemy->MaxPos, 1);
 
 
 

@@ -920,72 +920,75 @@ void BoxCollisionPlayer(D3DXVECTOR3 PlayerMin, D3DXVECTOR3 PlayerMax, D3DXVECTOR
 }
 
 //===================================
-//エネミー箱型当たり判定
+//プレイヤー箱型当たり判定
 //===================================
-void BoxCollisionEnemy(D3DXVECTOR3 PlayerMin, D3DXVECTOR3 PlayerMax, D3DXVECTOR3 HitMin, D3DXVECTOR3 HitMax)
+void BoxCollisionKill(D3DXVECTOR3 PlayerMin, D3DXVECTOR3 PlayerMax, D3DXVECTOR3 HitMin, D3DXVECTOR3 HitMax, int PlayerIndex)
 {//当たり判定
 
+	//1Pのとき
+	if (PlayerIndex == 1)
+	{
 		bool OverPenetration = true;//過貫通疑惑を判定
 
-		ENEMYMODEL* pEnemy;
-		pEnemy = GetEnemy();
+		Player* pPlayer;
+		pPlayer = GetPlayer();
 
 		//---------------------------------------X方向
 		if (PlayerMin.z < HitMax.z &&
 			PlayerMax.z > HitMin.z &&
-			PlayerMax.x - pEnemy->pos.x + pEnemy->oldPos.x <= HitMin.x &&
+			PlayerMax.x - pPlayer->pos.x + pPlayer->oldPos.x <= HitMin.x &&
 			PlayerMax.x > HitMin.x &&
 			PlayerMin.y < HitMax.y &&
 			PlayerMax.y > HitMin.y)
 		{
-			pEnemy->move.x = 0.0f;
-			pEnemy->pos.x = HitMin.x + (PlayerMin.x - pEnemy->pos.x) - 0.1f;
+			pPlayer->move.x = 0.0f;
+			pPlayer->pos.x = HitMin.x + (PlayerMin.x - pPlayer->pos.x) - 0.1f;
 
 			OverPenetration = false;
+			SetFade(MODE_RESULT);
 
-			ActionEnemy(ACTIONPATTERN_ENEMY_WALK);
 		}
 
 		if (PlayerMin.z < HitMax.z &&
 			PlayerMax.z > HitMin.z &&
-			PlayerMin.x - pEnemy->pos.x + pEnemy->oldPos.x >= HitMax.x &&
+			PlayerMin.x - pPlayer->pos.x + pPlayer->oldPos.x >= HitMax.x &&
 			PlayerMin.x < HitMax.x &&
 			PlayerMin.y < HitMax.y &&
 			PlayerMax.y > HitMin.y)
 		{
-			pEnemy->move.x = 0.0f;
-			pEnemy->pos.x = HitMax.x + (PlayerMax.x - pEnemy->pos.x) + 0.1f;
+			pPlayer->move.x = 0.0f;
+			pPlayer->pos.x = HitMax.x + (PlayerMax.x - pPlayer->pos.x) + 0.1f;
 			OverPenetration = false;
-			ActionEnemy(ACTIONPATTERN_ENEMY_WALK);
+			SetFade(MODE_RESULT);
 
 		}
 
 		//---------------------------------------Z方向
 		if (PlayerMin.x < HitMax.x &&
 			PlayerMax.x > HitMin.x &&
-			PlayerMin.z - pEnemy->pos.z + pEnemy->oldPos.z >= HitMax.z &&
+			PlayerMin.z - pPlayer->pos.z + pPlayer->oldPos.z >= HitMax.z &&
 			PlayerMin.z < HitMax.z &&
 			PlayerMin.y < HitMax.y &&
 			PlayerMax.y > HitMin.y)
 		{
-			pEnemy->move.z = 0.0f;
-			pEnemy->pos.z = HitMax.z - (PlayerMin.z - pEnemy->pos.z) + 0.1f;
+			pPlayer->move.z = 0.0f;
+			pPlayer->pos.z = HitMax.z - (PlayerMin.z - pPlayer->pos.z) + 0.1f;
 			OverPenetration = false;
-			ActionEnemy(ACTIONPATTERN_ENEMY_WALK);
+			SetFade(MODE_RESULT);
 
 		}
 
 		if (PlayerMin.x < HitMax.x &&
 			PlayerMax.x > HitMin.x &&
-			PlayerMax.z - pEnemy->pos.z + pEnemy->oldPos.z <= HitMin.z &&
+			PlayerMax.z - pPlayer->pos.z + pPlayer->oldPos.z <= HitMin.z &&
 			PlayerMax.z > HitMin.z &&
 			PlayerMin.y < HitMax.y &&
 			PlayerMax.y > HitMin.y)
 		{
-			pEnemy->move.z = 0.0f;
-			pEnemy->pos.z = HitMin.z - (PlayerMax.z - pEnemy->pos.z) - 0.1f;
+			pPlayer->move.z = 0.0f;
+			pPlayer->pos.z = HitMin.z - (PlayerMax.z - pPlayer->pos.z) - 0.1f;
 			OverPenetration = false;
-			ActionEnemy(ACTIONPATTERN_ENEMY_WALK);
+			SetFade(MODE_RESULT);
 
 		}
 
@@ -994,11 +997,232 @@ void BoxCollisionEnemy(D3DXVECTOR3 PlayerMin, D3DXVECTOR3 PlayerMax, D3DXVECTOR3
 			PlayerMax.x > HitMin.x &&
 			PlayerMin.z < HitMax.z &&
 			PlayerMax.z > HitMin.z &&
-			PlayerMin.y - pEnemy->pos.y + pEnemy->oldPos.y >= HitMax.y &&
+			PlayerMin.y - pPlayer->pos.y + pPlayer->oldPos.y >= HitMax.y &&
 			PlayerMin.y < HitMax.y)
 		{
+			pPlayer->move.y = 0.0f;
+			pPlayer->pos.y = HitMax.y + (PlayerMin.y - pPlayer->pos.y);
+
+			if (pPlayer->NowMotionDOWN == MOTIONTYPE_1P_JUMP)
+			{
+				pPlayer->NowMotionDOWN = MOTIONTYPE_1P_RANDING;
+			}
+			else if (pPlayer->NowMotionDOWN == MOTIONTYPE_1P_MOVE)
+			{
+				pPlayer->NowMotionDOWN = MOTIONTYPE_1P_MOVE;
+			}
+
+			pPlayer->bLandingNow = true;
+			OverPenetration = false;
+		}
+
+
+		if (OverPenetration == false)
+		{
+
+		}
+
+
+
+
+	}
+	else if (PlayerIndex == 2)
+	{//2Pの時
+		Player_2P* pPlayer2;
+		pPlayer2 = GetPlayer_2P();
+
+		bool OverPenetration = false;//過貫通疑惑を判定
+
+		//---------------------------------------X方向
+		if (PlayerMin.z < HitMax.z &&
+			PlayerMax.z > HitMin.z &&
+			PlayerMax.x - pPlayer2->pos.x + pPlayer2->oldPos.x <= HitMin.x &&
+			PlayerMax.x > HitMin.x &&
+			PlayerMin.y < HitMax.y &&
+			PlayerMax.y > HitMin.y)
+		{
+			pPlayer2->move.x = 0.0f;
+			pPlayer2->pos.x = HitMin.x + (PlayerMin.x - pPlayer2->pos.x) - 0.1f;
+			OverPenetration = false;
+			SetFade(MODE_RESULT);
+
+		}
+
+		if (PlayerMin.z < HitMax.z &&
+			PlayerMax.z > HitMin.z &&
+			PlayerMin.x - pPlayer2->pos.x + pPlayer2->oldPos.x >= HitMax.x &&
+			PlayerMin.x < HitMax.x &&
+			PlayerMin.y < HitMax.y &&
+			PlayerMax.y > HitMin.y)
+		{
+			pPlayer2->move.x = 0.0f;
+			pPlayer2->pos.x = HitMax.x + (PlayerMax.x - pPlayer2->pos.x) + 0.1f;
+			OverPenetration = false;
+			SetFade(MODE_RESULT);
+
+		}
+
+		//---------------------------------------Z方向
+		if (PlayerMin.x < HitMax.x &&
+			PlayerMax.x > HitMin.x &&
+			PlayerMin.z - pPlayer2->pos.z + pPlayer2->oldPos.z >= HitMax.z &&
+			PlayerMin.z < HitMax.z &&
+			PlayerMin.y < HitMax.y &&
+			PlayerMax.y > HitMin.y)
+		{
+			pPlayer2->move.z = 0.0f;
+			pPlayer2->pos.z = HitMax.z - (PlayerMin.z - pPlayer2->pos.z) + 0.1f;
+			OverPenetration = false;
+			SetFade(MODE_RESULT);
+
+		}
+
+		if (PlayerMin.x < HitMax.x &&
+			PlayerMax.x > HitMin.x &&
+			PlayerMax.z - pPlayer2->pos.z + pPlayer2->oldPos.z <= HitMin.z &&
+			PlayerMax.z > HitMin.z &&
+			PlayerMin.y < HitMax.y &&
+			PlayerMax.y > HitMin.y)
+		{
+			pPlayer2->move.z = 0.0f;
+			pPlayer2->pos.z = HitMin.z - (PlayerMax.z - pPlayer2->pos.z) - 0.1f;
+			OverPenetration = false;
+			SetFade(MODE_RESULT);
+
+		}
+
+		//------------------------------------Y方向
+		if (PlayerMin.x < HitMax.x &&
+			PlayerMax.x > HitMin.x &&
+			PlayerMin.z < HitMax.z &&
+			PlayerMax.z > HitMin.z &&
+			PlayerMin.y - pPlayer2->pos.y + pPlayer2->oldPos.y >= HitMax.y &&
+			PlayerMin.y < HitMax.y)
+		{
+			pPlayer2->move.y = 0.0f;
+			pPlayer2->pos.y = HitMax.y + (PlayerMin.y - pPlayer2->pos.y);
+
+			if (pPlayer2->NowMotionDOWN == MOTIONTYPE_2P_JUMP)
+			{
+				pPlayer2->NowMotionDOWN = MOTIONTYPE_2P_RANDING;
+			}
+			else if (pPlayer2->NowMotionDOWN == MOTIONTYPE_2P_MOVE)
+			{
+				pPlayer2->NowMotionDOWN = MOTIONTYPE_2P_MOVE;
+			}
+
+			pPlayer2->bLandingNow = true;
+			OverPenetration = false;
+		}
+	}
+
+
+#if _DEBUG
+	// 上下の辺
+	SetLine(D3DXVECTOR3(HitMin.x, HitMax.y, HitMin.z), D3DXVECTOR3(HitMax.x, HitMax.y, HitMin.z), D3DXCOLOR(0.0f, 1.0f, 1.0f, 1.0f));
+	SetLine(D3DXVECTOR3(HitMin.x, HitMin.y, HitMin.z), D3DXVECTOR3(HitMax.x, HitMin.y, HitMin.z), D3DXCOLOR(0.0f, 1.0f, 1.0f, 1.0f));
+
+	SetLine(D3DXVECTOR3(HitMin.x, HitMax.y, HitMax.z), D3DXVECTOR3(HitMax.x, HitMax.y, HitMax.z), D3DXCOLOR(0.0f, 1.0f, 1.0f, 1.0f));
+	SetLine(D3DXVECTOR3(HitMin.x, HitMin.y, HitMax.z), D3DXVECTOR3(HitMax.x, HitMin.y, HitMax.z), D3DXCOLOR(0.0f, 1.0f, 1.0f, 1.0f));
+
+	// 側面の辺																											
+	SetLine(D3DXVECTOR3(HitMin.x, HitMin.y, HitMin.z), D3DXVECTOR3(HitMin.x, HitMax.y, HitMin.z), D3DXCOLOR(0.0f, 1.0f, 1.0f, 1.0f));
+	SetLine(D3DXVECTOR3(HitMax.x, HitMin.y, HitMin.z), D3DXVECTOR3(HitMax.x, HitMax.y, HitMin.z), D3DXCOLOR(0.0f, 1.0f, 1.0f, 1.0f));
+
+	SetLine(D3DXVECTOR3(HitMin.x, HitMin.y, HitMax.z), D3DXVECTOR3(HitMin.x, HitMax.y, HitMax.z), D3DXCOLOR(0.0f, 1.0f, 1.0f, 1.0f));
+	SetLine(D3DXVECTOR3(HitMax.x, HitMin.y, HitMax.z), D3DXVECTOR3(HitMax.x, HitMax.y, HitMax.z), D3DXCOLOR(0.0f, 1.0f, 1.0f, 1.0f));
+
+
+	// その他の辺																									   
+	SetLine(D3DXVECTOR3(HitMin.x, HitMin.y, HitMin.z), D3DXVECTOR3(HitMin.x, HitMin.y, HitMax.z), D3DXCOLOR(0.0f, 1.0f, 1.0f, 1.0f));
+	SetLine(D3DXVECTOR3(HitMax.x, HitMax.y, HitMin.z), D3DXVECTOR3(HitMax.x, HitMax.y, HitMax.z), D3DXCOLOR(0.0f, 1.0f, 1.0f, 1.0f));
+
+	SetLine(D3DXVECTOR3(HitMin.x, HitMax.y, HitMin.z), D3DXVECTOR3(HitMin.x, HitMax.y, HitMax.z), D3DXCOLOR(0.0f, 1.0f, 1.0f, 1.0f));
+	SetLine(D3DXVECTOR3(HitMax.x, HitMin.y, HitMin.z), D3DXVECTOR3(HitMax.x, HitMin.y, HitMax.z), D3DXCOLOR(0.0f, 1.0f, 1.0f, 1.0f));
+#endif
+
+}
+
+//===================================
+//エネミー箱型当たり判定
+//===================================
+void BoxCollisionEnemy(D3DXVECTOR3 EnemyMin, D3DXVECTOR3 EnemyMax, D3DXVECTOR3 HitMin, D3DXVECTOR3 HitMax)
+{//当たり判定
+
+		bool OverPenetration = true;//過貫通疑惑を判定
+
+		ENEMYMODEL* pEnemy;
+		pEnemy = GetEnemy();
+
+		//---------------------------------------X方向
+		if (EnemyMin.z < HitMax.z &&
+			EnemyMax.z > HitMin.z &&
+			EnemyMax.x - pEnemy->pos.x + pEnemy->oldPos.x <= HitMin.x &&
+			EnemyMax.x > HitMin.x &&
+			EnemyMin.y < HitMax.y &&
+			EnemyMax.y > HitMin.y)
+		{
+			pEnemy->move.x = 0.0f;
+			pEnemy->pos.x = HitMin.x + (EnemyMin.x - pEnemy->pos.x) - 0.1f;
+
+			OverPenetration = false;
+
+			ActionEnemy(ACTIONPATTERN_ENEMY_WALK);
+		}
+
+		if (EnemyMin.z < HitMax.z &&
+			EnemyMax.z > HitMin.z &&
+			EnemyMin.x - pEnemy->pos.x + pEnemy->oldPos.x >= HitMax.x &&
+			EnemyMin.x < HitMax.x &&
+			EnemyMin.y < HitMax.y &&
+			EnemyMax.y > HitMin.y)
+		{
+			pEnemy->move.x = 0.0f;
+			pEnemy->pos.x = HitMax.x + (EnemyMax.x - pEnemy->pos.x) + 0.1f;
+			OverPenetration = false;
+			ActionEnemy(ACTIONPATTERN_ENEMY_WALK);
+
+		}
+
+		//---------------------------------------Z方向
+		if (EnemyMin.x < HitMax.x &&
+			EnemyMax.x > HitMin.x &&
+			EnemyMin.z - pEnemy->pos.z + pEnemy->oldPos.z >= HitMax.z &&
+			EnemyMin.z < HitMax.z &&
+			EnemyMin.y < HitMax.y &&
+			EnemyMax.y > HitMin.y)
+		{
+			pEnemy->move.z = 0.0f;
+			pEnemy->pos.z = HitMax.z - (EnemyMin.z - pEnemy->pos.z) + 0.1f;
+			OverPenetration = false;
+			ActionEnemy(ACTIONPATTERN_ENEMY_WALK);
+
+		}
+
+		if (EnemyMin.x < HitMax.x &&
+			EnemyMax.x > HitMin.x &&
+			EnemyMax.z - pEnemy->pos.z + pEnemy->oldPos.z <= HitMin.z &&
+			EnemyMax.z > HitMin.z &&
+			EnemyMin.y < HitMax.y &&
+			EnemyMax.y > HitMin.y)
+		{
+			pEnemy->move.z = 0.0f;
+			pEnemy->pos.z = HitMin.z - (EnemyMax.z - pEnemy->pos.z) - 0.1f;
+			OverPenetration = false;
+			ActionEnemy(ACTIONPATTERN_ENEMY_WALK);
+
+		}
+
+		//------------------------------------Y方向
+		if (EnemyMin.x < HitMax.x &&
+			EnemyMax.x > HitMin.x &&
+			EnemyMin.z < HitMax.z &&
+			EnemyMax.z > HitMin.z &&
+			EnemyMin.y - pEnemy->pos.y + pEnemy->oldPos.y >= HitMax.y &&
+			EnemyMin.y < HitMax.y)
+		{
 			pEnemy->move.y = 0.0f;
-			pEnemy->pos.y = HitMax.y + (PlayerMin.y - pEnemy->pos.y);
+			pEnemy->pos.y = HitMax.y + (EnemyMin.y - pEnemy->pos.y);
 
 			if (pEnemy->NowMotionDOWN == MOTIONTYPE_ENEMY_JUMP)
 			{
