@@ -34,8 +34,8 @@ void InitEnemy_View(void)
         g_Enemy_View[nCnt].bUse = false;
         g_Enemy_View[nCnt].bDrawOk = false;
     }
-    SetEnemy_View(D3DXVECTOR3(0.0f, 500.0f, 0.0f), 200,false, D3DXCOLOR(0.0f, 0.0f, 0.5f, 1.0f));
-    SetEnemy_View(D3DXVECTOR3(0.0f, 500.0f, 0.0f), 200,false, D3DXCOLOR(0.0f, 0.0f, 0.5f, 1.0f));
+    SetEnemy_View(D3DXVECTOR3(0.0f, 500.0f, 0.0f), 200,false, D3DXCOLOR(0.0f, 0.0f, 0.5f, 0.0f));
+    SetEnemy_View(D3DXVECTOR3(0.0f, 500.0f, 0.0f), 200,false, D3DXCOLOR(0.0f, 0.0f, 0.5f, 0.0f));
 
 }
 
