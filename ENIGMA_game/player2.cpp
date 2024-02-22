@@ -821,8 +821,6 @@ void DrawPlayer_2P(int CameraLoopNum)
 				//モデル(パーツ)の描画
 				g_pMeshModel_2P[nCnt]->DrawSubset(nCntMat);
 
-			
-
 			}
 		}
 		//保存してたマテリアルを戻す

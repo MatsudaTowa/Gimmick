@@ -6,6 +6,8 @@
 //=========================================================
 #include "enemy.h"
 #include "stage.h"
+#include "player.h"
+#include "player2.h"
 #include "hitcollision_mistake_prevention.h"
 #include "model.h"
 #include "main.h"
@@ -172,9 +174,23 @@ void UpdateEnemy(void)
 	//{
 	//	g_Enemy.move = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 	//}
+	 
+
 	//古いposを代入
 	g_Enemy.oldPos = g_Enemy.pos;
 
+	if (g_Enemy.ActionPattern == ACTIONPATTERN_ENEMY_CHASE)
+	{
+		Player* pPlayer = GetPlayer();
+		//プレイヤー追従処理
+		float PlayerLength_x = pPlayer->pos.x - g_Enemy.pos.x; //プレイヤーとの距離計算
+		float PlayerLength_z = pPlayer->pos.z - g_Enemy.pos.z; //プレイヤーとの距離計算
+		float fLength = sqrtf(PlayerLength_x * PlayerLength_x + PlayerLength_z * PlayerLength_z);
+		float fAngle = atan2f(PlayerLength_x, PlayerLength_z);
+		g_Enemy.rot.y = (fAngle - (1.0f * D3DX_PI));
+		g_Enemy.move.x += sinf(fAngle) * 0.07f;
+		g_Enemy.move.z += cosf(fAngle) * 0.07f;
+	}
 	//位置を更新
 	g_Enemy.pos += g_Enemy.move;
 
@@ -291,6 +307,8 @@ void UpdateEnemy(void)
 //===================================
 void ActionEnemy(ACTIONPATTERN_ENEMY ActionPattern)
 {
+	g_Enemy.ActionPattern = ActionPattern;
+
 	if (ActionPattern == ACTIONPATTERN_ENEMY_STANDBY)
 	{//静止状態
 		g_Enemy.move = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
@@ -321,6 +339,18 @@ void ActionEnemy(ACTIONPATTERN_ENEMY ActionPattern)
 		g_Enemy.move = D3DXVECTOR3((float)nMoveX, 0.0f, (float)nMoveZ);
 		g_Enemy.NowMotionDOWN = MOTIONTYPE_ENEMY_MOVE;
 
+	}
+	else if (ActionPattern == ACTIONPATTERN_ENEMY_CHASE)
+	{
+		Player* pPlayer = GetPlayer();
+		//プレイヤー追従処理
+		float PlayerLength_x = pPlayer->pos.x - g_Enemy.pos.x; //プレイヤーとの距離計算
+		float PlayerLength_z = pPlayer->pos.z - g_Enemy.pos.z; //プレイヤーとの距離計算
+		float fLength = sqrtf(PlayerLength_x * PlayerLength_x + PlayerLength_z * PlayerLength_z);
+		float fAngle = atan2f(PlayerLength_x, PlayerLength_z);
+		g_Enemy.rot.y = (fAngle - (1.0f * D3DX_PI));
+		g_Enemy.move.x += sinf(fAngle) * 0.05f;
+		g_Enemy.move.z += cosf(fAngle) * 0.05f;
 	}
 	LowerBodyEnemy3();
 

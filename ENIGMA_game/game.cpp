@@ -1401,7 +1401,10 @@ void BoxCollisionEnemy(D3DXVECTOR3 EnemyMin, D3DXVECTOR3 EnemyMax, D3DXVECTOR3 H
 
 		OverPenetration = false;
 
-		ActionEnemy(ACTIONPATTERN_ENEMY_WALK);
+		if (pEnemy->ActionPattern == ACTIONPATTERN_ENEMY_WALK)
+		{
+			ActionEnemy(ACTIONPATTERN_ENEMY_WALK);
+		}
 	}
 
 	if (EnemyMin.z < HitMax.z &&
@@ -1414,8 +1417,10 @@ void BoxCollisionEnemy(D3DXVECTOR3 EnemyMin, D3DXVECTOR3 EnemyMax, D3DXVECTOR3 H
 		pEnemy->move.x = 0.0f;
 		pEnemy->pos.x = HitMax.x + (EnemyMax.x - pEnemy->pos.x) + 0.1f;
 		OverPenetration = false;
-		ActionEnemy(ACTIONPATTERN_ENEMY_WALK);
-
+		if (pEnemy->ActionPattern == ACTIONPATTERN_ENEMY_WALK)
+		{
+			ActionEnemy(ACTIONPATTERN_ENEMY_WALK);
+		}
 	}
 
 	//---------------------------------------Z方向
@@ -1429,8 +1434,10 @@ void BoxCollisionEnemy(D3DXVECTOR3 EnemyMin, D3DXVECTOR3 EnemyMax, D3DXVECTOR3 H
 		pEnemy->move.z = 0.0f;
 		pEnemy->pos.z = HitMax.z - (EnemyMin.z - pEnemy->pos.z) + 0.1f;
 		OverPenetration = false;
-		ActionEnemy(ACTIONPATTERN_ENEMY_WALK);
-
+		if (pEnemy->ActionPattern == ACTIONPATTERN_ENEMY_WALK)
+		{
+			ActionEnemy(ACTIONPATTERN_ENEMY_WALK);
+		}
 	}
 
 	if (EnemyMin.x < HitMax.x &&
@@ -1443,8 +1450,10 @@ void BoxCollisionEnemy(D3DXVECTOR3 EnemyMin, D3DXVECTOR3 EnemyMax, D3DXVECTOR3 H
 		pEnemy->move.z = 0.0f;
 		pEnemy->pos.z = HitMin.z - (EnemyMax.z - pEnemy->pos.z) - 0.1f;
 		OverPenetration = false;
-		ActionEnemy(ACTIONPATTERN_ENEMY_WALK);
-
+		if (pEnemy->ActionPattern == ACTIONPATTERN_ENEMY_WALK)
+		{
+			ActionEnemy(ACTIONPATTERN_ENEMY_WALK);
+		}
 	}
 
 	//------------------------------------Y方向
@@ -2426,7 +2435,7 @@ void SphereEnemyView(D3DXVECTOR3 PlayerPos, int PlayerIndex, int ZoneIndex)
 
 			pEnemyView[ZoneIndex].ZoneColor = D3DXCOLOR(1.0f, 5.0f, 2.0f, 0.2f);
 			pEnemyView[ZoneIndex].bDrawOk = false;
-			ActionEnemy(ACTIONPATTERN_ENEMY_STANDBY);
+			ActionEnemy(ACTIONPATTERN_ENEMY_CHASE);
 		}
 		else
 		{
@@ -2440,7 +2449,7 @@ void SphereEnemyView(D3DXVECTOR3 PlayerPos, int PlayerIndex, int ZoneIndex)
 
 			pEnemyView[ZoneIndex].ZoneColor = D3DXCOLOR(1.0f, 5.0f, 2.0f, 0.2f);
 			pEnemyView[ZoneIndex].bDrawOk = false;
-			ActionEnemy(ACTIONPATTERN_ENEMY_STANDBY);
+			ActionEnemy(ACTIONPATTERN_ENEMY_CHASE);
 		}
 		else
 		{
