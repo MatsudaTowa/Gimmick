@@ -187,6 +187,10 @@ void DrawSteam(void)
 			pDevice->SetRenderState(D3DRS_BLENDOP, D3DBLENDOP_ADD);
 			pDevice->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
 			pDevice->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
+
+			
+			//テクスチャを戻す
+			pDevice->SetTexture(0, NULL);
 		}
 	}
 }

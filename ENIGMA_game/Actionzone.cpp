@@ -181,7 +181,7 @@ void DrawActionZone(void)
                 for (int nCntMat = 0; nCntMat < (int)g_dwNumMatZone; nCntMat++)
                 {
                     //マテリアルの設定
-                    pDevice->SetMaterial(&pMat[nCntMat].MatD3D);
+                 //   pDevice->SetMaterial(&pMat[nCntMat].MatD3D);
 
                     //テクスチャの設定
                     pDevice->SetTexture(0, NULL);//今回は設定しない
@@ -190,7 +190,7 @@ void DrawActionZone(void)
                     g_pMeshZone[nCntMat]->DrawSubset(nCntMat);
 
                     //保存してたマテリアルを戻す
-                    pDevice->SetMaterial(&matDef);
+                  //  pDevice->SetMaterial(&matDef);
 
 
                     // マテリアルの設定
@@ -200,6 +200,12 @@ void DrawActionZone(void)
                     pMat[nCntMat].MatD3D.Diffuse = D3DXCOLOR(g_ActionZone[nCntZone].ZoneColor.r * g_ActionZone[nCntZone].SizeMag.x, g_ActionZone[nCntZone].ZoneColor.g * g_ActionZone[nCntZone].SizeMag.x, g_ActionZone[nCntZone].ZoneColor.b * g_ActionZone[nCntZone].SizeMag.x, g_ActionZone[nCntZone].ZoneColor.a);
 
                 }
+                //保存してたマテリアルを戻す
+                pDevice->SetMaterial(&matDef);
+
+                //テクスチャを戻す
+                pDevice->SetTexture(0, NULL);
+
             }
         }
     }

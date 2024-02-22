@@ -105,6 +105,8 @@ void InitStage(void)
 	SetStage(D3DXVECTOR3(-1050.0f, 0100.0f, -1230.0f), D3DXVECTOR3(0.00f, +3.14f, 0.00f), 0170.0f, 0300.0f, TEXTYPE_00);//テスト仕様
 	SetStage(D3DXVECTOR3(-0880.0f, 0100.0f, -1330.0f), D3DXVECTOR3(0.00f, -1.57f, 0.00f), 0100.0f, 0300.0f, TEXTYPE_00);//テスト仕様
 
+
+
 	//十字路----------------------------------------------------------------------------------------------------------------------------------------
 	//天井
 	SetStage(D3DXVECTOR3(-0600.0f, 0300.0f, -2900.0f), D3DXVECTOR3(-1.57f, +0.00f, 0.00f), 1100.0f, 1000.0f, TEXTYPE_00);//テスト仕様スポーン地後
@@ -142,6 +144,8 @@ void InitStage(void)
 	SetStage(D3DXVECTOR3(-0850.0f, 0000.0f, -3050.0f), D3DXVECTOR3(0.00f, -1.57f, 0.00f), 0100.0f, 0300.0f, TEXTYPE_00);//テスト仕様スポーン地右奥
 	SetStage(D3DXVECTOR3(-0350.0f, 0000.0f, -3050.0f), D3DXVECTOR3(0.00f, +1.57f, 0.00f), 0100.0f, 0300.0f, TEXTYPE_00);//テスト仕様スポーン地左奥
 
+
+
 	//水回り-------------------------------------------------------------------------------------------------------------------------------------
 	//天井
 	SetStage(D3DXVECTOR3(+3250.0f, 0200.0f, -0250.0f), D3DXVECTOR3(-1.57f, +0.00f, 0.00f), 0400.0f, 0400.0f, TEXTYPE_00);//テスト仕様
@@ -177,10 +181,10 @@ void InitStage(void)
 	SetStage(D3DXVECTOR3(+3200.0f, 0020.0f, -0590.0f), D3DXVECTOR3(0.00f, -1.57f, 0.00f), 0075.0f, 0100.0f, TEXTYPE_00);//テスト仕様
 	
 
+
 	//リビング--------------------------------------------------------------------------------------------------------------------------------------------
 	//天井
 	SetStage(D3DXVECTOR3(+3200.0f, 0300.0f, -1900.0f), D3DXVECTOR3(-1.57f, +0.00f, 0.00f), 0500.0f, 0700.0f, TEXTYPE_00);//テスト仕様
-
 
 	//壁
 	SetStage(D3DXVECTOR3(+3150.0f, 0100.0f, -1700.0f), D3DXVECTOR3(0.00f, +3.14f, 0.00f), 0050.0f, 0200.0f, TEXTYPE_00);//テスト仕様入ってすぐの壁空間右側
@@ -206,6 +210,11 @@ void InitStage(void)
 	//床
 	SetStage(D3DXVECTOR3(+3200.0f, 0100.0f, -1900.0f), D3DXVECTOR3(1.57f, +0.00f, 0.00f), 0500.0f, 0700.0f, TEXTYPE_00);//テスト仕様
 
+	//チュートリアルルーム
+	SetStage(D3DXVECTOR3(+3000.0f, 0000.0f, +2550.0f), D3DXVECTOR3(0.00f, +0.00f, 0.00f), 0400.0f, 0300.0f, TEXTYPE_00);//テスト仕様
+	SetStage(D3DXVECTOR3(+3000.0f, 0000.0f, +1050.0f), D3DXVECTOR3(0.00f, +3.14f, 0.00f), 0400.0f, 0300.0f, TEXTYPE_00);//テスト仕様
+	SetStage(D3DXVECTOR3(+3400.0f, 0000.0f, +1800.0f), D3DXVECTOR3(0.00f, +1.57f, 0.00f), 0800.0f, 0300.0f, TEXTYPE_00);//テスト仕様
+	SetStage(D3DXVECTOR3(+2600.0f, 0000.0f, +1800.0f), D3DXVECTOR3(0.00f, -1.57f, 0.00f), 0800.0f, 0300.0f, TEXTYPE_00);//テスト仕様
 
 
 	//当たり判定除外
@@ -282,6 +291,10 @@ void DrawStage(void)
 			pDevice->DrawPrimitive(D3DPT_TRIANGLESTRIP,//プリミティブの種類
 				nWall * 4,//描画する最初の頂点インデックス
 				2);//描画するプリミティブ数
+
+			
+			//テクスチャを戻す
+			pDevice->SetTexture(0, NULL);
 		}
 	}
 }
@@ -415,5 +428,21 @@ void ExclusionCollision_Stage(void)
 		g_Stage[i].bCollision = false;
 	//	g_Stage[i].bUse = false;
 	}
+	g_Stage[31].bCollision = false;
+	g_Stage[36].bCollision = false;
+	g_Stage[37].bCollision = false;
+	g_Stage[39].bCollision = false;
+	g_Stage[40].bCollision = false;
+	for (int m = 42; m <= 49; m++)
+	{
+		g_Stage[m].bCollision = false;
+	}
+	g_Stage[51].bCollision = false;
+	g_Stage[52].bCollision = false;
+	g_Stage[54].bCollision = false;
+	g_Stage[55].bCollision = false;
+	g_Stage[62].bCollision = false;
+	g_Stage[63].bCollision = false;
+	g_Stage[64].bCollision = false;
 
 }

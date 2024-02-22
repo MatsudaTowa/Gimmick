@@ -37,6 +37,9 @@ CHARACTERSET
 	NUM_PARTS = 15					# パーツ数
 	MOVE = 3.2						# 移動量
 	JUMP = 11.25					# ジャンプ量
+	RADIUS = 20.0					# 半径
+	HEIGHT = 40.0					# 高さ
+
 
 	PARTSSET
 		INDEX = 0					# 上半身
@@ -1356,7 +1359,4 @@ MOTIONSET
 		END_KEY
 	END_KEYSET
 END_MOTIONSET
-
-
-
 END_SCRIPT		# この行は絶対消さないこと！

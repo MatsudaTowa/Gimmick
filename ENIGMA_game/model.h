@@ -11,7 +11,7 @@
 
 #define MAX_MODEL	(256) //モデルの最大数
 #define NUM_MODEL	(26) //モデルの種類
-#define NUM_TEXTURE	(5) //テクスチャ数
+#define NUM_TEXTURE	(20) //テクスチャ数
 
 typedef enum
 {

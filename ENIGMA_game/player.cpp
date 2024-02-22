@@ -14,8 +14,10 @@
 #include "transfergate.h"
 #include "Actionzone.h"
 #include "enemy_view.h"
-#include "bathgimmick.h"
 #include "enemy.h"
+#include "bathgimmick.h"
+#include "menu.h"
+
 
 //#include "sound.h"
 
@@ -40,7 +42,11 @@ DWORD dwNumMatModel[MAX_PARTS] = {};//マテリアルの数
 MODEL g_Model;//モデル全体
 //--------------------------------------------------------------------------
 
-LPDIRECT3DTEXTURE9 g_apTexture_1P[NUM_TEXTURE_1P] = {}; //テクスチャポインタ
+LPDIRECT3DTEXTURE9 g_apTexture_1P[MAX_PARTS][NUM_TEXTURE_1P] = {}; //テクスチャポインタ
+
+//各モーションのモデル数
+char g_PlayerFileName[MAX_PARTS][MAX_WORD2][MAX_WORD] = {};//パス格納
+
 
 //追尾注視点
 View g_View[2];
@@ -89,7 +95,20 @@ void InitPlayer(void)
 
 	g_Player.nLife = MAXLIFE;
 
-	g_Player.pos = D3DXVECTOR3(0.0f, 10.0f, 0.0f);	//位置
+
+	//メニューからどのモードを選んだか取得
+	int MenutoGame = GetMenu();
+
+	if (MenutoGame == START_MENU_GAME)
+	{//メニューで「ゲームスタート」を選んだ場合
+		g_Player.pos = D3DXVECTOR3(0.0f, 10.0f, 0.0f);	//位置
+	}
+	else
+	{//それ以外(チュートリアルを選んだ場合)
+		g_Player.pos = D3DXVECTOR3(3000.0f, 10.0f, 2500.0f);	//位置
+	}
+
+
 
 	g_Player.oldPos = g_Player.pos;	//位置
 
@@ -105,7 +124,7 @@ void InitPlayer(void)
 
 	g_Player.JumpFrame = 0;
 
-	g_Player.bUse = true;
+	g_Player.bUse = false;
 	g_Player.JumpNow = false;
 	g_Player.JumpOld = false;
 
@@ -169,10 +188,11 @@ void InitPlayer(void)
 	g_Player.nldShadow = SetShadow();
 
 	LoadSet();//---------------------------------------------------------こいつがロード
+	LoadXfire_Player();
+	
 
-		//仮の体
-		//仮
-	//SetModel(g_Player.pos, D3DXVECTOR3(0.0f, 0.0f, 0.0f), MODELTYPE_CUBE);//-----1
+	int test;
+	test = 0;
 }
 //=============================
 //モデルの終了処理
@@ -180,20 +200,26 @@ void InitPlayer(void)
 void UninitPlayer(void)
 {
 
-
-	/*StopSound(SOUND_LABEL_SE_LOBOTWARK);
-	StopSound(SOUND_LABEL_SE_BOOST);
-	StopSound(SOUND_LABEL_SE_JUMP);*/
-
 	for (int nCntModel = 0; nCntModel < MAX_PARTS; nCntModel++)
 	{
-		//メッシュの破棄
+		for (int nCntTex = 0; nCntTex < NUM_TEXTURE_1P; nCntTex++)
+		{
+			// テクスチャの破棄
+			if (g_apTexture_1P[nCntModel][nCntTex] != NULL)
+			{
+				g_apTexture_1P[nCntModel][nCntTex]->Release();
+				g_apTexture_1P[nCntModel][nCntTex] = NULL; // 解放後に NULL を設定
+	
+			}
+		}
+
+		// メッシュの破棄
 		if (g_pMeshModel[nCntModel] != NULL)
 		{
 			g_pMeshModel[nCntModel]->Release();
 			g_pMeshModel[nCntModel] = NULL;
 		}
-		//マテリアルの破棄
+		// マテリアルの破棄
 		if (g_pBuffMatModel[nCntModel] != NULL)
 		{
 			g_pBuffMatModel[nCntModel]->Release();
@@ -206,480 +232,461 @@ void UninitPlayer(void)
 //=============================
 void UpdatePlayer(void)
 {
-	D3DXMATRIX mtxRot, mtxTrans, mtxParent;//計算用マトリックス
 
-	XINPUT_STATE joykeystate;
 
-	//ショイパットの状態を取得
-	DWORD dwResult = XInputGetState(0, &joykeystate);
+	//g_Player.bUse = true;
 
-	g_Player.JumpNow = false;
-	g_Player.bLandingNow = false;
-	g_Player.bAction = false;
-	g_test = false;
+	if (g_Player.bUse == true)
+	{
+		D3DXMATRIX mtxRot, mtxTrans, mtxParent;//計算用マトリックス
 
-	//---------------------------------------------------------------------------------------------------------ここで腰を相手に向ける
-//	bool calculated = false;//腰傾けたか
+		XINPUT_STATE joykeystate;
 
-	//腰の角度
-//	float minYAngle = -0.5f; // 下側の角度の限界
-//	float maxYAngle = 0.5f;  // 上側の角度の限界
+		//ショイパットの状態を取得
+		DWORD dwResult = XInputGetState(0, &joykeystate);
 
-	//-----------------------------------------------------------------------------------入力ここから
-	if (CheckInputMove2() == -1)
-	{//移動入力なし
+		g_Player.JumpNow = false;
+		g_Player.bLandingNow = false;
+		g_Player.bAction = false;
+		g_test = false;
 
-		if (g_Player.NowMotionDOWN != MOTIONTYPE_1P_STANDBY && g_Player.NowMotionDOWN != MOTIONTYPE_1P_JUMP && g_Player.NowMotionDOWN != MOTIONTYPE_1P_RANDING && g_Player.NowMotionDOWN != MOTIONTYPE_1P_ATTACK)//------------------------
-		{//モーション変動
-			g_Player.NowMotionDOWN = MOTIONTYPE_1P_STANDBY;
+		//---------------------------------------------------------------------------------------------------------ここで腰を相手に向ける
+	//	bool calculated = false;//腰傾けたか
+
+		//腰の角度
+	//	float minYAngle = -0.5f; // 下側の角度の限界
+	//	float maxYAngle = 0.5f;  // 上側の角度の限界
+
+		//-----------------------------------------------------------------------------------入力ここから
+		if (CheckInputMove2() == -1)
+		{//移動入力なし
+
+			if (g_Player.NowMotionDOWN != MOTIONTYPE_1P_STANDBY && g_Player.NowMotionDOWN != MOTIONTYPE_1P_JUMP && g_Player.NowMotionDOWN != MOTIONTYPE_1P_RANDING && g_Player.NowMotionDOWN != MOTIONTYPE_1P_ATTACK)//------------------------
+			{//モーション変動
+				g_Player.NowMotionDOWN = MOTIONTYPE_1P_STANDBY;
+			}
+
+			//		if (g_Player.NowMotionUP != MOTIONTYPE_1P_ATTACK)
+			//		{//モーション変動
+			//			g_Player.NowMotionUP = MOTIONTYPE_1P_STANDBY;
+			//		}
 		}
 
-//		if (g_Player.NowMotionUP != MOTIONTYPE_1P_ATTACK)
-//		{//モーション変動
-//			g_Player.NowMotionUP = MOTIONTYPE_1P_STANDBY;
-//		}
-	}
+		if (CheckInputMove2() == 0)
+		{//移動入力あり
+			if (dwResult == ERROR_SUCCESS)
+			{//キーボード/コントローラー入力反映(移動)
+				InPutControllerPlayer();
+			}
+			else
+			{//キーボード入力反映(移動)
+				InPutKeyboardPlayer();
+			}
 
-	if (CheckInputMove2() == 0)
-	{//移動入力あり
-		if (dwResult == ERROR_SUCCESS)
-		{//キーボード/コントローラー入力反映(移動)
-			InPutControllerPlayer();
+		}
+		//攻撃系入力
+		InputKeyAttack();
+
+		//古いposを代入
+		g_Player.oldPos = g_Player.pos;
+
+		//位置を更新
+		g_Player.pos += g_Player.move;
+
+
+		//--------------------------------------------------------------------------------------------------------------------------------------------------//当たり判定ここから
+		//プレイヤーのサイズ
+		D3DXVECTOR3 PlayerMin = D3DXVECTOR3(g_Player.pos + PLAYERMIN);
+		D3DXVECTOR3 PlayerMax = D3DXVECTOR3(g_Player.pos + PLAYERMAX);
+
+
+		//プレイヤー２のサイズ
+		Player_2P* pPlayer2;
+		pPlayer2 = GetPlayer_2P();
+
+		D3DXVECTOR3 PlayerMin_2P = D3DXVECTOR3(pPlayer2->pos + PLAYERMIN_2P);
+		D3DXVECTOR3 PlayerMax_2P = D3DXVECTOR3(pPlayer2->pos + PLAYERMAX_2P);
+
+		//プレイヤー同士当たり判定
+		BoxCollisionPlayer(PlayerMin, PlayerMax, PlayerMin_2P, PlayerMax_2P, 1);
+
+		//エネミー
+		ENEMYMODEL* pEnemy;
+		pEnemy = GetEnemy();
+		BoxCollisionKill(PlayerMin, PlayerMax, pEnemy->MinPos, pEnemy->MaxPos, 1);
+
+
+		//アイテム------------------------------------------------------------------------------------------------------------------------------------------------
+		ITEM* pItem;
+		pItem = GetItem();
+
+		for (int ItemCnt = 0; ItemCnt < NUMITEM; ItemCnt++)
+		{
+			if (pItem[ItemCnt].bUse == true)
+			{
+				if (pItem[ItemCnt].bGetNO == false)
+				{
+					BoxCollisionItem(PlayerMin, PlayerMax, pItem[ItemCnt].pos, 1, ItemCnt);
+				}
+			}
+		}
+
+
+
+
+
+		//転移門/-----------------------------------------------------------------------------------------------------------------------------------------
+		TRANSFERGATE* pTransferGate;
+		pTransferGate = GetTransferGate();
+
+		for (int nCntGate = 0; nCntGate < MAXGATE; nCntGate++)
+		{
+			if (pTransferGate[nCntGate].bUse == true)
+			{
+				D3DXVECTOR3 GateMin = D3DXVECTOR3(pTransferGate[nCntGate].pos + pTransferGate[nCntGate].GateMin);
+				D3DXVECTOR3 GateMax = D3DXVECTOR3(pTransferGate[nCntGate].pos + pTransferGate[nCntGate].GateMax);
+
+				BoxCollisionGate(PlayerMin, PlayerMax, GateMin, GateMax, 0, pTransferGate[nCntGate].nGateIndex, pTransferGate[nCntGate].nParentIndex);
+
+				//	break;
+			}
+		}
+
+
+		//----------------------------------------------------------------------------モデル接触
+		MAPOBJECT* pMapObject;
+		pMapObject = GetMapObject();
+
+		for (int i = 0; i < MAX_MODEL; i++)
+		{
+			if (pMapObject[i].bUse == true)
+			{
+				if (pMapObject[i].bCollision == true)
+				{
+					D3DXVECTOR3 ModelMin = D3DXVECTOR3(pMapObject[i].pos + pMapObject[i].Minpos);
+					D3DXVECTOR3 ModelMax = D3DXVECTOR3(pMapObject[i].pos + pMapObject[i].Maxpos);
+
+					//判定
+					BoxCollisionPlayer(PlayerMin, PlayerMax, ModelMin, ModelMax, 1);
+				}
+			}
+		}
+
+		//----------------------------------------------------------------------------壁、床接触
+		STAGE* pStage;
+		pStage = GetStage();
+		for (int nWall = 0; nWall < NUMSTAGE; nWall++)
+		{
+			if (pStage[nWall].bUse == true)
+			{
+				if (pStage[nWall].bCollision == true)
+				{
+					D3DXVECTOR3 StageMin = D3DXVECTOR3(pStage[nWall].posStage + pStage[nWall].MinPos);
+					D3DXVECTOR3 StageMax = D3DXVECTOR3(pStage[nWall].posStage + pStage[nWall].MaxPos);
+
+					//プレイヤー同士当たり判定
+					BoxCollisionPlayer(PlayerMin, PlayerMax, StageMin, StageMax, 1);
+				}
+			}
+		}
+
+
+		//行動エリア/-----------------------------------------------------------------------------------------------------------------------------------------
+		ACTIONZONE* pActionZone;
+		pActionZone = GetActionZone();
+
+		for (int nCntZone = 0; nCntZone < MAXZONE; nCntZone++)
+		{
+			if (pActionZone[nCntZone].bUse == true)
+			{
+
+				SphereCollisionZone(g_Player.pos, 0, nCntZone);
+				//	break;
+			}
+		}
+
+		//敵の視野/-----------------------------------------------------------------------------------------------------------------------------------------
+		ENEMYVIEW* pEnemyView;
+		pEnemyView = GetEnemy_View();
+
+		for (int nCntZone = 0; nCntZone < MAX_ENEMYVIEW; nCntZone++)
+		{
+			if (pEnemyView[nCntZone].bUse == true && pEnemyView[nCntZone].bFollowEnemy == true)
+			{
+
+				SphereEnemyView(g_Player.pos, 0, nCntZone);
+				//	break;
+			}
+		}
+
+		//当たり判定抜け防止/-----------------------------------------------------------------------------------------------------------------------------------------
+		COLLISION_PRE* pColisionPre;
+		pColisionPre = GetCollision_Pre();
+
+		for (int i = 0; i < MAXCOLLISION_PRE; i++)
+		{
+			if (pColisionPre[i].bUse == true)
+			{
+
+				D3DXVECTOR3 ColisionPreMin = D3DXVECTOR3(pColisionPre[i].pos + pColisionPre[i].Min);
+				D3DXVECTOR3 ColisionPreMax = D3DXVECTOR3(pColisionPre[i].pos + pColisionPre[i].Max);
+
+				//プレイヤー同士当たり判定
+				BoxCollisionPlayer(PlayerMin, PlayerMax, ColisionPreMin, ColisionPreMax, 1);
+
+			}
+		}
+
+
+
+
+
+
+
+
+		////--------------------------------------------------------------------------------------------------------------------------------------------------//当たり判定ここまで
+
+		if (g_Player.pos.y <= 0.0f)
+		{//地面-0以下にしない
+			g_Player.bLandingNow = true;
+		}
+
+		if (g_Player.bLandingNow == false)
+		{//空中
+			//移動量を更新(疑似慣性で減衰)
+			g_Player.move.x += (0.0f - g_Player.move.x) * DAMPING_RATIO2;
+			g_Player.move.y += (0.0f - g_Player.move.y) * DAMPING_RATIO2;
+			g_Player.move.z += (0.0f - g_Player.move.z) * DAMPING_RATIO2;
 		}
 		else
-		{//キーボード入力反映(移動)
-			InPutKeyboardPlayer();
+		{//地上
+			//移動量を更新(疑似慣性で減衰)
+			g_Player.move.x += (0.0f - g_Player.move.x) * DAMPING_RATIO;
+			g_Player.move.y += (0.0f - g_Player.move.y) * DAMPING_RATIO;
+			g_Player.move.z += (0.0f - g_Player.move.z) * DAMPING_RATIO;
 		}
 
-	}
-	//攻撃系入力
-	InputKeyAttack();
 
-	//古いposを代入
-	g_Player.oldPos = g_Player.pos;
+		//重力
+		if (g_Player.pos.y > 0.0f)
+		{//空中(地上ではない)の時
 
-	//位置を更新
-	g_Player.pos += g_Player.move;
+			//重力
+			g_Player.move.y -= GRAVITY;
 
-
-	//--------------------------------------------------------------------------------------------------------------------------------------------------//当たり判定ここから
-	//プレイヤーのサイズ
-	D3DXVECTOR3 PlayerMin = D3DXVECTOR3(g_Player.pos + PLAYERMIN);
-	D3DXVECTOR3 PlayerMax = D3DXVECTOR3(g_Player.pos + PLAYERMAX);
-
-
-	//プレイヤー２のサイズ
-	Player_2P* pPlayer2;
-	pPlayer2 = GetPlayer_2P();
-
-	D3DXVECTOR3 PlayerMin_2P = D3DXVECTOR3(pPlayer2->pos + PLAYERMIN_2P);
-	D3DXVECTOR3 PlayerMax_2P = D3DXVECTOR3(pPlayer2->pos + PLAYERMAX_2P);
-
-	//プレイヤー同士当たり判定
-	BoxCollisionPlayer(PlayerMin, PlayerMax, PlayerMin_2P, PlayerMax_2P,1);
-
-	//エネミー
-	ENEMYMODEL* pEnemy;
-	pEnemy = GetEnemy();
-	BoxCollisionKill(PlayerMin, PlayerMax, pEnemy->MinPos, pEnemy->MaxPos, 1);
-
-
-
-	//アイテム------------------------------------------------------------------------------------------------------------------------------------------------
-	ITEM* pItem;
-	pItem = GetItem();
-
-	for (int ItemCnt = 0; ItemCnt < NUMITEM; ItemCnt++)
-	{
-		if (pItem[ItemCnt].bUse == true)
-		{
-			if (pItem[ItemCnt].bGetNO == false)
-			{
-				BoxCollisionItem(PlayerMin, PlayerMax, pItem[ItemCnt].pos, 1, ItemCnt);
+			if (g_Player.bLandingNow == false)
+			{//ジャンプで無い
+				g_Player.NowMotionDOWN = MOTIONTYPE_1P_JUMP;
 			}
 		}
-	}
+		else
+		{//地上
+			g_Player.pos.y = 0.0f;
 
-
-
-
-
-	//転移門/-----------------------------------------------------------------------------------------------------------------------------------------
-	TRANSFERGATE* pTransferGate;
-	pTransferGate = GetTransferGate();
-
-	for (int nCntGate = 0; nCntGate < MAXGATE; nCntGate++)
-	{
-		if (pTransferGate[nCntGate].bUse == true)
-		{
-			D3DXVECTOR3 GateMin = D3DXVECTOR3(pTransferGate[nCntGate].pos + pTransferGate[nCntGate].GateMin);
-			D3DXVECTOR3 GateMax = D3DXVECTOR3(pTransferGate[nCntGate].pos + pTransferGate[nCntGate].GateMax);
-
-			BoxCollisionGate(PlayerMin, PlayerMax, GateMin, GateMax, 0, pTransferGate[nCntGate].nGateIndex, pTransferGate[nCntGate].nParentIndex);
-			
-		//	break;
-		}
-	}
-
-
-	//----------------------------------------------------------------------------モデル接触
-	MAPOBJECT* pMapObject;
-	pMapObject = GetMapObject();
-
-	for (int i = 0; i < MAX_MODEL; i++)
-	{
-		if (pMapObject[i].bUse == true)
-		{
-			if (pMapObject[i].bCollision == true)
-			{
-				D3DXVECTOR3 ModelMin = D3DXVECTOR3(pMapObject[i].pos + pMapObject[i].Minpos);
-				D3DXVECTOR3 ModelMax = D3DXVECTOR3(pMapObject[i].pos + pMapObject[i].Maxpos);
-
-				//判定
-				BoxCollisionPlayer(PlayerMin, PlayerMax, ModelMin, ModelMax, 1);
+			if (g_Player.NowMotionDOWN == MOTIONTYPE_1P_JUMP)
+			{//飛んでるときに着地
+				g_Player.NowMotionDOWN = MOTIONTYPE_1P_RANDING;
 			}
 		}
-	}
 
-	//----------------------------------------------------------------------------壁、床接触
-	STAGE* pStage;
-	pStage = GetStage();
-	for (int nWall = 0; nWall < NUMSTAGE; nWall++)
-	{
-		if (pStage[nWall].bUse == true)
+		//////侵入不可エリア(限界エリア)----------------------
+		////if (g_Player.pos.x > MAXMAREA)
+		////{
+		////	g_Player.pos.x = (MAXMAREA - 1.0f);
+		////}
+		////else if (g_Player.pos.x < -MAXMAREA)
+		////{
+		////	g_Player.pos.x = -(MAXMAREA - 1.0f);
+		////}
+
+		////if (g_Player.pos.z > MAXMAREA)
+		////{
+		////	g_Player.pos.z = (MAXMAREA - 1.0f);
+		////}
+		////else if (g_Player.pos.z < -MAXMAREA)
+		////{
+		////	g_Player.pos.z = -(MAXMAREA - 1.0f);
+		////}
+
+		//影
+		SetPositionShadow(g_Player.nldShadow, g_Player.pos, SHADOWSIZE_PLAYER);
+
+		//上下のモーション
+		LowerBodyMotion();
+		
+			//前回のモーションデータを更新
+			//g_Player.OldMotionUP = g_Player.NowMotionUP;
+		g_Player.OldMotionDOWN = g_Player.NowMotionDOWN;
+
+		g_Player.JumpOld = g_Player.JumpNow;
+
+
+		////---------------------------------------------------------------------------------------------------------------他で使う計算
+		//キャラ全体の基準(親の親)
+		//ワールドマトリックスの初期化
+		D3DXMatrixIdentity(&g_Player.mtxWorld);
+
+		//向きを反映
+		D3DXMatrixRotationYawPitchRoll(&mtxRot, g_Player.rot.y, g_Player.rot.x, g_Player.rot.z);
+
+		D3DXMatrixMultiply(&g_Player.mtxWorld, &g_Player.mtxWorld, &mtxRot);
+
+		//位置を反映
+		D3DXMatrixTranslation(&mtxTrans, g_Player.pos.x, g_Player.pos.y, g_Player.pos.z);
+
+		D3DXMatrixMultiply(&g_Player.mtxWorld, &g_Player.mtxWorld, &mtxTrans);
+
+
+		//------------------------------------------------------------------------------------------------------------注視点
+		Camera* pCamera;
+		pCamera = GetCamera();
+
+		D3DXMATRIX EscapeMtx;
+		//ワールドマトリックスの初期化
+		D3DXMatrixIdentity(&EscapeMtx);
+
+		//位置を反映
+		D3DXMatrixTranslation(&mtxTrans, g_Player.pos.x, g_Player.pos.y, g_Player.pos.z);
+
+		D3DXMatrixMultiply(&EscapeMtx, &EscapeMtx, &mtxTrans);
+
+		for (int i = 0; i < 2; i++)
 		{
-			if (pStage[nWall].bCollision == true)
+			g_View[i].ViewRot.y = -pCamera[0].rot.y;
+
+			//ワールドマトリックスの初期化
+			D3DXMatrixIdentity(&g_View[i].ViewPosMtx);
+
+			//向きを反映
+			D3DXMatrixRotationYawPitchRoll(&mtxRot, g_View[i].ViewRot.y, g_View[i].ViewRot.x, g_View[i].ViewRot.z);
+
+			D3DXMatrixMultiply(&g_View[i].ViewPosMtx, &g_View[i].ViewPosMtx, &mtxRot);
+
+			//位置を反映
+			D3DXMatrixTranslation(&mtxTrans, g_View[i].ViewPos.x, g_View[i].ViewPos.y, g_View[i].ViewPos.z);
+
+			D3DXMatrixMultiply(&g_View[i].ViewPosMtx, &g_View[i].ViewPosMtx, &mtxTrans);
+
+			if (i == 0)
+			{
+				//プレイヤーとかける
+				D3DXMatrixMultiply(&g_View[i].ViewPosMtx, &g_View[i].ViewPosMtx, &EscapeMtx);
+
+			}
+			else if (i == 1)
+			{
+				//0番目とかける
+				D3DXMatrixMultiply(&g_View[i].ViewPosMtx, &g_View[i].ViewPosMtx, &g_View[0].ViewPosMtx);
+			}
+		}
+		//------------------------------------------------------------------------------------------------------------注視点
+
+
+
+
+		//----------パーツ
+		for (int nCnt = 0; nCnt < g_Model.nMaxPartsCnt; nCnt++)
+		{//パーツ分回す
+			//モデルの位置
+			//ワールドマトリックスの初期化
+			D3DXMatrixIdentity(&g_Model.ModelParts[nCnt].mtxWorld);
+
+			//向きを反映
+			D3DXMatrixRotationYawPitchRoll(&mtxRot, g_Model.ModelParts[nCnt].Rot.y, g_Model.ModelParts[nCnt].Rot.x, g_Model.ModelParts[nCnt].Rot.z);
+
+			D3DXMatrixMultiply(&g_Model.ModelParts[nCnt].mtxWorld, &g_Model.ModelParts[nCnt].mtxWorld, &mtxRot);
+
+			//位置を反映
+			D3DXMatrixTranslation(&mtxTrans, g_Model.ModelParts[nCnt].Pos.x, g_Model.ModelParts[nCnt].Pos.y, g_Model.ModelParts[nCnt].Pos.z);
+
+			D3DXMatrixMultiply(&g_Model.ModelParts[nCnt].mtxWorld, &g_Model.ModelParts[nCnt].mtxWorld, &mtxTrans);
+
+			//親子関係
+			if (g_Model.ModelParts[nCnt].PEARENT == -1)
+			{
+				//プレイヤーとかける
+				D3DXMatrixMultiply(&g_Model.ModelParts[nCnt].mtxWorld, &g_Model.ModelParts[nCnt].mtxWorld, &g_Player.mtxWorld);
+			}
+			else
+			{
+				//自分の親のマトリックス欠けてる
+				D3DXMatrixMultiply(&g_Model.ModelParts[nCnt].mtxWorld, &g_Model.ModelParts[nCnt].mtxWorld, &g_Model.ModelParts[g_Model.ModelParts[nCnt].PEARENT].mtxWorld);
+
+			}
+		}
+
+
+
+
+
+		for (int nWall = 0; nWall < NUMSTAGE; nWall++)
+		{
+			if (pStage[nWall].bUse == true)
 			{
 				D3DXVECTOR3 StageMin = D3DXVECTOR3(pStage[nWall].posStage + pStage[nWall].MinPos);
 				D3DXVECTOR3 StageMax = D3DXVECTOR3(pStage[nWall].posStage + pStage[nWall].MaxPos);
 
-				//プレイヤー同士当たり判定
-				BoxCollisionPlayer(PlayerMin, PlayerMax, StageMin, StageMax, 1);
-			}
-		}
-	}
-
-
-	//行動エリア/-----------------------------------------------------------------------------------------------------------------------------------------
-	ACTIONZONE* pActionZone;
-	pActionZone = GetActionZone();
-
-	for (int nCntZone = 0; nCntZone < MAXZONE; nCntZone++)
-	{
-		if (pActionZone[nCntZone].bUse == true)
-		{
-			
-			SphereCollisionZone(g_Player.pos, 0, nCntZone);
-			//	break;
-		}
-	}
-
-	//敵の視野/-----------------------------------------------------------------------------------------------------------------------------------------
-	ENEMYVIEW* pEnemyView;
-	pEnemyView = GetEnemy_View();
-
-	for (int nCntZone = 0; nCntZone < MAX_ENEMYVIEW; nCntZone++)
-	{
-		if (pEnemyView[nCntZone].bUse == true && pEnemyView[nCntZone].bFollowEnemy == true)
-		{
-
-			SphereEnemyView(g_Player.pos, 0, nCntZone);
-			//	break;
-		}
-	}
-
-	//当たり判定抜け防止/-----------------------------------------------------------------------------------------------------------------------------------------
-	COLLISION_PRE* pColisionPre;
-	pColisionPre = GetCollision_Pre();
-
-	for (int i = 0; i < MAXCOLLISION_PRE; i++)
-	{
-		if (pColisionPre[i].bUse == true)
-		{
-
-			D3DXVECTOR3 ColisionPreMin = D3DXVECTOR3(pColisionPre[i].pos + pColisionPre[i].Min);
-			D3DXVECTOR3 ColisionPreMax = D3DXVECTOR3(pColisionPre[i].pos + pColisionPre[i].Max);
-
-			//プレイヤー同士当たり判定
-			BoxCollisionPlayer(PlayerMin, PlayerMax, ColisionPreMin, ColisionPreMax, 1);
-
-		}
-	}
-
-
-
-
-
-
-
-	////ラインの位置
-
-	//// 上下の辺
-	//SetLine(D3DXVECTOR3(PlayerMin.x, PlayerMax.y, PlayerMin.z), D3DXVECTOR3(PlayerMax.x, PlayerMax.y, PlayerMin.z), D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f));
-	//SetLine(D3DXVECTOR3(PlayerMin.x, PlayerMin.y, PlayerMin.z), D3DXVECTOR3(PlayerMax.x, PlayerMin.y, PlayerMin.z), D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f));
-
-	//SetLine(D3DXVECTOR3(PlayerMin.x, PlayerMax.y, PlayerMax.z), D3DXVECTOR3(PlayerMax.x, PlayerMax.y, PlayerMax.z), D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f));
-	//SetLine(D3DXVECTOR3(PlayerMin.x, PlayerMin.y, PlayerMax.z), D3DXVECTOR3(PlayerMax.x, PlayerMin.y, PlayerMax.z), D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f));
-
-	//// 側面の辺
-	//SetLine(D3DXVECTOR3(PlayerMin.x, PlayerMin.y, PlayerMin.z), D3DXVECTOR3(PlayerMin.x, PlayerMax.y, PlayerMin.z), D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f));
-	//SetLine(D3DXVECTOR3(PlayerMax.x, PlayerMin.y, PlayerMin.z), D3DXVECTOR3(PlayerMax.x, PlayerMax.y, PlayerMin.z), D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f));
-
-	//SetLine(D3DXVECTOR3(PlayerMin.x, PlayerMin.y, PlayerMax.z), D3DXVECTOR3(PlayerMin.x, PlayerMax.y, PlayerMax.z), D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f));
-	//SetLine(D3DXVECTOR3(PlayerMax.x, PlayerMin.y, PlayerMax.z), D3DXVECTOR3(PlayerMax.x, PlayerMax.y, PlayerMax.z), D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f));
-
-
-	//// その他の辺
-	//SetLine(D3DXVECTOR3(PlayerMin.x, PlayerMin.y, PlayerMin.z), D3DXVECTOR3(PlayerMin.x, PlayerMin.y, PlayerMax.z), D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f));
-	//SetLine(D3DXVECTOR3(PlayerMax.x, PlayerMax.y, PlayerMin.z), D3DXVECTOR3(PlayerMax.x, PlayerMax.y, PlayerMax.z), D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f));
-
-	//SetLine(D3DXVECTOR3(PlayerMin.x, PlayerMax.y, PlayerMin.z), D3DXVECTOR3(PlayerMin.x, PlayerMax.y, PlayerMax.z), D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f));
-	//SetLine(D3DXVECTOR3(PlayerMax.x, PlayerMin.y, PlayerMin.z), D3DXVECTOR3(PlayerMax.x, PlayerMin.y, PlayerMax.z), D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f));
-
-
-	////--------------------------------------------------------------------------------------------------------------------------------------------------//当たり判定ここまで
-
-	if (g_Player.pos.y <= 0.0f)
-	{//地面-0以下にしない
-		g_Player.bLandingNow = true;
-	}
-
-	if (g_Player.bLandingNow == false)
-	{//空中
-		//移動量を更新(疑似慣性で減衰)
-		g_Player.move.x += (0.0f - g_Player.move.x) * DAMPING_RATIO2;
-		g_Player.move.y += (0.0f - g_Player.move.y) * DAMPING_RATIO2;
-		g_Player.move.z += (0.0f - g_Player.move.z) * DAMPING_RATIO2;
-	}
-	else
-	{//地上
-		//移動量を更新(疑似慣性で減衰)
-		g_Player.move.x += (0.0f - g_Player.move.x) * DAMPING_RATIO;
-		g_Player.move.y += (0.0f - g_Player.move.y) * DAMPING_RATIO;
-		g_Player.move.z += (0.0f - g_Player.move.z) * DAMPING_RATIO;
-	}
-
-
-	//重力
-	if (g_Player.pos.y > 0.0f)
-	{//空中(地上ではない)の時
-
-		//重力
-		g_Player.move.y -= GRAVITY;
-
-		if (g_Player.bLandingNow == false)
-		{//ジャンプで無い
-			g_Player.NowMotionDOWN = MOTIONTYPE_1P_JUMP;
-		}
-	}
-	else
-	{//地上
-		g_Player.pos.y = 0.0f;
-
-		if (g_Player.NowMotionDOWN == MOTIONTYPE_1P_JUMP)
-		{//飛んでるときに着地
-			g_Player.NowMotionDOWN = MOTIONTYPE_1P_RANDING;
-		}
-	}
-
-	//////侵入不可エリア(限界エリア)----------------------
-	////if (g_Player.pos.x > MAXMAREA)
-	////{
-	////	g_Player.pos.x = (MAXMAREA - 1.0f);
-	////}
-	////else if (g_Player.pos.x < -MAXMAREA)
-	////{
-	////	g_Player.pos.x = -(MAXMAREA - 1.0f);
-	////}
-
-	////if (g_Player.pos.z > MAXMAREA)
-	////{
-	////	g_Player.pos.z = (MAXMAREA - 1.0f);
-	////}
-	////else if (g_Player.pos.z < -MAXMAREA)
-	////{
-	////	g_Player.pos.z = -(MAXMAREA - 1.0f);
-	////}
-
-	//影
-	SetPositionShadow(g_Player.nldShadow, g_Player.pos, SHADOWSIZE_PLAYER);
-
-	//上下のモーション
-	LowerBodyMotion();
-//	UpperBodyMotion();
-
-	//前回のモーションデータを更新
-	//g_Player.OldMotionUP = g_Player.NowMotionUP;
-	g_Player.OldMotionDOWN = g_Player.NowMotionDOWN;
-
-	g_Player.JumpOld = g_Player.JumpNow;
-
-
-	////---------------------------------------------------------------------------------------------------------------他で使う計算
-	//キャラ全体の基準(親の親)
-	//ワールドマトリックスの初期化
-	D3DXMatrixIdentity(&g_Player.mtxWorld);
-
-	//向きを反映
-	D3DXMatrixRotationYawPitchRoll(&mtxRot, g_Player.rot.y, g_Player.rot.x, g_Player.rot.z);
-
-	D3DXMatrixMultiply(&g_Player.mtxWorld, &g_Player.mtxWorld, &mtxRot);
-
-	//位置を反映
-	D3DXMatrixTranslation(&mtxTrans, g_Player.pos.x, g_Player.pos.y, g_Player.pos.z);
-
-	D3DXMatrixMultiply(&g_Player.mtxWorld, &g_Player.mtxWorld, &mtxTrans);
-
-
-	//------------------------------------------------------------------------------------------------------------注視点
-	Camera* pCamera;
-	pCamera = GetCamera();
-	
-	D3DXMATRIX EscapeMtx;
-	//ワールドマトリックスの初期化
-	D3DXMatrixIdentity(&EscapeMtx);
-
-	//位置を反映
-	D3DXMatrixTranslation(&mtxTrans, g_Player.pos.x, g_Player.pos.y, g_Player.pos.z);
-
-	D3DXMatrixMultiply(&EscapeMtx, &EscapeMtx, &mtxTrans);
-
-	for (int i = 0; i < 2; i++)
-	{
-		g_View[i].ViewRot.y = -pCamera[0].rot.y;
-
-		//ワールドマトリックスの初期化
-		D3DXMatrixIdentity(&g_View[i].ViewPosMtx);
-
-		//向きを反映
-		D3DXMatrixRotationYawPitchRoll(&mtxRot, g_View[i].ViewRot.y, g_View[i].ViewRot.x, g_View[i].ViewRot.z);
-
-		D3DXMatrixMultiply(&g_View[i].ViewPosMtx, &g_View[i].ViewPosMtx, &mtxRot);
-
-		//位置を反映
-		D3DXMatrixTranslation(&mtxTrans, g_View[i].ViewPos.x, g_View[i].ViewPos.y, g_View[i].ViewPos.z);
-
-		D3DXMatrixMultiply(&g_View[i].ViewPosMtx, &g_View[i].ViewPosMtx, &mtxTrans);
-
-		if (i == 0)
-		{
-			//プレイヤーとかける
-			D3DXMatrixMultiply(&g_View[i].ViewPosMtx, &g_View[i].ViewPosMtx, &EscapeMtx);
-
-		}
-		else if (i == 1)
-		{
-			//0番目とかける
-			D3DXMatrixMultiply(&g_View[i].ViewPosMtx, &g_View[i].ViewPosMtx, &g_View[0].ViewPosMtx);
-		}
-	}
-	//------------------------------------------------------------------------------------------------------------注視点
-
-
-	
-
-	//----------パーツ
-	for (int nCnt = 0; nCnt < g_Model.nMaxPartsCnt; nCnt++)
-	{//パーツ分回す
-		//モデルの位置
-		//ワールドマトリックスの初期化
-		D3DXMatrixIdentity(&g_Model.ModelParts[nCnt].mtxWorld);
-
-		//向きを反映
-		D3DXMatrixRotationYawPitchRoll(&mtxRot, g_Model.ModelParts[nCnt].Rot.y, g_Model.ModelParts[nCnt].Rot.x, g_Model.ModelParts[nCnt].Rot.z);
-
-		D3DXMatrixMultiply(&g_Model.ModelParts[nCnt].mtxWorld, &g_Model.ModelParts[nCnt].mtxWorld, &mtxRot);
-
-		//位置を反映
-		D3DXMatrixTranslation(&mtxTrans, g_Model.ModelParts[nCnt].Pos.x, g_Model.ModelParts[nCnt].Pos.y, g_Model.ModelParts[nCnt].Pos.z);
-
-		D3DXMatrixMultiply(&g_Model.ModelParts[nCnt].mtxWorld, &g_Model.ModelParts[nCnt].mtxWorld, &mtxTrans);
-
-		//親子関係
-		if (g_Model.ModelParts[nCnt].PEARENT == -1)
-		{
-			//プレイヤーとかける
-			D3DXMatrixMultiply(&g_Model.ModelParts[nCnt].mtxWorld, &g_Model.ModelParts[nCnt].mtxWorld, &g_Player.mtxWorld);
-		}
-		else
-		{
-			//自分の親のマトリックス欠けてる
-			D3DXMatrixMultiply(&g_Model.ModelParts[nCnt].mtxWorld, &g_Model.ModelParts[nCnt].mtxWorld, &g_Model.ModelParts[g_Model.ModelParts[nCnt].PEARENT].mtxWorld);
-
-		}
-	}
-
-
-
-
-
-	for (int nWall = 0; nWall < NUMSTAGE; nWall++)
-	{
-		if (pStage[nWall].bUse == true)
-		{
-			D3DXVECTOR3 StageMin = D3DXVECTOR3(pStage[nWall].posStage + pStage[nWall].MinPos);
-			D3DXVECTOR3 StageMax = D3DXVECTOR3(pStage[nWall].posStage + pStage[nWall].MaxPos);
-
-			//障害物検知
-			AdjustPlayerPositionToCollision_VIEWPOS(D3DXVECTOR3(g_Player.pos.x, (g_Player.pos.y + g_View[1].ViewPos.y), g_Player.pos.z), 0, StageMin, StageMax);
-
-		}
-	}
-
-	for (int i = 0; i < MAX_MODEL; i++)
-	{
-		if (pMapObject[i].bUse == true)
-		{
-			if (pMapObject[i].bCollision == true)
-			{
-				D3DXVECTOR3 ModelMin = D3DXVECTOR3(pMapObject[i].pos + pMapObject[i].Minpos);
-				D3DXVECTOR3 ModelMax = D3DXVECTOR3(pMapObject[i].pos + pMapObject[i].Maxpos);
-
-
-				//プレイヤー同士当たり判定
-				//BoxCollisionPlayer(PlayerMin, PlayerMax, ModelMin, ModelMax, 1);
 				//障害物検知
-				AdjustPlayerPositionToCollision_VIEWPOS(D3DXVECTOR3(g_Player.pos.x, (g_Player.pos.y + g_View[1].ViewPos.y), g_Player.pos.z), 0, ModelMin, ModelMax);
+				AdjustPlayerPositionToCollision_VIEWPOS(D3DXVECTOR3(g_Player.pos.x, (g_Player.pos.y + g_View[1].ViewPos.y), g_Player.pos.z), 0, StageMin, StageMax);
+
 			}
 		}
+
+		for (int i = 0; i < MAX_MODEL; i++)
+		{
+			if (pMapObject[i].bUse == true)
+			{
+				if (pMapObject[i].bCollision == true)
+				{
+					D3DXVECTOR3 ModelMin = D3DXVECTOR3(pMapObject[i].pos + pMapObject[i].Minpos);
+					D3DXVECTOR3 ModelMax = D3DXVECTOR3(pMapObject[i].pos + pMapObject[i].Maxpos);
+
+
+					//プレイヤー同士当たり判定
+					//BoxCollisionPlayer(PlayerMin, PlayerMax, ModelMin, ModelMax, 1);
+					//障害物検知
+					AdjustPlayerPositionToCollision_VIEWPOS(D3DXVECTOR3(g_Player.pos.x, (g_Player.pos.y + g_View[1].ViewPos.y), g_Player.pos.z), 0, ModelMin, ModelMax);
+				}
+			}
+		}
+
+
+
+
+
+
+
+
+
+
+
+
+
+		//状態遷移
+		//プレイヤー被弾振動管理
+		if (g_Player.PlayerStateCnt > 0)
+		{
+			g_Player.PlayerStateCnt--;
+		}
+
+		if (g_Player.PlayerStateCnt <= 0)
+		{
+			g_Player.PlayerState = PLAYERSTATE_1P_NOMAL;
+
+			//振動ストップ
+			VibrationLeft(0);
+			VibrationRight(0);
+		}
+
+
+
+
+
+
+		//MAPOBJECT *pObject;
+		//pObject = GetMapObject();
+		//pObject[0].pos = g_Player.pos;
 	}
-	
-
-
-
-
-
-
-
-
-
-
-
-
-	//状態遷移
-	//プレイヤー被弾振動管理
-	if (g_Player.PlayerStateCnt > 0)
-	{
-		g_Player.PlayerStateCnt--;
-	}
-
-	if (g_Player.PlayerStateCnt <= 0)
-	{
-		g_Player.PlayerState = PLAYERSTATE_1P_NOMAL;
-
-		//振動ストップ
-		VibrationLeft(0);
-		VibrationRight(0);
-	}
-
-
-
-
-
-
-	//MAPOBJECT *pObject;
-	//pObject = GetMapObject();
-	//pObject[0].pos = g_Player.pos;
 }
 //=============================
 //モデルの描画処理
@@ -818,15 +825,18 @@ void DrawPlayer(int CameraLoopNum)
 				//テクスチャの設定
 				//pDevice->SetTexture(0, NULL);//今回は設定しない
 				//テクスチャの設定
-				pDevice->SetTexture(0, g_apTexture_1P[nCntMat]);
+	
+				pDevice->SetTexture(0, g_apTexture_1P[nCnt][nCntMat]);
 				//モデル(パーツ)の描画
 				g_pMeshModel[nCnt]->DrawSubset(nCntMat);
 
-				//保存してたマテリアルを戻す
-				pDevice->SetMaterial(&matDef);
 			}
 		}
+		//保存してたマテリアルを戻す
+		pDevice->SetMaterial(&matDef);
 
+		//テクスチャを戻す
+		pDevice->SetTexture(0, NULL);
 	}
 	
 }
@@ -1302,6 +1312,45 @@ D3DXVECTOR3 ConversionPlayerRot3(D3DXVECTOR3 fRot, int nCnt)
 	return D3DXVECTOR3(rotDiff, rotDiff2, rotDiff3);
 
 }
+
+//===================================
+//Xfireよみこみ
+//===================================
+void LoadXfire_Player(void)
+{
+	LPDIRECT3DDEVICE9 pDevice = GetDevice();
+
+	for (int nCntPart = 0; nCntPart < g_Model.nMaxLoadPartsCnt; nCntPart++)
+	{
+		
+		// ファイルの読み込み
+		D3DXLoadMeshFromX(g_PlayerFileName[nCntPart][0],
+			D3DXMESH_SYSTEMMEM,
+			pDevice,
+			NULL,
+			&g_pBuffMatModel[nCntPart],
+			NULL,
+			&dwNumMatModel[nCntPart],
+			&g_pMeshModel[nCntPart]);
+
+		// マテリアルデータへのポインタを取得
+		D3DXMATERIAL* pMat = (D3DXMATERIAL*)g_pBuffMatModel[nCntPart]->GetBufferPointer();
+
+
+		for (int i = 0; i < (int)dwNumMatModel[nCntPart]; i++)
+		{
+			if (pMat[i].pTextureFilename != nullptr)
+			{
+				// テクスチャの読み込み
+				D3DXCreateTextureFromFile(pDevice,pMat[i].pTextureFilename,&g_apTexture_1P[nCntPart][i]);
+				
+				
+			}
+		}
+	}
+	g_Player.bUse = true;
+}
+
 //===================================
 //テキストからキャラの情報を読み込む処理----------------------------------------------------------------
 //===================================
@@ -1333,14 +1382,12 @@ void LoadSet(void)
 	int nKeyPartsCnt;//各キーの中でのパーツカウント
 	nKeyPartsCnt = 0;
 
-	char cModelFileName[MAX_PARTS][MAX_WORD2] = {};//とりあえず20でファイル名を管理
-
-	//pFile = fopen("data\\motion_LOBOT01.txt", "r");
-
-	//data\\motion_runningman.txt
 
 	pFile = fopen("data\\motion_PlayerModel.txt", "r");
-//	pFile = fopen("data\\motion_runningman.txt", "r");
+ //	pFile = fopen("data\\motion_runningman.txt", "r");
+//	pFile = fopen("data\\motionEnigma.txt", "r");
+
+
 
 	if (pFile != NULL)
 	{//ファイルが開いたら
@@ -1362,37 +1409,9 @@ void LoadSet(void)
 			else if (strcmp(&aString[0], "MODEL_FILENAME") == 0)
 			{//各モデルのパーツのパスが来たら
 				fscanf(pFile, "%s", &aString[0]);
-				fscanf(pFile, "%s", &cModelFileName[0]);//ファイルパス
+				fscanf(pFile, "%s", &g_PlayerFileName[nEscapeCntModel][0]);//ファイルパス
 
-				//ファイルの読み込み----------------------
-				D3DXLoadMeshFromX(cModelFileName[0],
-					D3DXMESH_SYSTEMMEM,
-					pDevice,
-					NULL,
-					&g_pBuffMatModel[nEscapeCntModel],
-					NULL,
-					&dwNumMatModel[nEscapeCntModel],
-					&g_pMeshModel[nEscapeCntModel]);
-				//----------------------------------------
 				
-				//D3DXMATERIAL* pMat;
-
-				D3DXMATERIAL* pMat;
-
-				//マテリアルデータへのポインタを取得
-				pMat = (D3DXMATERIAL*)g_pBuffMatModel[nEscapeCntModel]->GetBufferPointer();
-
-				for (int nCntMat = 0; nCntMat < (int)dwNumMatModel[nEscapeCntModel]; nCntMat++)
-				{
-					if (pMat[nCntMat].pTextureFilename != NULL)
-					{
-						//テクスチャの読み込み
-						D3DXCreateTextureFromFile(pDevice,
-							pMat[nCntMat].pTextureFilename,
-							&g_apTexture_1P[nCntMat]
-						);
-					}
-				}
 
 				nEscapeCntModel++;//モデル格納後インクリ
 
@@ -1553,11 +1572,6 @@ void LoadSet(void)
 		}
 	}
 
-
-
-
-
-
 }
 //-----------------------------------------------------------モーション後にCPP化ける...かも
 //===================================
@@ -1568,24 +1582,19 @@ void LowerBodyMotion(void)
 	if (g_Player.NowMotionDOWN != g_Player.OldMotionDOWN)
 	{//前回のモーションと違う時
 	//-------------------------------リセット動作
-		if (g_Player.MotionBrend == false)
-		{
-			g_Player.NowKeyCntDOWN = 0;
-			g_Player.NowFrameCntDOWN = 0;
-			g_Player.EscapeMotion = g_Player.NowMotionDOWN;
-			g_Player.BrendCnt = 0;
-			for (int i = 0; i < MAX_PARTS; i++)
-			{//リセット
+		g_Player.NowKeyCntDOWN = 0;
+		g_Player.NowFrameCntDOWN = 0;
+		g_Player.EscapeMotion = g_Player.NowMotionDOWN;
+		g_Player.BrendCnt = 0;
+		for (int i = 0; i < MAX_PARTS; i++)
+		{//リセット
 
-				g_Model.ModelParts[i].calculationExecution = false;
-				g_Model.ModelParts[i].CorrectCorrectionRotMove = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-				g_Model.ModelParts[i].CorrectCorrectionPosMove = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-				g_Player.MotionLoopStop = false;
-
-				g_Player.MotionBrend = true;
-
-			}
+			g_Model.ModelParts[i].calculationExecution = false;
+			g_Model.ModelParts[i].CorrectCorrectionRotMove = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+			g_Model.ModelParts[i].CorrectCorrectionPosMove = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+			g_Player.MotionLoopStop = false;
 		}
+		g_Player.MotionBrend = true;
 	}
 
 
@@ -1648,70 +1657,67 @@ void LowerBodyMotion(void)
 
 
 #else // 1
-	
-	if (g_Player.BrendCnt < BRENDFLAME)
-	{
-		for (int nCntParts = 0; nCntParts < g_Model.nMaxPartsCnt; nCntParts++)
-		{//パーツ分回る
 
-				//ROT系
-			if (g_Model.ModelParts[nCntParts].calculationExecution == false)
-			{
-				//CorrectionPos,CorrectionRotはあくまで、OFFSETをStart地点とした補正量なので、
-				D3DXVECTOR3 TargetRot;
-				TargetRot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+		if (g_Player.BrendCnt < BRENDFLAME)
+		{
+			for (int nCntParts = 0; nCntParts < g_Model.nMaxPartsCnt; nCntParts++)
+			{//パーツ分回る
 
-				TargetRot = g_Model.ModelParts[nCntParts].StartRot + g_Model.Motion[g_Player.NowMotionDOWN].KeyData[0].PartsData[nCntParts].CorrectionRot;
+					//ROT系
+				if (g_Model.ModelParts[nCntParts].calculationExecution == false)
+				{
+					//CorrectionPos,CorrectionRotはあくまで、OFFSETをStart地点とした補正量なので、
+					D3DXVECTOR3 TargetRot;
+					TargetRot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 
-				g_Model.ModelParts[nCntParts].CorrectCorrectionRotMove = (ConversionPlayerRot3(TargetRot - g_Model.ModelParts[nCntParts].Rot, 0)/ BRENDFLAME);
+					TargetRot = g_Model.ModelParts[nCntParts].StartRot + g_Model.Motion[g_Player.NowMotionDOWN].KeyData[1].PartsData[nCntParts].CorrectionRot;
 
-				g_Model.ModelParts[nCntParts].calculationExecution = true;
+					g_Model.ModelParts[nCntParts].CorrectCorrectionRotMove = (ConversionPlayerRot3(TargetRot - g_Model.ModelParts[nCntParts].Rot, 0) / BRENDFLAME);
+
+					g_Model.ModelParts[nCntParts].calculationExecution = true;
+				}
+
+				g_Model.ModelParts[nCntParts].Rot += g_Model.ModelParts[nCntParts].CorrectCorrectionRotMove;
+
+				//POS系
+				//--------------------------------------------------------------------------------
+				if (g_Model.ModelParts[nCntParts].PEARENT == -1)
+				{//自分がすべての親の時
+					D3DXVECTOR3 TargetPos;
+					TargetPos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+
+					//初期位置から見た地点を補正した、目標地点の算出
+					TargetPos = g_Model.ModelParts[nCntParts].StartPos + g_Model.Motion[g_Player.NowMotionDOWN].KeyData[1].PartsData[nCntParts].CorrectionPos;
+
+					//現在の位置から、上で算出した目標地点までの差分計算
+					g_Model.ModelParts[nCntParts].CorrectCorrectionPosMove = (TargetPos - g_Model.ModelParts[nCntParts].Pos) / BRENDFLAME;
+
+					//POSの更新
+					g_Model.ModelParts[nCntParts].Pos += g_Model.ModelParts[nCntParts].CorrectCorrectionPosMove;
+					//------------------------------------------------------------------------------------
+				}
 			}
 
-			g_Model.ModelParts[nCntParts].Rot += g_Model.ModelParts[nCntParts].CorrectCorrectionRotMove;
+		}
+		g_Player.BrendCnt++;
 
-			//POS系
-			//--------------------------------------------------------------------------------
-			if (g_Model.ModelParts[nCntParts].PEARENT == -1)
-			{//自分がすべての親の時
-				D3DXVECTOR3 TargetPos;
-				TargetPos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+		if (g_Player.BrendCnt >= BRENDFLAME)
+		{
+			g_Player.BrendCnt = 0;
 
-				//初期位置から見た地点を補正した、目標地点の算出
-				TargetPos = g_Model.ModelParts[nCntParts].StartPos + g_Model.Motion[g_Player.NowMotionDOWN].KeyData[0].PartsData[nCntParts].CorrectionPos;
+			g_Player.MotionBrend = false;
 
-				//現在の位置から、上で算出した目標地点までの差分計算
-				g_Model.ModelParts[nCntParts].CorrectCorrectionPosMove = (TargetPos - g_Model.ModelParts[nCntParts].Pos)/ BRENDFLAME;
+			g_Player.NowKeyCntDOWN++;//キーを進める
 
-				//POSの更新
-				g_Model.ModelParts[nCntParts].Pos += g_Model.ModelParts[nCntParts].CorrectCorrectionPosMove;
-				//------------------------------------------------------------------------------------
+			for (int nCntParts = 0; nCntParts < g_Model.nMaxPartsCnt; nCntParts++)
+			{//パーツ分回る
+				g_Model.ModelParts[nCntParts].calculationExecution = false;
+				g_Model.ModelParts[nCntParts].CorrectCorrectionRotMove = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+				g_Model.ModelParts[nCntParts].CorrectCorrectionPosMove = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+
 			}
 		}
-
-	}
-	g_Player.BrendCnt++;
-
-	if (g_Player.BrendCnt >= BRENDFLAME)
-	{
-		g_Player.BrendCnt = 0;
-
-		g_Player.MotionBrend = false;
-
-		g_Player.NowKeyCntDOWN++;//キーを進める
-
-		for (int nCntParts = 0; nCntParts < g_Model.nMaxPartsCnt; nCntParts++)
-		{//パーツ分回る
-			g_Model.ModelParts[nCntParts].calculationExecution = false;
-			g_Model.ModelParts[nCntParts].CorrectCorrectionRotMove = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-			g_Model.ModelParts[nCntParts].CorrectCorrectionPosMove = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-
-		}
-	}
-	#endif
-
-
-
+#endif
 	}
 	else
 	{
@@ -1719,29 +1725,10 @@ void LowerBodyMotion(void)
 		// 本動作------------------------------------------------------------------------------------------------------------------
 		if (g_Player.MotionLoopStop == false)
 		{
-			if (g_Player.NowKeyCntDOWN == 0)
-			{//0番目のキー＝＝データズレで認識できない
-				if (g_Model.Motion[g_Player.NowMotionDOWN].KeyData[g_Player.NowKeyCntDOWN - 1].nSplitFrame == 0)
-				{//分割フレーム数が0＝＝ズレ以外ありえない
-					g_Model.Motion[g_Player.NowMotionDOWN].KeyData[g_Player.NowKeyCntDOWN - 1].nSplitFrame = g_Model.Motion[g_Player.NowMotionDOWN].KeyData[g_Model.Motion[g_Player.NowMotionDOWN].nNumKey - 1].nSplitFrame;
-				//	g_Model.Motion[g_Player.NowMotionDOWN].KeyData[g_Player.NowKeyCntDOWN - 1].nSplitFrame = 5;
-				}
-
-			}
-
-			if (g_Player.NowFrameCntDOWN < g_Model.Motion[g_Player.NowMotionDOWN].KeyData[g_Player.NowKeyCntDOWN - 1].nSplitFrame)
+			if (g_Player.NowFrameCntDOWN < g_Model.Motion[g_Player.NowMotionDOWN].KeyData[g_Player.NowKeyCntDOWN /*- 1*/].nSplitFrame)
 			{//分割フレームの分回る
 				if (g_Player.NowKeyCntDOWN < g_Model.Motion[g_Player.NowMotionDOWN].nNumKey)
 				{//キーの分回る
-					if (g_Player.NowKeyCntDOWN == 12)
-					{
-						if (g_Player.NowMotionDOWN == MOTIONTYPE_1P_ATTACK)
-						{
-							int test;
-
-							test = 1111;
-						}
-					}
 
 					for (int nCntParts = 0; nCntParts < g_Model.nMaxPartsCnt; nCntParts++)
 					{//パーツ分回る
@@ -1754,9 +1741,15 @@ void LowerBodyMotion(void)
 							D3DXVECTOR3 TargetRot;
 							TargetRot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 
-							TargetRot = g_Model.ModelParts[nCntParts].StartRot + g_Model.Motion[g_Player.NowMotionDOWN].KeyData[g_Player.NowKeyCntDOWN].PartsData[nCntParts].CorrectionRot;
-
-							g_Model.ModelParts[nCntParts].CorrectCorrectionRotMove = (ConversionPlayerRot3(TargetRot - g_Model.ModelParts[nCntParts].Rot, 0)) / g_Model.Motion[g_Player.NowMotionDOWN].KeyData[g_Player.NowKeyCntDOWN - 1].nSplitFrame;
+							if (g_Player.NowKeyCntDOWN != g_Model.Motion[g_Player.NowMotionDOWN].nNumKey - 1)
+							{//最後キーじゃない
+								TargetRot = g_Model.ModelParts[nCntParts].StartRot + g_Model.Motion[g_Player.NowMotionDOWN].KeyData[g_Player.NowKeyCntDOWN + 1].PartsData[nCntParts].CorrectionRot;
+							}
+							else if (g_Player.NowKeyCntDOWN == g_Model.Motion[g_Player.NowMotionDOWN].nNumKey - 1)
+							{//最後キーのとき
+								TargetRot = g_Model.ModelParts[nCntParts].StartRot + g_Model.Motion[g_Player.NowMotionDOWN].KeyData[0].PartsData[nCntParts].CorrectionRot;
+							}
+							g_Model.ModelParts[nCntParts].CorrectCorrectionRotMove = (ConversionPlayerRot3(TargetRot - g_Model.ModelParts[nCntParts].Rot, 0)) / g_Model.Motion[g_Player.NowMotionDOWN].KeyData[g_Player.NowKeyCntDOWN].nSplitFrame;
 
 							g_Model.ModelParts[nCntParts].calculationExecution = true;
 						}
@@ -1769,12 +1762,18 @@ void LowerBodyMotion(void)
 						{//自分がすべての親の時
 							D3DXVECTOR3 TargetPos;
 							TargetPos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-
+							if (g_Player.NowKeyCntDOWN != g_Model.Motion[g_Player.NowMotionDOWN].nNumKey - 1)
+							{//最後キーじゃない
 							//初期位置から見た地点を補正した、目標地点の算出
-							TargetPos = g_Model.ModelParts[nCntParts].StartPos + g_Model.Motion[g_Player.NowMotionDOWN].KeyData[g_Player.NowKeyCntDOWN].PartsData[nCntParts].CorrectionPos;
-
+								TargetPos = g_Model.ModelParts[nCntParts].StartPos + g_Model.Motion[g_Player.NowMotionDOWN].KeyData[g_Player.NowKeyCntDOWN + 1].PartsData[nCntParts].CorrectionPos;
+							}
+							else if (g_Player.NowKeyCntDOWN == g_Model.Motion[g_Player.NowMotionDOWN].nNumKey - 1)
+							{//最後キーのとき
+							//初期位置から見た地点を補正した、目標地点の算出
+								TargetPos = g_Model.ModelParts[nCntParts].StartPos + g_Model.Motion[g_Player.NowMotionDOWN].KeyData[0].PartsData[nCntParts].CorrectionPos;
+							}
 							//現在の位置から、上で算出した目標地点までの差分計算
-							g_Model.ModelParts[nCntParts].CorrectCorrectionPosMove = (TargetPos - g_Model.ModelParts[nCntParts].Pos) / g_Model.Motion[g_Player.NowMotionDOWN].KeyData[g_Player.NowKeyCntDOWN - 1].nSplitFrame;
+							g_Model.ModelParts[nCntParts].CorrectCorrectionPosMove = (TargetPos - g_Model.ModelParts[nCntParts].Pos) / g_Model.Motion[g_Player.NowMotionDOWN].KeyData[g_Player.NowKeyCntDOWN].nSplitFrame;
 
 							//POSの更新
 							g_Model.ModelParts[nCntParts].Pos += g_Model.ModelParts[nCntParts].CorrectCorrectionPosMove;

@@ -104,10 +104,6 @@ void InitModel(void)
 
 	for (int nCnt = 0; nCnt < MAX_MODEL; nCnt++)
 	{
-		//頂点数の取得
-		nNumVtx = g_aModel[g_aModel[nCnt].nType].pMesh->GetNumVertices();
-		//頂点フォーマットのサイズを取得
-		sizeFVF = D3DXGetFVFVertexSize(g_aModel[g_aModel[nCnt].nType].pMesh->GetFVF());
 
 		g_aModel[nCnt].pos = D3DXVECTOR3(0.0f, 0.0f, 0.0f); //モデルの初期位置
 		g_aModel[nCnt].Minpos = D3DXVECTOR3(100000.0f, 1000000.0f, 1000000.0f); //モデルの最小位置
@@ -119,47 +115,57 @@ void InitModel(void)
 		g_aModel[nCnt].bUse = false;
 		g_aModel[nCnt].bCollision = false;
 
-		//頂点バッファのロック
-		g_aModel[g_aModel[nCnt].nType].pMesh->LockVertexBuffer(D3DLOCK_READONLY, (void**)&pVtxBuff);
-		for (int nCntVtx = 0; nCntVtx < nNumVtx; nCntVtx++)
-		{
-			//頂点座標の代入
 
-			D3DXVECTOR3 vtx = *(D3DXVECTOR3*)pVtxBuff;
 
-			if (vtx.x > g_aModel[nCnt].Maxpos.x)
-			{
-				g_aModel[nCnt].Maxpos.x = vtx.x;
-			}
-			if (vtx.x < g_aModel[nCnt].Minpos.x)
-			{
-				g_aModel[nCnt].Minpos.x = vtx.x;
-			}
+		//------------------------------------------------------------------------------------------これダメ
+	////	頂点数の取得
+	//	nNumVtx = g_aModel[g_aModel[nCnt].nType].pMesh->GetNumVertices();
+	////	頂点フォーマットのサイズを取得
+	//	sizeFVF = D3DXGetFVFVertexSize(g_aModel[g_aModel[nCnt].nType].pMesh->GetFVF());
 
-			if (vtx.y > g_aModel[nCnt].Maxpos.y)
-			{
-				g_aModel[nCnt].Maxpos.y = vtx.y;
-			}
-			if (vtx.y < g_aModel[nCnt].Minpos.y)
-			{
-				g_aModel[nCnt].Minpos.y = vtx.y;
-			}
+	//	//頂点バッファのロック
+	//	g_aModel[g_aModel[nCnt].nType].pMesh->LockVertexBuffer(D3DLOCK_READONLY, (void**)&pVtxBuff);
+	//	for (int nCntVtx = 0; nCntVtx < nNumVtx; nCntVtx++)
+	//	{
+	//		//頂点座標の代入
+	//		D3DXVECTOR3 vtx = *(D3DXVECTOR3*)pVtxBuff;
 
-			if (vtx.z > g_aModel[nCnt].Maxpos.z)
-			{
-				g_aModel[nCnt].Maxpos.z = vtx.z;
-			}
-			if (vtx.z < g_aModel[nCnt].Minpos.z)
-			{
-				g_aModel[nCnt].Minpos.z = vtx.z;
-			}
+	//		if (vtx.x > g_aModel[nCnt].Maxpos.x)
+	//		{
+	//			g_aModel[nCnt].Maxpos.x = vtx.x;
+	//		}
+	//		if (vtx.x < g_aModel[nCnt].Minpos.x)
+	//		{
+	//			g_aModel[nCnt].Minpos.x = vtx.x;
+	//		}
 
-			// 次の頂点に進む
-			pVtxBuff += sizeFVF;
+	//		if (vtx.y > g_aModel[nCnt].Maxpos.y)
+	//		{
+	//			g_aModel[nCnt].Maxpos.y = vtx.y;
+	//		}
+	//		if (vtx.y < g_aModel[nCnt].Minpos.y)
+	//		{
+	//			g_aModel[nCnt].Minpos.y = vtx.y;
+	//		}
 
-		}
+	//		if (vtx.z > g_aModel[nCnt].Maxpos.z)
+	//		{
+	//			g_aModel[nCnt].Maxpos.z = vtx.z;
+	//		}
+	//		if (vtx.z < g_aModel[nCnt].Minpos.z)
+	//		{
+	//			g_aModel[nCnt].Minpos.z = vtx.z;
+	//		}
 
-		g_aModel[g_aModel[nCnt].nType].pMesh->UnlockVertexBuffer();
+	//		// 次の頂点に進む
+	//		pVtxBuff += sizeFVF;
+
+	//	}
+
+	//	g_aModel[g_aModel[nCnt].nType].pMesh->UnlockVertexBuffer();
+
+
+
 	}
 }
 
@@ -170,22 +176,32 @@ void UninitModel(void)
 {
 	for (int nCnt = 0; nCnt < MAX_MODEL; nCnt++)
 	{
-//		if (g_aModel[nCnt].bUse == true)
-//		{
-			//メッシュの破棄
-			if (g_aModel[nCnt].pMesh != NULL)
-			{
-				g_aModel[nCnt].pMesh->Release();
-				g_aModel[nCnt].pMesh = NULL;
-			}
+		//		if (g_aModel[nCnt].bUse == true)
+		//		{
+					//メッシュの破棄
+		if (g_aModel[nCnt].pMesh != NULL)
+		{
+			g_aModel[nCnt].pMesh->Release();
+			g_aModel[nCnt].pMesh = NULL;
+		}
 
-			//マテリアルの破棄
-			if (g_aModel[nCnt].pBuffMat != NULL)
+		//マテリアルの破棄
+		if (g_aModel[nCnt].pBuffMat != NULL)
+		{
+			g_aModel[nCnt].pBuffMat->Release();
+			g_aModel[nCnt].pBuffMat = NULL;
+		}
+
+		for (int nCntTex = 0; nCntTex < (int)g_aModel[nCnt].nNumMat; nCntTex++)
+		{
+			// テクスチャの破棄
+			if (g_apTextureModel[nCnt][nCntTex] != NULL)
 			{
-				g_aModel[nCnt].pBuffMat->Release();
-				g_aModel[nCnt].pBuffMat = NULL;
+				g_apTextureModel[nCnt][nCntTex]->Release();
+				g_apTextureModel[nCnt][nCntTex] = NULL; // 解放後に NULL を設定
 			}
-//		}
+		}
+		//		}
 	}
 }
 
@@ -315,18 +331,13 @@ void DrawModel(void)
 			//αテストを無効に
 			pDevice->SetRenderState(D3DRS_ALPHATESTENABLE, FALSE);
 
-			////頂点バッファをデータストリームに設定
-			//pDevice->SetStreamSource(0, g_pVtxBuffModel, 0, sizeof(VERTEX_3D));
+			//保存してたマテリアルを戻す
+			pDevice->SetMaterial(&matDef);
 
-			////頂点フォーマットの設定
-			//pDevice->SetFVF(FVF_VERTEX_3D);
-
-			////ポリゴンの描画
-			//pDevice->DrawPrimitive(D3DPT_TRIANGLESTRIP, 0, 2);
+			//テクスチャを戻す
+			pDevice->SetTexture(0, NULL);
 		}
 	}
-	//保存してたマテリアルを戻す
-	pDevice->SetMaterial(&matDef);
 }
 
 //=============================================

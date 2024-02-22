@@ -276,7 +276,11 @@ void DrawGameFade(void)
 			//ポリゴンの描画
 			pDevice->DrawPrimitive(D3DPT_TRIANGLESTRIP, FadeCnt * 4, 2);
 //		}
+			
+		
 	}
+	//テクスチャを戻す
+			pDevice->SetTexture(0, NULL);
 }
 //=============================
 //ゲーム内フェードの設定処理

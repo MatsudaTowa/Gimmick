@@ -147,6 +147,10 @@ void DrawLine(void)
                 1);             //描画するプリミティブ数
 
             //[nCntLine].bUse = false;
+
+                 
+            //テクスチャを戻す
+            pDevice->SetTexture(0, NULL);
         }
     }
 }

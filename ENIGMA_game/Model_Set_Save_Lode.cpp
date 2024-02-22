@@ -53,8 +53,6 @@ void NewSet_Debug_Model(void)
 {
 	//+ここに新規で置くモデルの関数を置く。セーブ後はリセットすべし
 
-	//a版用金庫設置(地下室)
-	//SetModel(D3DXVECTOR3(-0700.0f, 0000.0f, -0450.0f), D3DXVECTOR3(0.0f, -2.35f, 0.0f), MODELTYPE_SAFE);	
 }
 
 //=============================

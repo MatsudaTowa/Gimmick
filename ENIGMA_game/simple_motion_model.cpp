@@ -39,10 +39,6 @@ SIMPLEMODELINFO g_ModelInfo[SIMPLEMOTIONMODEL_MAX] =
 	{"data\\MODEL\\leverblue.x",SIMPLEMOTIONMODEL_LEVER_BLUE_LEVER,SIMPLEMOTIONMODEL_LEVER_BLUE_ROOT},
 };
 
-
-
-
-
 ///-------------------------------------------------------------------------モデル
 LPD3DXMESH g_pMeshSimpleModel[SIMPLEMOTIONMODEL_MAX] = {};//メッシュ(頂点情報)へのポインタ
 
@@ -136,55 +132,66 @@ void DrawSimpleModel(void)
 	
 	for (int SimpleModel = 0; SimpleModel < SIMPLEMOTIONMODEL_MAX; SimpleModel++)
 	{
-		//モデルの位置
-	//ワールドマトリックスの初期化
-		D3DXMatrixIdentity(&g_ModelInfo[SimpleModel].SinpleModel.mtxWorld);
-
-		//向きを反映
-		D3DXMatrixRotationYawPitchRoll(&mtxRot, g_ModelInfo[SimpleModel].SinpleModel.rot.y, g_ModelInfo[SimpleModel].SinpleModel.rot.x, g_ModelInfo[SimpleModel].SinpleModel.rot.z);
-
-		D3DXMatrixMultiply(&g_ModelInfo[SimpleModel].SinpleModel.mtxWorld, &g_ModelInfo[SimpleModel].SinpleModel.mtxWorld, &mtxRot);
-
-		//位置を反映
-		D3DXMatrixTranslation(&mtxTrans, g_ModelInfo[SimpleModel].SinpleModel.pos.x, g_ModelInfo[SimpleModel].SinpleModel.pos.y, g_ModelInfo[SimpleModel].SinpleModel.pos.z);
-
-		D3DXMatrixMultiply(&g_ModelInfo[SimpleModel].SinpleModel.mtxWorld, &g_ModelInfo[SimpleModel].SinpleModel.mtxWorld, &mtxTrans);
-
-		//親子関係
-		if (g_ModelInfo[SimpleModel].ParentNum == g_ModelInfo[SimpleModel].MyNum)
-		{//自分が親
-			//プレイヤーとかける
-		//	D3DXMatrixMultiply(&g_Model.ModelParts[nCnt].mtxWorld, &g_Model.ModelParts[nCnt].mtxWorld, &g_Player.mtxWorld);
-		}
-		else
+		if (g_ModelInfo[SimpleModel].SinpleModel.bUse == true)
 		{
-			//自分の親のマトリックスかけてる
-			D3DXMatrixMultiply(&g_ModelInfo[SimpleModel].SinpleModel.mtxWorld, &g_ModelInfo[SimpleModel].SinpleModel.mtxWorld, &g_ModelInfo[g_ModelInfo[SimpleModel].ParentNum].SinpleModel.mtxWorld);
 
-		}
 
-		//ワールドマトリックスの設定
-		pDevice->SetTransform(D3DTS_WORLD, &g_ModelInfo[SimpleModel].SinpleModel.mtxWorld);
+			//モデルの位置
+		//ワールドマトリックスの初期化
+			D3DXMatrixIdentity(&g_ModelInfo[SimpleModel].SinpleModel.mtxWorld);
 
-		//現在のマテリアルを取得
-		pDevice->GetMaterial(&matDef);
+			//向きを反映
+			D3DXMatrixRotationYawPitchRoll(&mtxRot, g_ModelInfo[SimpleModel].SinpleModel.rot.y, g_ModelInfo[SimpleModel].SinpleModel.rot.x, g_ModelInfo[SimpleModel].SinpleModel.rot.z);
 
-		//マテリアルデータへのポインタを取得
-		pMat = (D3DXMATERIAL*)g_pBuffMatSimpleModel[SimpleModel]->GetBufferPointer();
+			D3DXMatrixMultiply(&g_ModelInfo[SimpleModel].SinpleModel.mtxWorld, &g_ModelInfo[SimpleModel].SinpleModel.mtxWorld, &mtxRot);
 
-		for (int nCntMat = 0; nCntMat < (int)dwNumMatSimpleModel[SimpleModel]; nCntMat++)
-		{
-			//マテリアルの設定
-			pDevice->SetMaterial(&pMat[nCntMat].MatD3D);
+			//位置を反映
+			D3DXMatrixTranslation(&mtxTrans, g_ModelInfo[SimpleModel].SinpleModel.pos.x, g_ModelInfo[SimpleModel].SinpleModel.pos.y, g_ModelInfo[SimpleModel].SinpleModel.pos.z);
 
-			//テクスチャの設定
-			pDevice->SetTexture(0, NULL);//今回は設定しない
+			D3DXMatrixMultiply(&g_ModelInfo[SimpleModel].SinpleModel.mtxWorld, &g_ModelInfo[SimpleModel].SinpleModel.mtxWorld, &mtxTrans);
 
-			//モデル(パーツ)の描画
-			g_pMeshSimpleModel[SimpleModel]->DrawSubset(nCntMat);
+			//親子関係
+			if (g_ModelInfo[SimpleModel].ParentNum == g_ModelInfo[SimpleModel].MyNum)
+			{//自分が親
+				//プレイヤーとかける
+			//	D3DXMatrixMultiply(&g_Model.ModelParts[nCnt].mtxWorld, &g_Model.ModelParts[nCnt].mtxWorld, &g_Player.mtxWorld);
+			}
+			else
+			{
+				//自分の親のマトリックスかけてる
+				D3DXMatrixMultiply(&g_ModelInfo[SimpleModel].SinpleModel.mtxWorld, &g_ModelInfo[SimpleModel].SinpleModel.mtxWorld, &g_ModelInfo[g_ModelInfo[SimpleModel].ParentNum].SinpleModel.mtxWorld);
+
+			}
+
+			//ワールドマトリックスの設定
+			pDevice->SetTransform(D3DTS_WORLD, &g_ModelInfo[SimpleModel].SinpleModel.mtxWorld);
+
+			//現在のマテリアルを取得
+			pDevice->GetMaterial(&matDef);
+
+			//マテリアルデータへのポインタを取得
+			pMat = (D3DXMATERIAL*)g_pBuffMatSimpleModel[SimpleModel]->GetBufferPointer();
+
+			for (int nCntMat = 0; nCntMat < (int)dwNumMatSimpleModel[SimpleModel]; nCntMat++)
+			{
+				//マテリアルの設定
+				pDevice->SetMaterial(&pMat[nCntMat].MatD3D);
+
+				//テクスチャの設定
+				pDevice->SetTexture(0, NULL);//今回は設定しない
+
+				//モデル(パーツ)の描画
+				g_pMeshSimpleModel[SimpleModel]->DrawSubset(nCntMat);
+
+				//保存してたマテリアルを戻す
+		//		pDevice->SetMaterial(&matDef);
+			}
 
 			//保存してたマテリアルを戻す
 			pDevice->SetMaterial(&matDef);
+
+			//テクスチャを戻す
+			pDevice->SetTexture(0, NULL);
 		}
 	}
 }

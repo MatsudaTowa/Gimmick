@@ -7,22 +7,23 @@
 #include "game.h"
 #include "input.h"
 #include "fade.h"
-//#include "sound.h"
+#include "sound.h"
 #include "pause.h"
 #include "eyetrap.h"
 #include "camera.h"
 #include "light.h"
 #include "stage.h"
-#include "model.h"
+
+#include "player.h"//----------------------------------------------------------------------OK
+#include "player2.h"//---------------------------------------------------------------------NG
+#include "enemy.h"
 #include "enemy_view.h"
-#include "player.h"
-#include "player2.h"
 #include "moneybox.h"
 #include "moneyboxdigit.h"
 #include "bathgimmick.h"
 #include "steam.h"
 #include "password.h"
-#include "enemy.h"
+
 #include "shadow.h"
 #include "meshfield.h"
 #include "sky.h"
@@ -34,20 +35,18 @@
 #include "speechbubble.h"
 #include "text.h"
 
-#include"DebugModel.h"
-
+//#include"DebugModel.h"
 
 #include "item.h"
 #include "particle.h"
 #include"itemUI.h"
 #include "simple_motion_model.h"
-#include "advanced_motion_model.h"
+#include "advanced_motion_model.h"//---------------------------------------------------------------------１個目OK２個目NG
 #include "hitcollision_mistake_prevention.h"
+#include "map.h"
+
 //仮
 #include "Model_Set_Save_Lode.h"
-
-
-
 
 #include <stdio.h>//ヘッダーファイルをインクルード
 #include <string.h>//文字列を扱う変数
@@ -91,8 +90,7 @@ void InitGame(void)
 
 	g_EndGameFrame = GAME_END_DELAY;//クリアからゲーム終了までの余韻
 
-	InitPause();
-	
+
 	g_nLoopCnt = 0;//ゲームループリセット
 
 	g_nHaveKey = 0; //鍵保有数リセット
@@ -108,6 +106,10 @@ void InitGame(void)
 	g_bLever1 = false; //レバーオフ
 	g_bLever2 = false; //レバーオフ
 
+
+
+	InitPause();
+	
 	InitLight();
 	InitCamera();
 
@@ -143,28 +145,22 @@ void InitGame(void)
 	InitParticle();
 	InitSimpleModel();
 	InitEyeTrap();
-	//仕方なく仮
-	SetActionZone(D3DXVECTOR3(-50.0f, 0.0f, -500.0f), 200.0f, ACTION_TYPE_EYETRAP, D3DXCOLOR(0.0f, 1.0f, 1.0f, 0.8f));
+	InitMap();
 
-	//----------------------------制限時間
-	NowTime* pNowTime;
-	pNowTime = GetNowTime();
-	pNowTime->NowTime = g_EndFlame;//とりま60秒
-	InitLimitTime();
-	//-----------------------------
+	//仕方なく仮
+	//SetActionZone(D3DXVECTOR3(-50.0f, 0.0f, -500.0f), 200.0f, ACTION_TYPE_EYETRAP, D3DXCOLOR(0.0f, 1.0f, 1.0f, 0.8f));
 
 	
 
-	InitMeshField();//------------------------デバッグ
+	
 #if _DEBUG
+	InitMeshField();
 	if (GameLoopSave == false)
 	{
 	}
 
 	InitLine();
 
-	//デバッグモデル
-	//InitDebugModel();
 #endif
 
 	//デバッグ-------------------
@@ -172,8 +168,10 @@ void InitGame(void)
 	Model_DebugLoad();
 	Model_DebugSet();
 
+#if _DEBUG
 	//新規モデル置き場
 	NewSet_Debug_Model();
+#endif
 
 
 
@@ -183,8 +181,22 @@ void InitGame(void)
 #if _DEBUG
 
 	//デバッグモデル
-	InitDebugModel();
+//	InitDebugModel();
 #endif
+
+	//----------------------------制限時間
+	NowTime* pNowTime;
+	pNowTime = GetNowTime();
+	pNowTime->NowTime = g_EndFlame;//とりま60秒
+	InitLimitTime();
+	//-----------------------------
+
+
+
+
+
+	int test;
+	test = 0;
 }
 //=============================
 //ゲーム画面の終了処理
@@ -194,45 +206,105 @@ void UninitGame(void)
 	//振動ストップ
 	VibrationLeft(0);
 	VibrationRight(0);
-	UninitPause();
 
-	UninitLight();
-	UninitCamera();
-	UninitModel();
-	UninitStage();
-	UninitPlayer();
-	UninitPlayer_2P();
+//	UninitPause();
+//
+//	UninitLight();
+//	UninitCamera();
+//	UninitModel();
+//	UninitStage();
+//	UninitPlayer();
+//	UninitPlayer_2P();
+//	UninitShadow();
+//	UninitMoneybox();
+//	UninitMoneyboxDigit();
+//	UninitPassword();
+//	UninitBathGimmick();
+//	UninitSteam();
+//
+//	UninitSky();
+//
+//	UninitTransferGate();
+//	UninitActionZone();
+//	UninitGameFade();
+//	UninitLimitTime();
+//	UninitScreenUI();
+//	UninitSpeechBubble();
+//	UninitParticle();
+//	UninitItem();
+//	UninitItem_UI();
+//
+//	UninitMeshField();
+//	UninitSimpleModel();
+//	UninitAdvancedModel();
+//	UninitCollision_Pre();
+//	UninitEyeTrap();
+//	UninitMap();
+//#if _DEBUG
+//
+//	UninitLine();
+//	UninitDebugModel();
+//#endif
+
+	UninitLimitTime();//
+
+#if _DEBUG
+	//デバッグモデル
+//	UninitDebugModel();//
+#endif
+
+	
+
+#if _DEBUG
+	UninitLine();//
+
+	UninitMeshField();//
+#endif
+	UninitMap();//
+	UninitEyeTrap();//
+	UninitSimpleModel();//
+	UninitParticle();//
+	UninitSpeechBubble();//
+	UninitScreenUI();//
+	UninitGameFade();//
+	UninitActionZone();//
+	UninitCollision_Pre();//
+	UninitTransferGate();//
+	UninitSky();//
+	UninitPlayer_2P();//
+	UninitPlayer();//
 	UninitEnemy();
 	UninitEnemy_View();
-	UninitShadow();
-	UninitMoneybox();
-	UninitMoneyboxDigit();
-	UninitPassword();
-	UninitBathGimmick();
-	UninitSteam();
+	UninitSteam();//
+	UninitBathGimmick();//
+	UninitPassword();//
+	UninitMoneyboxDigit();//
+	UninitMoneybox();//
+	UninitShadow();//
+	UninitAdvancedModel();//
+	UninitStage();//
+	LoadModel();//
+	UninitModel();//
+	UninitItem_UI();//
+	UninitItem();//
+	UninitCamera();//
+	UninitLight();//
 
-	UninitSky();
+	UninitPause();//--------------------
 
-	UninitTransferGate();
-	UninitActionZone();
-	UninitGameFade();
-	UninitLimitTime();
-	UninitScreenUI();
-	UninitSpeechBubble();
-	UninitParticle();
-	UninitItem();
-	UninitItem_UI();
 
-	UninitMeshField();
-	UninitSimpleModel();
-	UninitAdvancedModel();
-	UninitCollision_Pre();
-	UninitEyeTrap();
-#if _DEBUG
 
-	UninitLine();
-	UninitDebugModel();
-#endif
+
+
+
+
+
+
+
+
+
+
+
 
 }
 //=============================
@@ -269,10 +341,8 @@ void UpdateGame(void)
 		UpdateLimitTime();
 
 		//--------------------------------------------------------------------------------クリア、敗北条件
-		if (GetkeyboardPress(DIK_O) == true)//トリガー
+		if (GetkeyboardPress(DIK_O) == true /*|| GetJoypadTrigger(JOYKEY_A, 0) == true*/)
 		{//oが押された(デバッグ用)
-
-		
 			//モード設定(フェードの後リザルト画面に移行)
 			SetFade(MODE_RESULT);
 		}
@@ -293,10 +363,9 @@ void UpdateGame(void)
 		{//F1が押された(デバッグ用)
 
 #if _DEBUG
-			DeleteCoveredModel();
+	//		DeleteCoveredModel();
 #endif
 		}
-
 
 		if (g_ClearFlag == true)
 		{
@@ -313,8 +382,8 @@ void UpdateGame(void)
 		}
 
 		//------------------------------------ゲームオーバー条件変更
-		if (pNowtime->NowTime <= 0 || pPlayer->bUse == false || pPlayer2->bUse == false)
-		{//ゲームオーバー
+//		if (pNowtime->NowTime <= 0 || pPlayer->bUse == false || pPlayer2->bUse == false)
+//		{//ゲームオーバー
 			
 		 //振動ストップ
 			VibrationLeft(0);
@@ -322,7 +391,7 @@ void UpdateGame(void)
 
 			if (g_EndGameFrame > 0)
 			{//余韻用
-				g_EndGameFrame--;
+//				g_EndGameFrame--;
 			}
 			else
 			{//余韻がたった
@@ -330,7 +399,7 @@ void UpdateGame(void)
 				//モード設定(フェードの後リザルト画面に移行)
 				SetFade(MODE_RESULT);
 			}
-		}
+//		}
 		//--------------------------------------------------------------------------------クリア、敗北条件ここまで
 	
 		g_nLoopCnt++;//出現タイミングで使用
@@ -345,16 +414,16 @@ void UpdateGame(void)
 		UpdateAdvancedModel();
 
 		UpdateStage();
-
-//		UpdateMeshField();
-
+#if _DEBUG
+		UpdateMeshField();
+#endif
+		
 		UpdateItem();
 
 		UpdatePlayer();
 		UpdatePlayer_2P();
 		UpdateEnemy_View();
 		UpdateEnemy();
-
 
 		//--------------------プレイヤー
 
@@ -369,13 +438,16 @@ void UpdateGame(void)
 		}
 		//--------------------
 		UpdateItem_UI(bPlayer1inOK, bPlayer2inOK);//入力受付可能かどうか
+		UpdateMap(bPlayer1inOK, bPlayer2inOK);
 
 		UpdateSimpleModel();
 
 
 		if ((pPlayer->bMoneyBoxGimmick == true || pPlayer2->bMoneyBoxGimmick == true))
 		{
-			SetMonetbox(g_MoneyboxPlayer);
+
+			SetMonetbox(g_MoneyboxPlayer);//----------------------------------------------------------------------------------------------------------------------------------------------------------怪しい
+
 			if (g_bClearMoneybox == false)
 			{
 				UpdateMoneybox();
@@ -398,7 +470,7 @@ void UpdateGame(void)
 		UpdateShadow();
 #if _DEBUG
 		UpdateLine();
-		UpdateDebugModel();
+	//	UpdateDebugModel();
 #endif
 		UpdateScreenUI();
 		UpdateSpeechBubble();
@@ -407,6 +479,7 @@ void UpdateGame(void)
 		UpdateParticle();
 
 		UpdateCollision_Pre();
+
 	}
 	else
 	{//ポーズ中
@@ -442,20 +515,14 @@ void DrawGame(void)
 			1.0f,
 			0);
 
-		DrawMeshField();
+		
 #if _DEBUG
-
+		DrawMeshField();
 #endif
 		DrawSky();
 
 		DrawShadow();
-		if ((pPlayer->bMoneyBoxGimmick == true || pPlayer2->bMoneyBoxGimmick == true))
-		{
-			DrawMoneybox();
-			DrawMoneyboxDigit();
-			DrawPassword();
-
-		}
+		
 		DrawBathGimmick();
 		DrawSteam();
 		DrawModel();
@@ -470,15 +537,19 @@ void DrawGame(void)
 		DrawEnemy();
 
 #if _DEBUG
+		DrawTransferGate();
+		
+#endif
+		
+	
+
+#if _DEBUG
 		DrawCollision_Pre();
 		DrawActionZone();
 		DrawLine();
-		DrawDebugModel();
 		DrawEnemy_View();
+	//	DrawDebugModel();
 #endif
-
-		DrawTransferGate();
-	
 		//αテストを有効
 		pDevice->SetRenderState(D3DRS_ALPHATESTENABLE, TRUE);
 		pDevice->SetRenderState(D3DRS_ALPHAREF, 0);//基準値
@@ -520,9 +591,24 @@ void DrawGame(void)
 	DrawGameFade();
 	DrawLimitTime();
 	DrawScreenUI();
-	DrawItem_UI();
+
 	DrawEyeTrap();
 	DrawHaveKey(g_nHaveKey);
+
+	if ((pPlayer->bMoneyBoxGimmick == true || pPlayer2->bMoneyBoxGimmick == true))
+	{
+		DrawMoneybox();
+		DrawMoneyboxDigit();
+		DrawPassword();
+
+	}
+	
+		DrawItem_UI();
+		DrawMap();
+	
+
+
+
 
 	DrawTextSet(D3DXVECTOR3(550.0f, 490.0f, 0.0f), 20, FONT_AKABARASINDELERA, D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f), "F1で重なりモデルを削除(取扱注意)");
 	DrawTextSet(D3DXVECTOR3(550.0f, 660.0f, 0.0f), 20, FONT_AKABARASINDELERA, D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f), "F5キーでモデル配置をセーブ！一度のみ！");
@@ -530,7 +616,7 @@ void DrawGame(void)
 	DrawTextSet(D3DXVECTOR3(550.0f, 700.0f, 0.0f), 20, FONT_AKABARASINDELERA, D3DXCOLOR(1.0f, 1.0f, 0.0f, 1.0f), "Xボタンでとりあえずアイテム出現");
 
 
-	DrawDebugDelC0mment();
+//	DrawDebugDelC0mment();
 
 	if (g_bPause == true)
 	{
@@ -565,7 +651,7 @@ void LoadModel(void)
 		fread(&g_nUseModel, sizeof(int), 1, pFile);
 
 		//敵の使用数分、敵の読み込み
-		fread(&g_aModelInfo[0], sizeof(ModelInfo), g_nUseModel, pFile);
+	//	fread(&g_aModelInfo[0], sizeof(ModelInfo), g_nUseModel, pFile);
 
 		//ファイルを閉じる
 		fclose(pFile);
@@ -596,7 +682,7 @@ void LoadField(void)
 		fread(&g_nUseField, sizeof(int), 1, pFile);
 
 		//敵の使用数分、敵の読み込み
-		fread(&g_aFieldInfo[0], sizeof(FieldInfo), g_nUseField, pFile);
+	//	fread(&g_aFieldInfo[0], sizeof(FieldInfo), g_nUseField, pFile);
 
 		//ファイルを閉じる
 		fclose(pFile);
@@ -628,7 +714,7 @@ void LoadWall(void)
 		fread(&g_nUseWall, sizeof(int), 1, pFile);
 
 		//敵の使用数分、敵の読み込み
-		fread(&g_aWallInfo[0], sizeof(ModelInfo), g_nUseWall, pFile);
+	//	fread(&g_aWallInfo[0], sizeof(ModelInfo), g_nUseWall, pFile);
 
 		//ファイルを閉じる
 		fclose(pFile);
@@ -720,7 +806,7 @@ void BoxCollisionPlayer(D3DXVECTOR3 PlayerMin, D3DXVECTOR3 PlayerMax, D3DXVECTOR
 	//1Pのとき
 	if (PlayerIndex == 1)
 	{
-		bool OverPenetration = true;//過貫通疑惑を判定
+		bool OverPenetration = true;//過貫通疑惑を判定--の予定
 
 		Player* pPlayer;
 		pPlayer = GetPlayer();
@@ -815,7 +901,7 @@ void BoxCollisionPlayer(D3DXVECTOR3 PlayerMin, D3DXVECTOR3 PlayerMax, D3DXVECTOR
 		Player_2P* pPlayer2;
 		pPlayer2 = GetPlayer_2P();
 
-		bool OverPenetration = false;//過貫通疑惑を判定
+		bool OverPenetration = false;//過貫通疑惑を判定--の予定
 
 		//---------------------------------------X方向
 		if (PlayerMin.z < HitMax.z &&
@@ -919,8 +1005,180 @@ void BoxCollisionPlayer(D3DXVECTOR3 PlayerMin, D3DXVECTOR3 PlayerMax, D3DXVECTOR
 
 }
 
+
+
 //===================================
-//プレイヤー箱型当たり判定
+//プレイヤーとカメラの間の障害物判定
+//===================================
+void AdjustPlayerPositionToCollision_CAMERA(D3DXVECTOR3 playerPos, int CameraIndex,D3DXVECTOR3 HitMin, D3DXVECTOR3 HitMax)
+{
+	Player* pPlayer;
+	pPlayer = GetPlayer();
+	Player_2P* pPlayer2;
+	pPlayer2 = GetPlayer_2P();
+
+	Camera* pCamera;
+	pCamera = GetCamera();
+
+	// カメラとプレイヤーの直線上での当たり判定
+	D3DXVECTOR3 direction = pCamera[CameraIndex].posV - playerPos;//現在のプレイヤーとカメラの距離
+	D3DXVECTOR3 normalizedDir;
+	D3DXVec3Normalize(&normalizedDir, &direction);
+
+	// 当たり判定の結果を保存する変数
+	bool collision = false;
+	float collisionDistance = 0.0f;//衝突した距離
+
+	// プレイヤーからカメラに向かう方向にレイを飛ばして、障害物との当たり判定を行う
+	// （ここでは単純に箱型当たり判定を使用していますが、実際のゲームにおいてはより高度なアルゴリズムを使用することが一般的です）
+	while (collision==false)
+	{
+		D3DXVECTOR3 rayPos = playerPos + normalizedDir * collisionDistance;
+
+		if (rayPos.x < HitMax.x && rayPos.x > HitMin.x &&
+			rayPos.y < HitMax.y && rayPos.y > HitMin.y &&
+			rayPos.z < HitMax.z && rayPos.z > HitMin.z)
+		{
+			// 衝突が検知された場合、collisionDistanceを調整して再度判定
+			collision = true;
+		}
+
+		// レイの移動距離を増やして再度判定
+		collisionDistance += 0.5f;
+
+		// レイが一定距離(カメラとプレイヤーの距離)以上伸びた場合、無限ループを防ぐために抜ける
+		if (CAMERALENGTH < collisionDistance)
+		{
+			break;
+		}
+	}
+
+	// 衝突時にカメラの位置を調整
+	if (collision==true)
+	{
+		pCamera[CameraIndex].posV -= (normalizedDir * 0.98f);
+		pCamera[CameraIndex].move = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+		pCamera[CameraIndex].CameraLength = collisionDistance-3.0f;
+
+		if (collisionDistance < 46)
+		{//距離が短い
+			if (CameraIndex==0)
+			{//プレイヤー1
+				pPlayer->bTransparent = true;
+			}
+			else if (CameraIndex == 1)
+			{//プレイヤー2
+				pPlayer2->bTransparent = true;
+			}
+		}
+
+	}
+}
+//===================================
+//プレイヤーと注視点の間の障害物判定
+//===================================
+void AdjustPlayerPositionToCollision_VIEWPOS(D3DXVECTOR3 playerPos, int PlayerIndex, D3DXVECTOR3 HitMin, D3DXVECTOR3 HitMax)
+{
+	Player* pPlayer;
+	pPlayer = GetPlayer();
+	Player_2P* pPlayer2;
+	pPlayer2 = GetPlayer_2P();
+
+	View* pViewMtx = GetView();
+
+	View2* pViewMtx2 = GetView_2P();
+
+	HitMin -= D3DXVECTOR3(1.5f, 0.0f, 1.5f);
+	HitMax += D3DXVECTOR3(1.5f, 0.0f, 1.5f);
+
+
+	if (PlayerIndex == 0)
+	{
+		// 注視点とプレイヤーの直線上での当たり判定
+		D3DXVECTOR3 direction = D3DXVECTOR3(pViewMtx[1].ViewPosMtx._41, pViewMtx[1].ViewPosMtx._42, pViewMtx[1].ViewPosMtx._43) - playerPos;//方角制定
+		D3DXVECTOR3 normalizedDir;
+		D3DXVec3Normalize(&normalizedDir, &direction);
+
+		// 当たり判定の結果を保存する変数
+		bool collision = false;
+		float collisionDistance = 0.0f;//衝突した距離
+
+		while (collision == false)
+		{
+			D3DXVECTOR3 rayPos = playerPos + normalizedDir * collisionDistance;
+
+			if (rayPos.x < HitMax.x && rayPos.x > HitMin.x &&
+				rayPos.y < HitMax.y && rayPos.y > HitMin.y &&
+				rayPos.z < HitMax.z && rayPos.z > HitMin.z)
+			{
+				// 衝突が検知された場合、collisionDistanceを調整して再度判定
+				collision = true;
+			}
+
+			// レイの移動距離を増やして再度判定
+			collisionDistance += 0.5f;
+
+			// レイが一定距離(カメラとプレイヤーの距離)以上伸びた場合、無限ループを防ぐために抜ける
+			if (VIEWPOS.x < collisionDistance)
+			{
+				pViewMtx[1].ViewPos = VIEWPOS;
+				break;
+			}
+		}
+		// 衝突時にカメラの位置を調整
+		if (collision == true)
+		{
+			pViewMtx[1].ViewPosMtx._41 -= (normalizedDir.x* collisionDistance * 0.8f);
+			//pViewMtx[1].ViewPosMtx._42 -= (normalizedDir.y);
+			pViewMtx[1].ViewPosMtx._43 -= (normalizedDir.z * collisionDistance * 0.8f);
+		}
+	}
+	else if (PlayerIndex == 2)
+	{
+		// 注視点とプレイヤーの直線上での当たり判定
+		D3DXVECTOR3 direction = D3DXVECTOR3(pViewMtx2[1].ViewPosMtx._41, pViewMtx2[1].ViewPosMtx._42, pViewMtx2[1].ViewPosMtx._43) - playerPos;//方角制定
+		D3DXVECTOR3 normalizedDir;
+		D3DXVec3Normalize(&normalizedDir, &direction);
+
+		// 当たり判定の結果を保存する変数
+		bool collision = false;
+		float collisionDistance = 0.0f;//衝突した距離
+
+		while (collision == false)
+		{
+			D3DXVECTOR3 rayPos = playerPos + normalizedDir * collisionDistance;
+
+			if (rayPos.x < HitMax.x && rayPos.x > HitMin.x &&
+				rayPos.y < HitMax.y && rayPos.y > HitMin.y &&
+				rayPos.z < HitMax.z && rayPos.z > HitMin.z)
+			{
+				// 衝突が検知された場合、collisionDistanceを調整して再度判定
+				collision = true;
+			}
+
+			// レイの移動距離を増やして再度判定
+			collisionDistance += 0.5f;
+
+			// レイが一定距離(カメラとプレイヤーの距離)以上伸びた場合、無限ループを防ぐために抜ける
+			if (VIEWPOS.x < collisionDistance)
+			{
+				pViewMtx2[1].ViewPos = VIEWPOS;
+				break;
+			}
+		}
+
+		// 衝突時にカメラの位置を調整
+		if (collision == true)
+		{
+			pViewMtx2[1].ViewPosMtx._41 -= (normalizedDir.x * collisionDistance * 0.6f);
+			//pViewMtx[1].ViewPosMtx._42 -= (normalizedDir.y);
+			pViewMtx2[1].ViewPosMtx._43 -= (normalizedDir.z * collisionDistance * 0.6f);
+		}
+	}
+}
+
+//===================================
+//プレイヤーエネミー接触判定
 //===================================
 void BoxCollisionKill(D3DXVECTOR3 PlayerMin, D3DXVECTOR3 PlayerMax, D3DXVECTOR3 HitMin, D3DXVECTOR3 HitMax, int PlayerIndex)
 {//当たり判定
@@ -1117,30 +1375,6 @@ void BoxCollisionKill(D3DXVECTOR3 PlayerMin, D3DXVECTOR3 PlayerMax, D3DXVECTOR3 
 	}
 
 
-#if _DEBUG
-	// 上下の辺
-	SetLine(D3DXVECTOR3(HitMin.x, HitMax.y, HitMin.z), D3DXVECTOR3(HitMax.x, HitMax.y, HitMin.z), D3DXCOLOR(0.0f, 1.0f, 1.0f, 1.0f));
-	SetLine(D3DXVECTOR3(HitMin.x, HitMin.y, HitMin.z), D3DXVECTOR3(HitMax.x, HitMin.y, HitMin.z), D3DXCOLOR(0.0f, 1.0f, 1.0f, 1.0f));
-
-	SetLine(D3DXVECTOR3(HitMin.x, HitMax.y, HitMax.z), D3DXVECTOR3(HitMax.x, HitMax.y, HitMax.z), D3DXCOLOR(0.0f, 1.0f, 1.0f, 1.0f));
-	SetLine(D3DXVECTOR3(HitMin.x, HitMin.y, HitMax.z), D3DXVECTOR3(HitMax.x, HitMin.y, HitMax.z), D3DXCOLOR(0.0f, 1.0f, 1.0f, 1.0f));
-
-	// 側面の辺																											
-	SetLine(D3DXVECTOR3(HitMin.x, HitMin.y, HitMin.z), D3DXVECTOR3(HitMin.x, HitMax.y, HitMin.z), D3DXCOLOR(0.0f, 1.0f, 1.0f, 1.0f));
-	SetLine(D3DXVECTOR3(HitMax.x, HitMin.y, HitMin.z), D3DXVECTOR3(HitMax.x, HitMax.y, HitMin.z), D3DXCOLOR(0.0f, 1.0f, 1.0f, 1.0f));
-
-	SetLine(D3DXVECTOR3(HitMin.x, HitMin.y, HitMax.z), D3DXVECTOR3(HitMin.x, HitMax.y, HitMax.z), D3DXCOLOR(0.0f, 1.0f, 1.0f, 1.0f));
-	SetLine(D3DXVECTOR3(HitMax.x, HitMin.y, HitMax.z), D3DXVECTOR3(HitMax.x, HitMax.y, HitMax.z), D3DXCOLOR(0.0f, 1.0f, 1.0f, 1.0f));
-
-
-	// その他の辺																									   
-	SetLine(D3DXVECTOR3(HitMin.x, HitMin.y, HitMin.z), D3DXVECTOR3(HitMin.x, HitMin.y, HitMax.z), D3DXCOLOR(0.0f, 1.0f, 1.0f, 1.0f));
-	SetLine(D3DXVECTOR3(HitMax.x, HitMax.y, HitMin.z), D3DXVECTOR3(HitMax.x, HitMax.y, HitMax.z), D3DXCOLOR(0.0f, 1.0f, 1.0f, 1.0f));
-
-	SetLine(D3DXVECTOR3(HitMin.x, HitMax.y, HitMin.z), D3DXVECTOR3(HitMin.x, HitMax.y, HitMax.z), D3DXCOLOR(0.0f, 1.0f, 1.0f, 1.0f));
-	SetLine(D3DXVECTOR3(HitMax.x, HitMin.y, HitMin.z), D3DXVECTOR3(HitMax.x, HitMin.y, HitMax.z), D3DXCOLOR(0.0f, 1.0f, 1.0f, 1.0f));
-#endif
-
 }
 
 //===================================
@@ -1149,99 +1383,99 @@ void BoxCollisionKill(D3DXVECTOR3 PlayerMin, D3DXVECTOR3 PlayerMax, D3DXVECTOR3 
 void BoxCollisionEnemy(D3DXVECTOR3 EnemyMin, D3DXVECTOR3 EnemyMax, D3DXVECTOR3 HitMin, D3DXVECTOR3 HitMax)
 {//当たり判定
 
-		bool OverPenetration = true;//過貫通疑惑を判定
+	bool OverPenetration = true;//過貫通疑惑を判定
 
-		ENEMYMODEL* pEnemy;
-		pEnemy = GetEnemy();
+	ENEMYMODEL* pEnemy;
+	pEnemy = GetEnemy();
 
-		//---------------------------------------X方向
-		if (EnemyMin.z < HitMax.z &&
-			EnemyMax.z > HitMin.z &&
-			EnemyMax.x - pEnemy->pos.x + pEnemy->oldPos.x <= HitMin.x &&
-			EnemyMax.x > HitMin.x &&
-			EnemyMin.y < HitMax.y &&
-			EnemyMax.y > HitMin.y)
+	//---------------------------------------X方向
+	if (EnemyMin.z < HitMax.z &&
+		EnemyMax.z > HitMin.z &&
+		EnemyMax.x - pEnemy->pos.x + pEnemy->oldPos.x <= HitMin.x &&
+		EnemyMax.x > HitMin.x &&
+		EnemyMin.y < HitMax.y &&
+		EnemyMax.y > HitMin.y)
+	{
+		pEnemy->move.x = 0.0f;
+		pEnemy->pos.x = HitMin.x + (EnemyMin.x - pEnemy->pos.x) - 0.1f;
+
+		OverPenetration = false;
+
+		ActionEnemy(ACTIONPATTERN_ENEMY_WALK);
+	}
+
+	if (EnemyMin.z < HitMax.z &&
+		EnemyMax.z > HitMin.z &&
+		EnemyMin.x - pEnemy->pos.x + pEnemy->oldPos.x >= HitMax.x &&
+		EnemyMin.x < HitMax.x &&
+		EnemyMin.y < HitMax.y &&
+		EnemyMax.y > HitMin.y)
+	{
+		pEnemy->move.x = 0.0f;
+		pEnemy->pos.x = HitMax.x + (EnemyMax.x - pEnemy->pos.x) + 0.1f;
+		OverPenetration = false;
+		ActionEnemy(ACTIONPATTERN_ENEMY_WALK);
+
+	}
+
+	//---------------------------------------Z方向
+	if (EnemyMin.x < HitMax.x &&
+		EnemyMax.x > HitMin.x &&
+		EnemyMin.z - pEnemy->pos.z + pEnemy->oldPos.z >= HitMax.z &&
+		EnemyMin.z < HitMax.z &&
+		EnemyMin.y < HitMax.y &&
+		EnemyMax.y > HitMin.y)
+	{
+		pEnemy->move.z = 0.0f;
+		pEnemy->pos.z = HitMax.z - (EnemyMin.z - pEnemy->pos.z) + 0.1f;
+		OverPenetration = false;
+		ActionEnemy(ACTIONPATTERN_ENEMY_WALK);
+
+	}
+
+	if (EnemyMin.x < HitMax.x &&
+		EnemyMax.x > HitMin.x &&
+		EnemyMax.z - pEnemy->pos.z + pEnemy->oldPos.z <= HitMin.z &&
+		EnemyMax.z > HitMin.z &&
+		EnemyMin.y < HitMax.y &&
+		EnemyMax.y > HitMin.y)
+	{
+		pEnemy->move.z = 0.0f;
+		pEnemy->pos.z = HitMin.z - (EnemyMax.z - pEnemy->pos.z) - 0.1f;
+		OverPenetration = false;
+		ActionEnemy(ACTIONPATTERN_ENEMY_WALK);
+
+	}
+
+	//------------------------------------Y方向
+	if (EnemyMin.x < HitMax.x &&
+		EnemyMax.x > HitMin.x &&
+		EnemyMin.z < HitMax.z &&
+		EnemyMax.z > HitMin.z &&
+		EnemyMin.y - pEnemy->pos.y + pEnemy->oldPos.y >= HitMax.y &&
+		EnemyMin.y < HitMax.y)
+	{
+		pEnemy->move.y = 0.0f;
+		pEnemy->pos.y = HitMax.y + (EnemyMin.y - pEnemy->pos.y);
+
+		if (pEnemy->NowMotionDOWN == MOTIONTYPE_ENEMY_JUMP)
 		{
-			pEnemy->move.x = 0.0f;
-			pEnemy->pos.x = HitMin.x + (EnemyMin.x - pEnemy->pos.x) - 0.1f;
-
-			OverPenetration = false;
-
-			ActionEnemy(ACTIONPATTERN_ENEMY_WALK);
+			pEnemy->NowMotionDOWN = MOTIONTYPE_ENEMY_RANDING;
+		}
+		else if (pEnemy->NowMotionDOWN == MOTIONTYPE_ENEMY_MOVE)
+		{
+			pEnemy->NowMotionDOWN = MOTIONTYPE_ENEMY_MOVE;
 		}
 
-		if (EnemyMin.z < HitMax.z &&
-			EnemyMax.z > HitMin.z &&
-			EnemyMin.x - pEnemy->pos.x + pEnemy->oldPos.x >= HitMax.x &&
-			EnemyMin.x < HitMax.x &&
-			EnemyMin.y < HitMax.y &&
-			EnemyMax.y > HitMin.y)
-		{
-			pEnemy->move.x = 0.0f;
-			pEnemy->pos.x = HitMax.x + (EnemyMax.x - pEnemy->pos.x) + 0.1f;
-			OverPenetration = false;
-			ActionEnemy(ACTIONPATTERN_ENEMY_WALK);
-
-		}
-
-		//---------------------------------------Z方向
-		if (EnemyMin.x < HitMax.x &&
-			EnemyMax.x > HitMin.x &&
-			EnemyMin.z - pEnemy->pos.z + pEnemy->oldPos.z >= HitMax.z &&
-			EnemyMin.z < HitMax.z &&
-			EnemyMin.y < HitMax.y &&
-			EnemyMax.y > HitMin.y)
-		{
-			pEnemy->move.z = 0.0f;
-			pEnemy->pos.z = HitMax.z - (EnemyMin.z - pEnemy->pos.z) + 0.1f;
-			OverPenetration = false;
-			ActionEnemy(ACTIONPATTERN_ENEMY_WALK);
-
-		}
-
-		if (EnemyMin.x < HitMax.x &&
-			EnemyMax.x > HitMin.x &&
-			EnemyMax.z - pEnemy->pos.z + pEnemy->oldPos.z <= HitMin.z &&
-			EnemyMax.z > HitMin.z &&
-			EnemyMin.y < HitMax.y &&
-			EnemyMax.y > HitMin.y)
-		{
-			pEnemy->move.z = 0.0f;
-			pEnemy->pos.z = HitMin.z - (EnemyMax.z - pEnemy->pos.z) - 0.1f;
-			OverPenetration = false;
-			ActionEnemy(ACTIONPATTERN_ENEMY_WALK);
-
-		}
-
-		//------------------------------------Y方向
-		if (EnemyMin.x < HitMax.x &&
-			EnemyMax.x > HitMin.x &&
-			EnemyMin.z < HitMax.z &&
-			EnemyMax.z > HitMin.z &&
-			EnemyMin.y - pEnemy->pos.y + pEnemy->oldPos.y >= HitMax.y &&
-			EnemyMin.y < HitMax.y)
-		{
-			pEnemy->move.y = 0.0f;
-			pEnemy->pos.y = HitMax.y + (EnemyMin.y - pEnemy->pos.y);
-
-			if (pEnemy->NowMotionDOWN == MOTIONTYPE_ENEMY_JUMP)
-			{
-				pEnemy->NowMotionDOWN = MOTIONTYPE_ENEMY_RANDING;
-			}
-			else if (pEnemy->NowMotionDOWN == MOTIONTYPE_ENEMY_MOVE)
-			{
-				pEnemy->NowMotionDOWN = MOTIONTYPE_ENEMY_MOVE;
-			}
-
-			pEnemy->bLandingNow = true;
-			OverPenetration = false;
-		}
+		pEnemy->bLandingNow = true;
+		OverPenetration = false;
+	}
 
 
-		if (OverPenetration == false)
-		{
+	if (OverPenetration == false)
+	{
 
-		}
+	}
 
 #if _DEBUG
 	// 上下の辺
@@ -1268,277 +1502,6 @@ void BoxCollisionEnemy(D3DXVECTOR3 EnemyMin, D3DXVECTOR3 EnemyMax, D3DXVECTOR3 H
 #endif
 
 }
-
-////===================================
-////カメラ箱型当たり判定---モデル
-////===================================
-//void BoxCollisionCamera(D3DXVECTOR3 CameraMin, D3DXVECTOR3 CameraMax, D3DXVECTOR3 HitMin, D3DXVECTOR3 HitMax, int CameraIndex)
-//{//当たり判定
-//	//LPDIRECT3DDEVICE9 pDevice = GetDevice();
-//
-//
-//		Camera* pCamera;
-//		pCamera = GetCamera();
-//
-//		//---------------------------------------X方向
-//		if (CameraMin.z < HitMax.z &&
-//			CameraMax.z > HitMin.z &&
-//			CameraMax.x - pCamera[CameraIndex].posV.x +pCamera[CameraIndex].OldPosV.x <= HitMin.x &&
-//			CameraMax.x > HitMin.x &&
-//			CameraMin.y < HitMax.y &&
-//			CameraMax.y > HitMin.y)
-//		{
-//			pCamera[CameraIndex].move.x = 0.0f;
-////			pCamera[CameraIndex].posV.x = HitMin.x + (CameraMin.x - pCamera[CameraIndex].posV.x) - 0.1f;
-//		}
-//
-//		if (CameraMin.z < HitMax.z &&
-//			CameraMax.z > HitMin.z &&
-//			CameraMin.x - pCamera[CameraIndex].posV.x +pCamera[CameraIndex].OldPosV.x >= HitMax.x &&
-//			CameraMin.x < HitMax.x &&
-//			CameraMin.y < HitMax.y &&
-//			CameraMax.y > HitMin.y)
-//		{
-//			pCamera[CameraIndex].move.x = 0.0f;
-////			pCamera[CameraIndex].posV.x = HitMax.x + (CameraMax.x - pCamera[CameraIndex].posV.x) + 0.1f;
-//		}
-//
-//		//---------------------------------------Z方向
-//		if (CameraMin.x < HitMax.x &&
-//			CameraMax.x > HitMin.x &&
-//			CameraMin.z - pCamera[CameraIndex].posV.z +pCamera[CameraIndex].OldPosV.z >= HitMax.z &&
-//			CameraMin.z < HitMax.z &&
-//			CameraMin.y < HitMax.y &&
-//			CameraMax.y > HitMin.y)
-//		{
-//			pCamera[CameraIndex].move.z = 0.0f;
-////			pCamera[CameraIndex].posV.z = HitMax.z - (CameraMin.z - pCamera[CameraIndex].posV.z) + 0.1f;
-//		}
-//
-//		if (CameraMin.x < HitMax.x &&
-//			CameraMax.x > HitMin.x &&
-//			CameraMax.z - pCamera[CameraIndex].posV.z +pCamera[CameraIndex].OldPosV.z <= HitMin.z &&
-//			CameraMax.z > HitMin.z &&
-//			CameraMin.y < HitMax.y &&
-//			CameraMax.y > HitMin.y)
-//		{
-//			pCamera[CameraIndex].move.z = 0.0f;
-////			pCamera[CameraIndex].posV.z = HitMin.z - (CameraMax.z - pCamera[CameraIndex].posV.z) - 0.1f;
-//		}
-//
-//		//------------------------------------Y方向
-//		if (CameraMin.x < HitMax.x &&
-//			CameraMax.x > HitMin.x &&
-//			CameraMin.z < HitMax.z &&
-//			CameraMax.z > HitMin.z &&
-//			CameraMin.y - pCamera[CameraIndex].posV.y +pCamera[CameraIndex].OldPosV.y >= HitMax.y &&
-//			CameraMin.y < HitMax.y)
-//		{
-//			pCamera[CameraIndex].move.y = 0.0f;
-////			pCamera[CameraIndex].posV.y = HitMax.y + (CameraMin.y - pCamera[CameraIndex].posV.y);
-//
-//		}
-//	
-//
-//
-//	//// 上下の辺
-//	//SetLine(D3DXVECTOR3(HitMin.x, HitMax.y, HitMin.z), D3DXVECTOR3(HitMax.x, HitMax.y, HitMin.z), D3DXCOLOR(0.0f, 1.0f, 1.0f, 1.0f));
-//	//SetLine(D3DXVECTOR3(HitMin.x, HitMin.y, HitMin.z), D3DXVECTOR3(HitMax.x, HitMin.y, HitMin.z), D3DXCOLOR(0.0f, 1.0f, 1.0f, 1.0f));
-//	//																													
-//	//SetLine(D3DXVECTOR3(HitMin.x, HitMax.y, HitMax.z), D3DXVECTOR3(HitMax.x, HitMax.y, HitMax.z), D3DXCOLOR(0.0f, 1.0f, 1.0f, 1.0f));
-//	//SetLine(D3DXVECTOR3(HitMin.x, HitMin.y, HitMax.z), D3DXVECTOR3(HitMax.x, HitMin.y, HitMax.z), D3DXCOLOR(0.0f, 1.0f, 1.0f, 1.0f));
-//	//																													
-//	//// 側面の辺																											
-//	//SetLine(D3DXVECTOR3(HitMin.x, HitMin.y, HitMin.z), D3DXVECTOR3(HitMin.x, HitMax.y, HitMin.z), D3DXCOLOR(0.0f, 1.0f, 1.0f, 1.0f));
-//	//SetLine(D3DXVECTOR3(HitMax.x, HitMin.y, HitMin.z), D3DXVECTOR3(HitMax.x, HitMax.y, HitMin.z), D3DXCOLOR(0.0f, 1.0f, 1.0f, 1.0f));
-//	//																													
-//	//SetLine(D3DXVECTOR3(HitMin.x, HitMin.y, HitMax.z), D3DXVECTOR3(HitMin.x, HitMax.y, HitMax.z), D3DXCOLOR(0.0f, 1.0f, 1.0f, 1.0f));
-//	//SetLine(D3DXVECTOR3(HitMax.x, HitMin.y, HitMax.z), D3DXVECTOR3(HitMax.x, HitMax.y, HitMax.z), D3DXCOLOR(0.0f, 1.0f, 1.0f, 1.0f));
-//	//																													
-//	//																													
-//	//// その他の辺																									   
-//	//SetLine(D3DXVECTOR3(HitMin.x, HitMin.y, HitMin.z), D3DXVECTOR3(HitMin.x, HitMin.y, HitMax.z), D3DXCOLOR(0.0f, 1.0f, 1.0f, 1.0f));
-//	//SetLine(D3DXVECTOR3(HitMax.x, HitMax.y, HitMin.z), D3DXVECTOR3(HitMax.x, HitMax.y, HitMax.z), D3DXCOLOR(0.0f, 1.0f, 1.0f, 1.0f));
-//	//																													
-//	//SetLine(D3DXVECTOR3(HitMin.x, HitMax.y, HitMin.z), D3DXVECTOR3(HitMin.x, HitMax.y, HitMax.z), D3DXCOLOR(0.0f, 1.0f, 1.0f, 1.0f));
-//	//SetLine(D3DXVECTOR3(HitMax.x, HitMin.y, HitMin.z), D3DXVECTOR3(HitMax.x, HitMin.y, HitMax.z), D3DXCOLOR(0.0f, 1.0f, 1.0f, 1.0f));
-//
-//}
-
-
-//===================================
-//プレイヤーとカメラの間の障害物判定
-//===================================
-void AdjustPlayerPositionToCollision_CAMERA(D3DXVECTOR3 playerPos, int CameraIndex,D3DXVECTOR3 HitMin, D3DXVECTOR3 HitMax)
-{
-	Player* pPlayer;
-	pPlayer = GetPlayer();
-	Player_2P* pPlayer2;
-	pPlayer2 = GetPlayer_2P();
-
-	Camera* pCamera;
-	pCamera = GetCamera();
-
-	// カメラとプレイヤーの直線上での当たり判定
-	D3DXVECTOR3 direction = pCamera[CameraIndex].posV - playerPos;//現在のプレイヤーとカメラの距離
-	D3DXVECTOR3 normalizedDir;
-	D3DXVec3Normalize(&normalizedDir, &direction);
-
-	// 当たり判定の結果を保存する変数
-	bool collision = false;
-	float collisionDistance = 0.0f;//衝突した距離
-
-	// プレイヤーからカメラに向かう方向にレイを飛ばして、障害物との当たり判定を行う
-	// （ここでは単純に箱型当たり判定を使用していますが、実際のゲームにおいてはより高度なアルゴリズムを使用することが一般的です）
-	while (collision==false)
-	{
-		D3DXVECTOR3 rayPos = playerPos + normalizedDir * collisionDistance;
-
-		if (rayPos.x < HitMax.x && rayPos.x > HitMin.x &&
-			rayPos.y < HitMax.y && rayPos.y > HitMin.y &&
-			rayPos.z < HitMax.z && rayPos.z > HitMin.z)
-		{
-			// 衝突が検知された場合、collisionDistanceを調整して再度判定
-			collision = true;
-		}
-
-		// レイの移動距離を増やして再度判定
-		collisionDistance += 0.5f;
-
-		// レイが一定距離(カメラとプレイヤーの距離)以上伸びた場合、無限ループを防ぐために抜ける
-		if (CAMERALENGTH < collisionDistance)
-		{
-			break;
-		}
-	}
-
-	// 衝突時にカメラの位置を調整
-	if (collision==true)
-	{
-		pCamera[CameraIndex].posV -= (normalizedDir * 0.98f);
-		pCamera[CameraIndex].move = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-		pCamera[CameraIndex].CameraLength = collisionDistance-3.0f;
-
-		if (collisionDistance < 46)
-		{//距離が短い
-			if (CameraIndex==0)
-			{//プレイヤー1
-				pPlayer->bTransparent = true;
-			}
-			else if (CameraIndex == 1)
-			{//プレイヤー2
-				pPlayer2->bTransparent = true;
-			}
-		}
-
-	}
-}
-//===================================
-//プレイヤーと注視点の間の障害物判定
-//===================================
-void AdjustPlayerPositionToCollision_VIEWPOS(D3DXVECTOR3 playerPos, int PlayerIndex, D3DXVECTOR3 HitMin, D3DXVECTOR3 HitMax)
-{
-	Player* pPlayer;
-	pPlayer = GetPlayer();
-	Player_2P* pPlayer2;
-	pPlayer2 = GetPlayer_2P();
-
-	View* pViewMtx = GetView();
-
-	View2* pViewMtx2 = GetView_2P();
-
-	HitMin -= D3DXVECTOR3(1.5f, 0.0f, 1.5f);
-	HitMax += D3DXVECTOR3(1.5f, 0.0f, 1.5f);
-
-
-	if (PlayerIndex == 0)
-	{
-		// 注視点とプレイヤーの直線上での当たり判定
-		D3DXVECTOR3 direction = D3DXVECTOR3(pViewMtx[1].ViewPosMtx._41, pViewMtx[1].ViewPosMtx._42, pViewMtx[1].ViewPosMtx._43) - playerPos;//方角制定
-		D3DXVECTOR3 normalizedDir;
-		D3DXVec3Normalize(&normalizedDir, &direction);
-
-		// 当たり判定の結果を保存する変数
-		bool collision = false;
-		float collisionDistance = 0.0f;//衝突した距離
-
-		while (collision == false)
-		{
-			D3DXVECTOR3 rayPos = playerPos + normalizedDir * collisionDistance;
-
-			if (rayPos.x < HitMax.x && rayPos.x > HitMin.x &&
-				rayPos.y < HitMax.y && rayPos.y > HitMin.y &&
-				rayPos.z < HitMax.z && rayPos.z > HitMin.z)
-			{
-				// 衝突が検知された場合、collisionDistanceを調整して再度判定
-				collision = true;
-			}
-
-			// レイの移動距離を増やして再度判定
-			collisionDistance += 0.5f;
-
-			// レイが一定距離(カメラとプレイヤーの距離)以上伸びた場合、無限ループを防ぐために抜ける
-			if (VIEWPOS.x < collisionDistance)
-			{
-				pViewMtx[1].ViewPos = VIEWPOS;
-				break;
-			}
-		}
-		// 衝突時にカメラの位置を調整
-		if (collision == true)
-		{
-			pViewMtx[1].ViewPosMtx._41 -= (normalizedDir.x* collisionDistance * 0.8f);
-			//pViewMtx[1].ViewPosMtx._42 -= (normalizedDir.y);
-			pViewMtx[1].ViewPosMtx._43 -= (normalizedDir.z * collisionDistance * 0.8f);
-		}
-	}
-	else if (PlayerIndex == 2)
-	{
-		// 注視点とプレイヤーの直線上での当たり判定
-		D3DXVECTOR3 direction = D3DXVECTOR3(pViewMtx2[1].ViewPosMtx._41, pViewMtx2[1].ViewPosMtx._42, pViewMtx2[1].ViewPosMtx._43) - playerPos;//方角制定
-		D3DXVECTOR3 normalizedDir;
-		D3DXVec3Normalize(&normalizedDir, &direction);
-
-		// 当たり判定の結果を保存する変数
-		bool collision = false;
-		float collisionDistance = 0.0f;//衝突した距離
-
-		while (collision == false)
-		{
-			D3DXVECTOR3 rayPos = playerPos + normalizedDir * collisionDistance;
-
-			if (rayPos.x < HitMax.x && rayPos.x > HitMin.x &&
-				rayPos.y < HitMax.y && rayPos.y > HitMin.y &&
-				rayPos.z < HitMax.z && rayPos.z > HitMin.z)
-			{
-				// 衝突が検知された場合、collisionDistanceを調整して再度判定
-				collision = true;
-			}
-
-			// レイの移動距離を増やして再度判定
-			collisionDistance += 0.5f;
-
-			// レイが一定距離(カメラとプレイヤーの距離)以上伸びた場合、無限ループを防ぐために抜ける
-			if (VIEWPOS.x < collisionDistance)
-			{
-				pViewMtx2[1].ViewPos = VIEWPOS;
-				break;
-			}
-		}
-
-		// 衝突時にカメラの位置を調整
-		if (collision == true)
-		{
-			pViewMtx2[1].ViewPosMtx._41 -= (normalizedDir.x * collisionDistance * 0.6f);
-			//pViewMtx[1].ViewPosMtx._42 -= (normalizedDir.y);
-			pViewMtx2[1].ViewPosMtx._43 -= (normalizedDir.z * collisionDistance * 0.6f);
-		}
-	}
-}
-
-
-
-
 
 
 
@@ -2455,7 +2418,7 @@ void SphereEnemyView(D3DXVECTOR3 PlayerPos, int PlayerIndex, int ZoneIndex)
 	{//差分の距離が半径より短い==円の中にいる時
 		bIn = true;//接触判定
 	}
-	
+
 	if (PlayerIndex == 0)
 	{
 		if (bIn == true)
@@ -2485,7 +2448,6 @@ void SphereEnemyView(D3DXVECTOR3 PlayerPos, int PlayerIndex, int ZoneIndex)
 		}
 	}
 }
-
 
 //===================================
 //プレイヤー箱型当たり判定--アイテム

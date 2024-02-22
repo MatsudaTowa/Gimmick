@@ -147,7 +147,11 @@ void DrawPassword(void)
 		pDevice->DrawPrimitive(D3DPT_TRIANGLESTRIP,//プリミティブの種類//----------書き換え済み
 			nCnt * 4,//描画する最初の頂点インデックス
 			2);//描画するプリミティブ数
+		
+	
 	}
+	//テクスチャを戻す
+		pDevice->SetTexture(0, NULL);
 }
 
 void SetPassword(void)

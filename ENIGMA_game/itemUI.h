@@ -16,7 +16,7 @@
 #include "item.h"
 
 #define ITEMTEXUINUM	(8)//テクスチャ最大数
-#define MAXITEMUI	(74)//最大数
+#define MAXITEMUI	(32)//最大数
 
 #define ITEMUISIZE	(32.0f)//サイズ
 #define ITEMUISIZE2	(26.0f)//サイズ

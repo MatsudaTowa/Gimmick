@@ -29,7 +29,7 @@
 
 //マクロ定義
 #define CLASS_NAME	"windowclass"			//	ウィンドウクラスの名前
-#define WINDOW_NAME	"DESTINATION THE SKY"	//ウィンドウの名前（キャプションに表示）
+#define WINDOW_NAME	" ENIGMA"	//ウィンドウの名前（キャプションに表示）
 
 #define SCREEN_WIDE	(1280)//ウィンドウの幅
 #define SCREEN_HEIGHT	(720)//ウィンドウの高さ
@@ -79,6 +79,7 @@ typedef enum
 	MODE_GAME,//ゲーム画面
 	MODE_RESULT,//リザルト画面
 	MODE_TUTORIAL,//チュートリアル画面
+	MODE_MENU,//メニュー画面
 	MODE_MAX,
 }MODE;
 

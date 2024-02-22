@@ -130,6 +130,21 @@
     <Filter Include="ソース ファイル\--++|    GAME   |++--\//Stage%28Arrangements%29//\HITCOLLISION＿MISTAKE_PREVENTION">
       <UniqueIdentifier>{56c79d5a-e0c7-4b9d-b559-bd9a6465bf1a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\--++|    GAME   |++--\//GAME_SYSTEM//\MAP">
+      <UniqueIdentifier>{6c91049a-b69a-4d7e-bdf9-34c15fd29e7c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\--++|    MENU   |++--">
+      <UniqueIdentifier>{84d24b74-314d-4765-9716-6a39b6781e99}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\--++|    MENU   |++--\Film">
+      <UniqueIdentifier>{80c461f3-620a-41fe-9535-0ea889d5f8af}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\--++|    MENU   |++--\MenuFrame">
+      <UniqueIdentifier>{a1c111ca-1f41-4006-9f05-f85984e2c3dc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\--++|    GAME   |++--\//3D_Model//\ENEMY">
+      <UniqueIdentifier>{80e06431-54ab-4a6e-ae5f-9409b59064c4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="input.cpp">
@@ -255,11 +270,26 @@
     <ClCompile Include="eyetrap.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
+    <ClCompile Include="menu.cpp">
+      <Filter>ソース ファイル\--++|    MENU   |++--</Filter>
+    </ClCompile>
+    <ClCompile Include="map.cpp">
+      <Filter>ソース ファイル\--++|    GAME   |++--\//GAME_SYSTEM//\MAP</Filter>
+    </ClCompile>
+    <ClCompile Include="Film.cpp">
+      <Filter>ソース ファイル\--++|    MENU   |++--\Film</Filter>
+    </ClCompile>
+    <ClCompile Include="MenuFrame.cpp">
+      <Filter>ソース ファイル\--++|    MENU   |++--\MenuFrame</Filter>
+    </ClCompile>
+    <ClCompile Include="corkboard.cpp">
+      <Filter>ソース ファイル\--++|    MENU   |++--\MenuFrame</Filter>
+    </ClCompile>
     <ClCompile Include="enemy.cpp">
-      <Filter>ソース ファイル</Filter>
+      <Filter>ソース ファイル\--++|    GAME   |++--\//3D_Model//\ENEMY</Filter>
     </ClCompile>
     <ClCompile Include="enemy_view.cpp">
-      <Filter>ソース ファイル</Filter>
+      <Filter>ソース ファイル\--++|    GAME   |++--\//3D_Model//\ENEMY</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -329,6 +359,9 @@
     <ClInclude Include="gamefade.h">
       <Filter>ソース ファイル\--++|    GAME   |++--\//GAME_SYSTEM//\GAMEFADE</Filter>
     </ClInclude>
+    <ClInclude Include="limittime.h">
+      <Filter>ソース ファイル\--++|    GAME   |++--\//GAME_SYSTEM//\LIMITTIME</Filter>
+    </ClInclude>
     <ClInclude Include="screenui.h">
       <Filter>ソース ファイル\--++|    GAME   |++--\//GAME_SYSTEM//\SCREEN_UI</Filter>
     </ClInclude>
@@ -383,14 +416,26 @@
     <ClInclude Include="eyetrap.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="enemy.h">
-      <Filter>ヘッダー ファイル</Filter>
+    <ClInclude Include="menu.h">
+      <Filter>ソース ファイル\--++|    MENU   |++--</Filter>
     </ClInclude>
-    <ClInclude Include="limittime.h">
-      <Filter>ソース ファイル\--++|    GAME   |++--\//GAME_SYSTEM//\LIMITTIME</Filter>
+    <ClInclude Include="map.h">
+      <Filter>ソース ファイル\--++|    GAME   |++--\//GAME_SYSTEM//\MAP</Filter>
+    </ClInclude>
+    <ClInclude Include="Film.h">
+      <Filter>ソース ファイル\--++|    MENU   |++--\Film</Filter>
+    </ClInclude>
+    <ClInclude Include="MenuFrame.h">
+      <Filter>ソース ファイル\--++|    MENU   |++--\MenuFrame</Filter>
+    </ClInclude>
+    <ClInclude Include="corkboard.h">
+      <Filter>ソース ファイル\--++|    MENU   |++--\MenuFrame</Filter>
+    </ClInclude>
+    <ClInclude Include="enemy.h">
+      <Filter>ソース ファイル\--++|    GAME   |++--\//3D_Model//\ENEMY</Filter>
     </ClInclude>
     <ClInclude Include="enemy_view.h">
-      <Filter>ヘッダー ファイル</Filter>
+      <Filter>ソース ファイル\--++|    GAME   |++--\//3D_Model//\ENEMY</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -23,7 +23,7 @@ LPD3DXBUFFER g_pBuffMatModel_AD[MODEL_AD_TYPE_MAX][MAX_PARTS_AD] = {};//マテリア
 
 DWORD dwNumMatModel_AD[MODEL_AD_TYPE_MAX][MAX_PARTS_AD] = {};//マテリアルの数
 
-LPDIRECT3DTEXTURE9 g_apTextureModel_AD[MODEL_AD_TYPE_MAX][NUM_TEXTURE_AD] = {}; //テクスチャポインタ
+//PDIRECT3DTEXTURE9 g_apTextureModel_AD[MODEL_AD_TYPE_MAX][MAX_PARTS_AD][NUM_TEXTURE_AD] = {}; //テクスチャポインタ
 
 MODEL_AD g_Model3[MODEL_AD_TYPE_MAX];//モデル全体
 //--------------------------------------------------------------------------
@@ -45,11 +45,17 @@ typedef struct
 MODELADINFO g_ModelMotionInfo[MODEL_AD_TYPE_MAX] =
 {							//自分-----------------親
 	{"data\\motionEnigma.txt",MODEL_AD_TYPE_Test1},//テストのため書き換え必須
-	{"data\\motion_tituzyo_noleg.txt",MODEL_AD_TYPE_Test2},
+	{"data\\motionEnigma.txt",MODEL_AD_TYPE_Test2},
 };
+//**************************
+//   2/20　　テクスチャは正常動作しない！！！！！メモリリークがおきる！
+//**************************
 
 
 
+//各モーションのモデル数
+int g_nEscapeCntModel[MODEL_AD_TYPE_MAX] = {};
+char g_cModelFileName[MODEL_AD_TYPE_MAX][MAX_PARTS_AD][MAX_WORD2_AD] = {};//パス格納
 
 
 
@@ -60,6 +66,8 @@ void InitAdvancedModel(void)
 {
 	for (int ModelNum = 0; ModelNum < MODEL_AD_TYPE_MAX; ModelNum++)
 	{
+		g_nEscapeCntModel[ModelNum] = 0;
+
 		//とりあえずパーツの数(後にtxtで)だけ回す
 
 		//g_AdvancedModel.NowMotionUP = MOTIONTYPE_AD_MAX;
@@ -133,13 +141,13 @@ void InitAdvancedModel(void)
 			}
 		}
 
+		//////ここでセット
+		SetModel_AD(MODEL_AD_TYPE_Test1, D3DXVECTOR3(-50.0f, 0.0f, -500.0f), D3DXVECTOR3(0.0f, 3.14f, 0.0f));
+		LoadXfire_AdModel(MODEL_AD_TYPE_Test1);
 
 		
-
-		//ここでセット
-		SetModel_AD(MODEL_AD_TYPE_Test1, D3DXVECTOR3(-50.0f, 0.0f, -500.0f), D3DXVECTOR3(0.0f, 3.14f, 0.0f));
 		SetModel_AD(MODEL_AD_TYPE_Test2, D3DXVECTOR3(-50.0f, 0.0f, -200.0f), D3DXVECTOR3(0.0f, 3.14f, 0.0f));
-
+		LoadXfire_AdModel(MODEL_AD_TYPE_Test2);
 	}
 }
 //=============================
@@ -150,27 +158,40 @@ void UninitAdvancedModel(void)
 	for (int ModelNum = 0; ModelNum < MODEL_AD_TYPE_MAX; ModelNum++)
 	{
 
-		/*StopSound(SOUND_LABEL_SE_LOBOTWARK);
-		StopSound(SOUND_LABEL_SE_BOOST);
-		StopSound(SOUND_LABEL_SE_JUMP);*/
 
 		for (int nCntModel = 0; nCntModel < MAX_PARTS_AD; nCntModel++)
 		{
-			//メッシュの破棄
+			// メッシュの破棄
 			if (g_pMeshModel_AD[ModelNum][nCntModel] != NULL)
 			{
 				g_pMeshModel_AD[ModelNum][nCntModel]->Release();
-				g_pMeshModel_AD[ModelNum][nCntModel] = NULL;
+				g_pMeshModel_AD[ModelNum][nCntModel] = NULL; // 解放後に NULL を設定
 			}
-			//マテリアルの破棄
+
+			// マテリアルの破棄
 			if (g_pBuffMatModel_AD[ModelNum][nCntModel] != NULL)
 			{
 				g_pBuffMatModel_AD[ModelNum][nCntModel]->Release();
-				g_pBuffMatModel_AD[ModelNum][nCntModel] = NULL;
+				g_pBuffMatModel_AD[ModelNum][nCntModel] = NULL; // 解放後に NULL を設定
 			}
+
+			//for (int nCntTex = 0; nCntTex < NUM_TEXTURE_AD; nCntTex++)
+			//{
+			//	// テクスチャの破棄
+			//	if (g_apTextureModel_AD[ModelNum][nCntModel][nCntTex] != NULL)
+			//	{
+			//		g_apTextureModel_AD[ModelNum][nCntModel][nCntTex]->Release();
+			//		g_apTextureModel_AD[ModelNum][nCntModel][nCntTex] = NULL; // 解放後に NULL を設定
+			//	}
+			//}
+
 		}
 	}
+
+
+
 }
+
 //=============================
 //モデルの更新処理
 //=============================
@@ -183,7 +204,7 @@ void UpdateAdvancedModel(void)
 
 		//とりあえず待機
 		g_AdvancedModel[ModelNum].NowMotionDOWN = MOTIONTYPE_AD_STANDBY;
-		
+
 
 
 		//上下のモーション
@@ -308,16 +329,20 @@ void DrawAdvancedModel(void)
 					//テクスチャの設定
 					pDevice->SetTexture(0, NULL);//今回は設定しない
 					//テクスチャの設定
-					pDevice->SetTexture(0, g_apTextureModel_AD[ModelNum][nCntMat]);
+				//	pDevice->SetTexture(0, g_apTextureModel_AD[ModelNum][nCnt][nCntMat]);
 
 					//モデル(パーツ)の描画
 					g_pMeshModel_AD[ModelNum][nCnt]->DrawSubset(nCntMat);
 
 					//保存してたマテリアルを戻す
-					pDevice->SetMaterial(&matDef);
+				//	pDevice->SetMaterial(&matDef);
 				}
 			}
+			//保存してたマテリアルを戻す
+			pDevice->SetMaterial(&matDef);
 
+			//テクスチャを戻す
+			pDevice->SetTexture(0, NULL);
 		}
 	}
 }
@@ -340,7 +365,7 @@ LPD3DXMESH* GetMesh_AdvancedModel(int Index)
 //=============================
 //変換処理2D--------------------------めちゃ大事
 //=============================
-void ConversionAdvancedModelRot2(int Index,float fRot, int nCnt)
+void ConversionAdvancedModelRot2(int Index, float fRot, int nCnt)
 {
 	//ケツにf
 	//fmodfとは+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -411,6 +436,45 @@ D3DXVECTOR3 ConversionAdvancedModelRot3(D3DXVECTOR3 fRot, int nCnt)
 
 }
 //===================================
+//Xfireよみこみ
+//===================================
+void LoadXfire_AdModel(int Index)//OFFセットでの情報からモデル読み込み
+{
+	LPDIRECT3DDEVICE9 pDevice = GetDevice();
+
+	for (int nCnt = 0; nCnt < g_Model3[Index].nMaxLoadPartsCnt; nCnt++)
+	{
+		//ファイルの読み込み----------------------
+		D3DXLoadMeshFromX(&g_cModelFileName[Index][nCnt][0],
+			D3DXMESH_SYSTEMMEM,
+			pDevice,
+			NULL,
+			&g_pBuffMatModel_AD[Index][nCnt],
+			NULL,
+			&dwNumMatModel_AD[Index][nCnt],
+			&g_pMeshModel_AD[Index][nCnt]);
+
+		//D3DXMATERIAL* pMat;
+
+		////マテリアルデータへのポインタを取得
+		//pMat = (D3DXMATERIAL*)g_pBuffMatModel_AD[Index][nCnt]->GetBufferPointer();
+
+		//for (int nCntMat = 0; nCntMat < (int)dwNumMatModel_AD[Index][nCnt]; nCntMat++)
+		//{
+		//	if (pMat[nCntMat].pTextureFilename != NULL)
+		//	{
+		//		//テクスチャの読み込み
+		//		D3DXCreateTextureFromFile(pDevice,
+		//			pMat[nCntMat].pTextureFilename,
+		//			&g_apTextureModel_AD[Index][nCnt][nCntMat]
+		//		);
+		//	}
+		//}
+
+
+	}
+}
+//===================================
 //テキストからキャラの情報を読み込む処理----------------------------------------------------------------
 //===================================
 void LoadSet3(int Index)
@@ -425,8 +489,7 @@ void LoadSet3(int Index)
 	int nModelNum;//モデル
 	nModelNum = 0;
 
-	int nEscapeCntModel;//モデル数
-	nEscapeCntModel = 0;
+
 
 	int nfirstEscapePartsCnt;//はじめに使うパーツカウント
 	nfirstEscapePartsCnt = 0;
@@ -441,7 +504,7 @@ void LoadSet3(int Index)
 	int nKeyPartsCnt;//各キーの中でのパーツカウント
 	nKeyPartsCnt = 0;
 
-	char cModelFileName[MAX_PARTS_AD][MAX_WORD2_AD] = {};//とりあえず20でファイル名を管理
+	//char cModelFileName[MAX_PARTS_AD][MAX_WORD2_AD] = {};//とりあえず20でファイル名を管理
 
 	pFile = fopen(g_ModelMotionInfo[Index].pFilePass, "r");
 
@@ -465,39 +528,38 @@ void LoadSet3(int Index)
 			else if (strcmp(&aString[0], "MODEL_FILENAME") == 0)
 			{//各モデルのパーツのパスが来たら
 				fscanf(pFile, "%s", &aString[0]);
-				fscanf(pFile, "%s", &cModelFileName[0]);//ファイルパス
+				fscanf(pFile, "%s", &g_cModelFileName[Index][nModelNum][0]);//ファイルパス
 
-				//ファイルの読み込み----------------------
-				D3DXLoadMeshFromX(cModelFileName[0],
-					D3DXMESH_SYSTEMMEM,
-					pDevice,
-					NULL,
-					&g_pBuffMatModel_AD[Index][nEscapeCntModel],
-					NULL,
-					&dwNumMatModel_AD[Index][nEscapeCntModel],
-					&g_pMeshModel_AD[Index][nEscapeCntModel]);
 
-				D3DXMATERIAL* pMat;
 
-				//マテリアルデータへのポインタを取得
-				pMat = (D3DXMATERIAL*)g_pBuffMatModel_AD[Index][nEscapeCntModel]->GetBufferPointer();
+				////ファイルの読み込み----------------------
+				//D3DXLoadMeshFromX(&g_cModelFileName[Index][nModelNum][0],
+				//	D3DXMESH_SYSTEMMEM,
+				//	pDevice,
+				//	NULL,
+				//	&g_pBuffMatModel_AD[Index][g_nEscapeCntModel[Index]],
+				//	NULL,
+				//	&dwNumMatModel_AD[Index][g_nEscapeCntModel[Index]],
+				//	&g_pMeshModel_AD[Index][g_nEscapeCntModel[Index]]);
 
-				for (int nCntMat = 0; nCntMat < (int)dwNumMatModel_AD[Index][nEscapeCntModel]; nCntMat++)
-				{
-					if (pMat[nCntMat].pTextureFilename != NULL)
-					{
-						//テクスチャの読み込み
-						D3DXCreateTextureFromFile(pDevice,
-							pMat[nCntMat].pTextureFilename,
-							&g_apTextureModel_AD[Index][nCntMat]
-						);
-					}
-				}
+				//D3DXMATERIAL* pMat;
 
-				//----------------------------------------
+				////マテリアルデータへのポインタを取得
+				//pMat = (D3DXMATERIAL*)g_pBuffMatModel_AD[Index][g_nEscapeCntModel[Index]]->GetBufferPointer();
 
-				nEscapeCntModel++;//モデル格納後インクリ
+				//for (int nCntMat = 0; nCntMat < (int)dwNumMatModel_AD[Index][g_nEscapeCntModel[Index]]; nCntMat++)
+				//{
+				//	if (pMat[nCntMat].pTextureFilename != NULL)
+				//	{
+				//		//テクスチャの読み込み
+				//		D3DXCreateTextureFromFile(pDevice,
+				//			pMat[nCntMat].pTextureFilename,
+				//			&g_apTextureModel_AD[Index][nCntMat]
+				//		);
+				//	}
+				//}
 
+				nModelNum++;
 			}
 			else if (strcmp(&aString[0], "CHARACTERSET") == 0)
 			{//キャラセットがきたら
@@ -654,12 +716,6 @@ void LoadSet3(int Index)
 			}
 		}
 	}
-
-
-
-
-
-
 }
 //-----------------------------------------------------------モーション後にCPP化ける...かも
 //===================================
@@ -670,24 +726,23 @@ void LowerBodyMotion3(int Index)
 	if (g_AdvancedModel[Index].NowMotionDOWN != g_AdvancedModel[Index].OldMotionDOWN)
 	{//前回のモーションと違う時
 	//-------------------------------リセット動作
-		if (g_AdvancedModel[Index].MotionBrend == false)
-		{
-			g_AdvancedModel[Index].NowKeyCntDOWN = 0;
-			g_AdvancedModel[Index].NowFrameCntDOWN = 0;
-			g_AdvancedModel[Index].EscapeMotion = g_AdvancedModel[Index].NowMotionDOWN;
-			g_AdvancedModel[Index].BrendCnt = 0;
-			for (int i = 0; i < MAX_PARTS_AD; i++)
-			{//リセット
 
-				g_Model3[Index].ModelParts[i].calculationExecution = false;
-				g_Model3[Index].ModelParts[i].CorrectCorrectionRotMove = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-				g_Model3[Index].ModelParts[i].CorrectCorrectionPosMove = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-				g_AdvancedModel[Index].MotionLoopStop = false;
+		g_AdvancedModel[Index].NowKeyCntDOWN = 0;
+		g_AdvancedModel[Index].NowFrameCntDOWN = 0;
+		g_AdvancedModel[Index].EscapeMotion = g_AdvancedModel[Index].NowMotionDOWN;
+		g_AdvancedModel[Index].BrendCnt = 0;
+		for (int i = 0; i < MAX_PARTS_AD; i++)
+		{//リセット
 
-				g_AdvancedModel[Index].MotionBrend = true;
+			g_Model3[Index].ModelParts[i].calculationExecution = false;
+			g_Model3[Index].ModelParts[i].CorrectCorrectionRotMove = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+			g_Model3[Index].ModelParts[i].CorrectCorrectionPosMove = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+			g_AdvancedModel[Index].MotionLoopStop = false;
 
-			}
+
+
 		}
+		g_AdvancedModel[Index].MotionBrend = true;
 	}
 
 
@@ -818,32 +873,14 @@ void LowerBodyMotion3(int Index)
 	else
 	{
 
+
 		// 本動作------------------------------------------------------------------------------------------------------------------
 		if (g_AdvancedModel[Index].MotionLoopStop == false)
 		{
-			if (g_AdvancedModel[Index].NowKeyCntDOWN == 0)
-			{//0番目のキー＝＝データズレで認識できない
-				if (g_Model3[Index].Motion[g_AdvancedModel[Index].NowMotionDOWN].KeyData[g_AdvancedModel[Index].NowKeyCntDOWN - 1].nSplitFrame == 0)
-				{//分割フレーム数が0＝＝ズレ以外ありえない
-					g_Model3[Index].Motion[g_AdvancedModel[Index].NowMotionDOWN].KeyData[g_AdvancedModel[Index].NowKeyCntDOWN - 1].nSplitFrame = g_Model3[Index].Motion[g_AdvancedModel[Index].NowMotionDOWN].KeyData[g_Model3[Index].Motion[g_AdvancedModel[Index].NowMotionDOWN].nNumKey - 1].nSplitFrame;
-					//	g_Model3[Index].Motion[g_AdvancedModel[Index].NowMotionDOWN].KeyData[g_AdvancedModel[Index].NowKeyCntDOWN - 1].nSplitFrame = 5;
-				}
-
-			}
-
-			if (g_AdvancedModel[Index].NowFrameCntDOWN < g_Model3[Index].Motion[g_AdvancedModel[Index].NowMotionDOWN].KeyData[g_AdvancedModel[Index].NowKeyCntDOWN - 1].nSplitFrame)
+			if (g_AdvancedModel[Index].NowFrameCntDOWN < g_Model3[Index].Motion[g_AdvancedModel[Index].NowMotionDOWN].KeyData[g_AdvancedModel[Index].NowKeyCntDOWN /*- 1*/].nSplitFrame)
 			{//分割フレームの分回る
 				if (g_AdvancedModel[Index].NowKeyCntDOWN < g_Model3[Index].Motion[g_AdvancedModel[Index].NowMotionDOWN].nNumKey)
 				{//キーの分回る
-					if (g_AdvancedModel[Index].NowKeyCntDOWN == 12)
-					{
-						if (g_AdvancedModel[Index].NowMotionDOWN == MOTIONTYPE_AD_ATTACK)
-						{
-							int test;
-
-							test = 1111;
-						}
-					}
 
 					for (int nCntParts = 0; nCntParts < g_Model3[Index].nMaxPartsCnt; nCntParts++)
 					{//パーツ分回る
@@ -856,9 +893,15 @@ void LowerBodyMotion3(int Index)
 							D3DXVECTOR3 TargetRot;
 							TargetRot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 
-							TargetRot = g_Model3[Index].ModelParts[nCntParts].StartRot + g_Model3[Index].Motion[g_AdvancedModel[Index].NowMotionDOWN].KeyData[g_AdvancedModel[Index].NowKeyCntDOWN].PartsData[nCntParts].CorrectionRot;
-
-							g_Model3[Index].ModelParts[nCntParts].CorrectCorrectionRotMove = (ConversionAdvancedModelRot3(TargetRot - g_Model3[Index].ModelParts[nCntParts].Rot, 0)) / g_Model3[Index].Motion[g_AdvancedModel[Index].NowMotionDOWN].KeyData[g_AdvancedModel[Index].NowKeyCntDOWN - 1].nSplitFrame;
+							if (g_AdvancedModel[Index].NowKeyCntDOWN != g_Model3[Index].Motion[g_AdvancedModel[Index].NowMotionDOWN].nNumKey - 1)
+							{//最後キーじゃない
+								TargetRot = g_Model3[Index].ModelParts[nCntParts].StartRot + g_Model3[Index].Motion[g_AdvancedModel[Index].NowMotionDOWN].KeyData[g_AdvancedModel[Index].NowKeyCntDOWN + 1].PartsData[nCntParts].CorrectionRot;
+							}
+							else if (g_AdvancedModel[Index].NowKeyCntDOWN == g_Model3[Index].Motion[g_AdvancedModel[Index].NowMotionDOWN].nNumKey - 1)
+							{//最後キーのとき
+								TargetRot = g_Model3[Index].ModelParts[nCntParts].StartRot + g_Model3[Index].Motion[g_AdvancedModel[Index].NowMotionDOWN].KeyData[0].PartsData[nCntParts].CorrectionRot;
+							}
+							g_Model3[Index].ModelParts[nCntParts].CorrectCorrectionRotMove = (ConversionAdvancedModelRot3(TargetRot - g_Model3[Index].ModelParts[nCntParts].Rot, 0)) / g_Model3[Index].Motion[g_AdvancedModel[Index].NowMotionDOWN].KeyData[g_AdvancedModel[Index].NowKeyCntDOWN].nSplitFrame;
 
 							g_Model3[Index].ModelParts[nCntParts].calculationExecution = true;
 						}
@@ -871,12 +914,18 @@ void LowerBodyMotion3(int Index)
 						{//自分がすべての親の時
 							D3DXVECTOR3 TargetPos;
 							TargetPos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-
+							if (g_AdvancedModel[Index].NowKeyCntDOWN != g_Model3[Index].Motion[g_AdvancedModel[Index].NowMotionDOWN].nNumKey - 1)
+							{//最後キーじゃない
 							//初期位置から見た地点を補正した、目標地点の算出
-							TargetPos = g_Model3[Index].ModelParts[nCntParts].StartPos + g_Model3[Index].Motion[g_AdvancedModel[Index].NowMotionDOWN].KeyData[g_AdvancedModel[Index].NowKeyCntDOWN].PartsData[nCntParts].CorrectionPos;
-
+								TargetPos = g_Model3[Index].ModelParts[nCntParts].StartPos + g_Model3[Index].Motion[g_AdvancedModel[Index].NowMotionDOWN].KeyData[g_AdvancedModel[Index].NowKeyCntDOWN + 1].PartsData[nCntParts].CorrectionPos;
+							}
+							else if (g_AdvancedModel[Index].NowKeyCntDOWN == g_Model3[Index].Motion[g_AdvancedModel[Index].NowMotionDOWN].nNumKey - 1)
+							{//最後キーのとき
+							//初期位置から見た地点を補正した、目標地点の算出
+								TargetPos = g_Model3[Index].ModelParts[nCntParts].StartPos + g_Model3[Index].Motion[g_AdvancedModel[Index].NowMotionDOWN].KeyData[0].PartsData[nCntParts].CorrectionPos;
+							}
 							//現在の位置から、上で算出した目標地点までの差分計算
-							g_Model3[Index].ModelParts[nCntParts].CorrectCorrectionPosMove = (TargetPos - g_Model3[Index].ModelParts[nCntParts].Pos) / g_Model3[Index].Motion[g_AdvancedModel[Index].NowMotionDOWN].KeyData[g_AdvancedModel[Index].NowKeyCntDOWN - 1].nSplitFrame;
+							g_Model3[Index].ModelParts[nCntParts].CorrectCorrectionPosMove = (TargetPos - g_Model3[Index].ModelParts[nCntParts].Pos) / g_Model3[Index].Motion[g_AdvancedModel[Index].NowMotionDOWN].KeyData[g_AdvancedModel[Index].NowKeyCntDOWN].nSplitFrame;
 
 							//POSの更新
 							g_Model3[Index].ModelParts[nCntParts].Pos += g_Model3[Index].ModelParts[nCntParts].CorrectCorrectionPosMove;
@@ -944,273 +993,8 @@ void LowerBodyMotion3(int Index)
 			}
 		}
 	}
+
 }
-
-//
-////===================================
-////上半身モーション//胸
-////===================================
-//void UpperBodyMotion(void)
-//{
-//
-//#if 0
-//	//上下別モーション
-//
-//	if (g_AdvancedModel.NowMotionUP != g_AdvancedModel.OldMotionUP)
-//	{//前回のモーションと違う時
-//	//-------------------------------リセット動作
-//		g_AdvancedModel.NowKeyCntUP = 0;
-//		g_AdvancedModel.NowFrameCntUP = 0;
-//		for (int i = 0; i < MAX_PARTS_AD; i++)
-//		{//リセット
-//			g_Model3.ModelParts[i].calculationExecution = false;
-//			g_Model3.ModelParts[i].CorrectCorrectionRotMove = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-//			g_Model3.ModelParts[i].CorrectCorrectionPosMove = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-//			g_AdvancedModel.MotionLoopStop = false;
-//		}
-//	}
-//
-//	// 本動作------------------------------------------------------------------------------------------------------------------
-//		//1-8,15が上半身
-//		//1は胸----------敵の方向に向けるためうごかさない
-//		//0は腰
-//
-//		//345を除外(右手)
-//
-//	if (g_AdvancedModel.NowMotionUP != MOTIONTYPE_AD_ATTACK)
-//	{
-//		g_AdvancedModel.NowMotionUP = g_AdvancedModel.NowMotionDOWN;
-//
-//		if (g_AdvancedModel.NowMotionDOWN != MOTIONTYPE_1P_MOVE)
-//		{
-//			g_AdvancedModel.NowMotionUP = MOTIONTYPE_AD_STANDBY;
-//		}
-//	}
-//
-//
-//	if (g_AdvancedModel.NowFrameCntUP < g_Model3.Motion[g_AdvancedModel.NowMotionUP].KeyData[g_AdvancedModel.NowKeyCntUP].nSplitFrame)
-//	{//分割フレームの分回る
-//		if (g_AdvancedModel.NowKeyCntUP < g_Model3.Motion[g_AdvancedModel.NowMotionUP].nNumKey)
-//		{//キーの分回る
-//
-//			for (int nCntParts = 0; nCntParts < g_Model3.nMaxPartsCnt; nCntParts++)
-//			{//パーツ分回る
-//
-//				if (nCntParts == 2 || nCntParts == 15 || nCntParts == 16 || (nCntParts >= 6 && nCntParts <= 8) || (nCntParts >= 3 && nCntParts <= 5))
-//				{//下半身、腰、右手を除外----------------------------------------------------------------------------後に右手左手を分ける？？
-//
-//
-//					//ROT系
-//					if (g_Model3.ModelParts[nCntParts].calculationExecution == false)
-//					{
-//						//CorrectionPos,CorrectionRotはあくまで、OFFSETをStart地点とした補正量なので、
-//						D3DXVECTOR3 TargetRot;
-//						TargetRot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-//
-//						TargetRot = g_Model3.ModelParts[nCntParts].StartRot + g_Model3.Motion[g_AdvancedModel.NowMotionUP].KeyData[g_AdvancedModel.NowKeyCntUP].PartsData[nCntParts].CorrectionRot;
-//
-//						g_Model3.ModelParts[nCntParts].CorrectCorrectionRotMove = (ConversionAdvancedModelRot3(TargetRot - g_Model3.ModelParts[nCntParts].Rot, 0)) / g_Model3.Motion[g_AdvancedModel.NowMotionUP].KeyData[g_AdvancedModel.NowKeyCntUP].nSplitFrame;
-//
-//						g_Model3.ModelParts[nCntParts].calculationExecution = true;
-//					}
-//
-//					g_Model3.ModelParts[nCntParts].Rot += g_Model3.ModelParts[nCntParts].CorrectCorrectionRotMove;
-//
-//					//POS系
-//					//--------------------------------------------------------------------------------
-//					if (g_Model3.ModelParts[nCntParts].PEARENT == -1)
-//					{//自分がすべての親の時
-//						D3DXVECTOR3 TargetPos;
-//						TargetPos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-//
-//						//初期位置から見た地点を補正した、目標地点の算出
-//						TargetPos = g_Model3.ModelParts[nCntParts].StartPos + g_Model3.Motion[g_AdvancedModel.NowMotionUP].KeyData[g_AdvancedModel.NowKeyCntUP].PartsData[nCntParts].CorrectionPos;
-//
-//						//現在の位置から、上で算出した目標地点までの差分計算
-//						g_Model3.ModelParts[nCntParts].CorrectCorrectionPosMove = (TargetPos - g_Model3.ModelParts[nCntParts].Pos) / g_Model3.Motion[g_AdvancedModel.NowMotionUP].KeyData[g_AdvancedModel.NowKeyCntUP].nSplitFrame;
-//
-//						//POSの更新
-//						g_Model3.ModelParts[nCntParts].Pos += g_Model3.ModelParts[nCntParts].CorrectCorrectionPosMove;
-//						//------------------------------------------------------------------------------------
-//					}
-//				}
-//			}
-//
-//
-//			//	//仮射撃
-//			//if (g_AdvancedModel.NowMotionUP == MOTIONTYPE_AD_ATTACK)
-//			//{
-//			//	for (int i = 0; i < 2; i++)
-//			//	{
-//			//		if (g_AdvancedModel.NowKeyCntUP == 0 && g_AdvancedModel.NowFrameCntUP == g_Model3.Motion[g_AdvancedModel.NowMotionUP].KeyData[g_AdvancedModel.NowKeyCntUP].nSplitFrame - 1)
-//			//		{
-//			//		//	SetBullet(D3DXVECTOR3(mtxWorldBullet[i]._41, mtxWorldBullet[i]._42, mtxWorldBullet[i]._43), BulletMoveVec[i], 0, 0, BULLETTYPE_AdvancedModel);
-//			//		//	SetEffect(D3DXVECTOR3(mtxWorldBullet[i]._41, mtxWorldBullet[i]._42, mtxWorldBullet[i]._43), D3DXCOLOR(1.0f, 1.0f, 0.0f, 1.0f), 10, 2, EFECTTYPE_Boost);
-//			//		}
-//			//	}
-//			//}
-//		}
-//		g_AdvancedModel.NowFrameCntUP++;//フレーム進める
-//	}
-//	else
-//	{//フレーム数超えた
-//		g_AdvancedModel.NowFrameCntUP = 0;//フレームリセット
-//
-//		g_AdvancedModel.NowKeyCntUP++;//キーを進める
-//
-//		for (int i = 0; i < MAX_PARTS_AD; i++)
-//		{//リセット
-//			g_Model3.ModelParts[i].calculationExecution = false;
-//		}
-//
-//		if (g_AdvancedModel.NowKeyCntUP == g_Model3.Motion[g_AdvancedModel.NowMotionUP].nNumKey)
-//		{//キーが、最大キーを超えた時
-//
-//			g_AdvancedModel.NowFrameCntUP = 0;//フレームリセット
-//			g_AdvancedModel.NowKeyCntUP = 0;//キーリセット
-//
-//			if (g_Model3.Motion[g_AdvancedModel.NowMotionUP].nLoop == 0)
-//			{//ループしない
-//				g_AdvancedModel.NowMotionUP = MOTIONTYPE_AD_STANDBY;//待機状態に戻す
-//			}
-//		}
-//	}
-//}
-////------------------------------------------------------------ここまで
-//
-//#else
-//
-//	//一旦統一モーション
-//
-//	g_AdvancedModel.OldMotionUP = g_AdvancedModel.OldMotionDOWN;
-//	g_AdvancedModel.NowMotionUP = g_AdvancedModel.NowMotionDOWN;
-//
-//
-//	if (g_AdvancedModel.NowMotionUP != g_AdvancedModel.OldMotionUP)
-//	{//前回のモーションと違う時
-//	//-------------------------------リセット動作
-//		g_AdvancedModel.NowKeyCntUP = 0;
-//		g_AdvancedModel.NowFrameCntUP = 0;
-//		for (int i = 0; i < MAX_PARTS_AD; i++)
-//		{//リセット
-//			g_Model3.ModelParts[i].calculationExecution = false;
-//			g_Model3.ModelParts[i].CorrectCorrectionRotMove = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-//			g_Model3.ModelParts[i].CorrectCorrectionPosMove = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-//			g_AdvancedModel.MotionLoopStop = false;
-//		}
-//	}
-//
-//	// 本動作------------------------------------------------------------------------------------------------------------------
-//		//1-8,15が上半身
-//		//1は胸----------敵の方向に向けるためうごかさない
-//		//0は腰
-//
-//		//345を除外(右手)
-//
-//	if (g_AdvancedModel.NowMotionUP != MOTIONTYPE_AD_ATTACK)
-//	{
-//		g_AdvancedModel.NowMotionUP = g_AdvancedModel.NowMotionDOWN;
-//
-//		if (g_AdvancedModel.NowMotionDOWN != MOTIONTYPE_1P_MOVE)
-//		{
-//			g_AdvancedModel.NowMotionUP = MOTIONTYPE_AD_STANDBY;
-//		}
-//	}
-//
-//
-//	if (g_AdvancedModel.NowFrameCntUP < g_Model3.Motion[g_AdvancedModel.NowMotionUP].KeyData[g_AdvancedModel.NowKeyCntUP].nSplitFrame)
-//	{//分割フレームの分回る
-//		if (g_AdvancedModel.NowKeyCntUP < g_Model3.Motion[g_AdvancedModel.NowMotionUP].nNumKey)
-//		{//キーの分回る
-//
-//			for (int nCntParts = 0; nCntParts < g_Model3.nMaxPartsCnt; nCntParts++)
-//			{//パーツ分回る
-//
-//				if (nCntParts == 2 || nCntParts == 15 || nCntParts == 16 || (nCntParts >= 6 && nCntParts <= 8) || (nCntParts >= 3 && nCntParts <= 5))
-//				{//下半身
-//
-//					//ROT系
-//					if (g_Model3.ModelParts[nCntParts].calculationExecution == false)
-//					{
-//						//CorrectionPos,CorrectionRotはあくまで、OFFSETをStart地点とした補正量なので、
-//						D3DXVECTOR3 TargetRot;
-//						TargetRot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-//
-//						TargetRot = g_Model3.ModelParts[nCntParts].StartRot + g_Model3.Motion[g_AdvancedModel.NowMotionUP].KeyData[g_AdvancedModel.NowKeyCntUP].PartsData[nCntParts].CorrectionRot;
-//
-//						g_Model3.ModelParts[nCntParts].CorrectCorrectionRotMove = (ConversionAdvancedModelRot3(TargetRot - g_Model3.ModelParts[nCntParts].Rot, 0)) / g_Model3.Motion[g_AdvancedModel.NowMotionUP].KeyData[g_AdvancedModel.NowKeyCntUP].nSplitFrame;
-//
-//						g_Model3.ModelParts[nCntParts].calculationExecution = true;
-//					}
-//
-//					g_Model3.ModelParts[nCntParts].Rot += g_Model3.ModelParts[nCntParts].CorrectCorrectionRotMove;
-//
-//					//POS系
-//					//--------------------------------------------------------------------------------
-//					if (g_Model3.ModelParts[nCntParts].PEARENT == -1)
-//					{//自分がすべての親の時
-//						D3DXVECTOR3 TargetPos;
-//						TargetPos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-//
-//						//初期位置から見た地点を補正した、目標地点の算出
-//						TargetPos = g_Model3.ModelParts[nCntParts].StartPos + g_Model3.Motion[g_AdvancedModel.NowMotionUP].KeyData[g_AdvancedModel.NowKeyCntUP].PartsData[nCntParts].CorrectionPos;
-//
-//						//現在の位置から、上で算出した目標地点までの差分計算
-//						g_Model3.ModelParts[nCntParts].CorrectCorrectionPosMove = (TargetPos - g_Model3.ModelParts[nCntParts].Pos) / g_Model3.Motion[g_AdvancedModel.NowMotionUP].KeyData[g_AdvancedModel.NowKeyCntUP].nSplitFrame;
-//
-//						//POSの更新
-//						g_Model3.ModelParts[nCntParts].Pos += g_Model3.ModelParts[nCntParts].CorrectCorrectionPosMove;
-//						//------------------------------------------------------------------------------------
-//					}
-//				}
-//			}
-//
-//
-//			//	//仮射撃
-//			//if (g_AdvancedModel.NowMotionUP == MOTIONTYPE_AD_ATTACK)
-//			//{
-//			//	for (int i = 0; i < 2; i++)
-//			//	{
-//			//		if (g_AdvancedModel.NowKeyCntUP == 0 && g_AdvancedModel.NowFrameCntUP == g_Model3.Motion[g_AdvancedModel.NowMotionUP].KeyData[g_AdvancedModel.NowKeyCntUP].nSplitFrame - 1)
-//			//		{
-//			//		//	SetBullet(D3DXVECTOR3(mtxWorldBullet[i]._41, mtxWorldBullet[i]._42, mtxWorldBullet[i]._43), BulletMoveVec[i], 0, 0, BULLETTYPE_AdvancedModel);
-//			//		//	SetEffect(D3DXVECTOR3(mtxWorldBullet[i]._41, mtxWorldBullet[i]._42, mtxWorldBullet[i]._43), D3DXCOLOR(1.0f, 1.0f, 0.0f, 1.0f), 10, 2, EFECTTYPE_Boost);
-//			//		}
-//			//	}
-//			//}
-//		}
-//		g_AdvancedModel.NowFrameCntUP++;//フレーム進める
-//	}
-//	else
-//	{//フレーム数超えた
-//		g_AdvancedModel.NowFrameCntUP = 0;//フレームリセット
-//
-//		g_AdvancedModel.NowKeyCntUP++;//キーを進める
-//
-//		for (int i = 0; i < MAX_PARTS_AD; i++)
-//		{//リセット
-//			g_Model3.ModelParts[i].calculationExecution = false;
-//		}
-//
-//		if (g_AdvancedModel.NowKeyCntUP == g_Model3.Motion[g_AdvancedModel.NowMotionUP].nNumKey)
-//		{//キーが、最大キーを超えた時
-//
-//			g_AdvancedModel.NowFrameCntUP = 0;//フレームリセット
-//			g_AdvancedModel.NowKeyCntUP = 0;//キーリセット
-//
-//			if (g_Model3.Motion[g_AdvancedModel.NowMotionUP].nLoop == 0)
-//			{//ループしない
-//				g_AdvancedModel.NowMotionUP = MOTIONTYPE_AD_STANDBY;//待機状態に戻す
-//			}
-//		}
-//	}
-//
-//
-//}
-////------------------------------------------------------------ここまで
-//#endif // 0
-//
-
 
 
 //===================================

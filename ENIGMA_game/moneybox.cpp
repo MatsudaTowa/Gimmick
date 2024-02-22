@@ -127,6 +127,9 @@ void DrawMoneybox(void)
 		0,//描画する最初の頂点インデックス
 		2);//描画するプリミティブ数
 	
+	
+	//テクスチャを戻す
+	pDevice->SetTexture(0, NULL);
 }
 
 //=========================================================
@@ -139,11 +142,10 @@ void SetMonetbox(bool MoneyboxPlayer)
 	//デバイスの取得
 	pDevice = GetDevice();
 	g_Moneybox.WhichPlayer = MoneyboxPlayer;
-	//頂点バッファの生成
-	pDevice->CreateVertexBuffer(sizeof(VERTEX_2D) * 4, D3DUSAGE_WRITEONLY, FVF_VERTEX_2D, D3DPOOL_MANAGED, &g_pVtxBuffMoneybox, NULL);
-
 	if (g_Moneybox.WhichPlayer == false)
 	{//1Pの時
+		//頂点バッファの生成
+		pDevice->CreateVertexBuffer(sizeof(VERTEX_2D) * 4, D3DUSAGE_WRITEONLY, FVF_VERTEX_2D, D3DPOOL_MANAGED, &g_pVtxBuffMoneybox, NULL);
 
 		VERTEX_2D* pVtx;//頂点情報のポインタ
 
@@ -175,6 +177,7 @@ void SetMonetbox(bool MoneyboxPlayer)
 		pVtx[2].tex = D3DXVECTOR2(0.0f, 1.0f);
 		pVtx[3].tex = D3DXVECTOR2(1.0f, 1.0f);
 
+		g_pVtxBuffMoneybox->Unlock();
 	}
 	else if (g_Moneybox.WhichPlayer == true)
 	{//1Pの時
@@ -211,9 +214,8 @@ void SetMonetbox(bool MoneyboxPlayer)
 		pVtx[2].tex = D3DXVECTOR2(0.0f, 1.0f);
 		pVtx[3].tex = D3DXVECTOR2(1.0f, 1.0f);
 
-
+		g_pVtxBuffMoneybox->Unlock();
 	}
-	g_pVtxBuffMoneybox->Unlock();
 	SetMoneyboxDigit();
 	SetPassword();
 }

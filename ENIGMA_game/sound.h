@@ -35,4 +35,6 @@ void StopSound(void);
 //©ì--Ä¶’†‚©‚Ç‚¤‚©--Ä¶’†=true/Ä¶‚µ‚Ä‚È‚¢=false
 //bool SaundPlayJudge(SOUND_LABEL label);
 
+//int TestSoundmain(void);
+
 #endif

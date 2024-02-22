@@ -180,15 +180,20 @@ void DrawShadow(void)
 
 			//影の描画
 			pDevice->DrawPrimitive(D3DPT_TRIANGLESTRIP,//プリミティブの種類
-				nCnt*4,//描画する最初の頂点インデックス
+				nCnt * 4,//描画する最初の頂点インデックス
 				2);//描画するプリミティブ数
 
 				//アルファブレンディングをもとに戻す
 			pDevice->SetRenderState(D3DRS_BLENDOP, D3DBLENDOP_ADD);
 			pDevice->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
 			pDevice->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
+
+			//テクスチャを戻す
+			pDevice->SetTexture(0, NULL);
 		}
 	}
+
+
 }
 //=============================
 //影の設定処理

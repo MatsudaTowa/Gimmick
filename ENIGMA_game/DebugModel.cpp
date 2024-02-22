@@ -12,6 +12,7 @@
 #include "input.h"
 #include "text.h"
 #include "model.h"
+#include "stage.h"
 //#include "line.h"
 //using namespace __unnamed_enum_0153_1;
 
@@ -27,12 +28,15 @@ DEBUGMODEL g_DebugModel[MAXDEBUGMODEL];
 
 //生きてるモデル数
 int g_NUM_Model = -1;
+int g_NUM_Stage = -1;
+
 
 //削除モデルの座標
 D3DXVECTOR3 g_DelModelPos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 
 //セレクト番号
 int g_SelectNum = 0;
+int g_SelectNumStage = 0;
 
 //=============================
 // デバッグモデル初期化処理
@@ -41,7 +45,8 @@ void InitDebugModel(void)
 {    
     g_NUM_Model = -1;
     g_SelectNum = 0;
-
+    g_NUM_Stage = -1;
+    g_SelectNumStage = 0;
 
     //削除モデルの座標
     g_DelModelPos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
@@ -82,6 +87,10 @@ void InitDebugModel(void)
 
 
 
+     SetDebugModelSphere(80, D3DXCOLOR(1.0f, 1.0f, 5.0f, 0.5f), true);
+     SetDebugModelSphere(100, D3DXCOLOR(1.0f, 1.0f, 5.0f, 0.2f), false);//根本
+
+
     //これで１ペア
     //SetDebugModel(D3DXVECTOR3(2000.0f, 0.0f, -700.0f), D3DXVECTOR3(-50.0f, 0.0f, -50.0f), D3DXVECTOR3(50.0f, 100.0f, 50.0f), 0, 1, ACTION_TYPE_MAX);
     //SetDebugModel(D3DXVECTOR3(2000.0f, 0.0f, 700.0f), D3DXVECTOR3(-50.0f, 0.0f, -50.0f), D3DXVECTOR3(50.0f, 100.0f, 50.0f), 1, 0, ACTION_TYPE_MAX);
@@ -101,6 +110,16 @@ void InitDebugModel(void)
         }
     }
 
+    STAGE* pStage;
+    pStage = GetStage();
+
+    for (int nWall = 0; nWall < NUMSTAGE; nWall++)
+    {
+        if (pStage[nWall].bUse == true)
+        {
+            g_NUM_Stage++;
+        }
+    }
 }
 
 //=============================
@@ -140,6 +159,9 @@ void UpdateDebugModel(void)
     MAPOBJECT* pMapObject;
     pMapObject = GetMapObject();
 
+    STAGE* pStage;
+    pStage = GetStage();
+
     if (GetkeyboardTrigger(DIK_2) == true)
     {//2がおされた
         g_SelectNum++;
@@ -161,6 +183,31 @@ void UpdateDebugModel(void)
         pMapObject[g_SelectNum].bUse = false;
         g_NUM_Model--;
     }
+
+
+    if (GetkeyboardTrigger(DIK_4) == true)
+    {//2がおされた
+        g_SelectNumStage++;
+        if (g_SelectNumStage > g_NUM_Stage)
+        {
+            g_SelectNumStage = 0;
+        }
+    }
+    else if (GetkeyboardTrigger(DIK_3) == true)
+    {//1がおされた
+        g_SelectNumStage--;
+        if (g_SelectNumStage < 0)
+        {
+            g_SelectNumStage = g_NUM_Stage;
+        }
+    }
+
+
+
+
+
+
+
 
     for (int nCntModel = 0; nCntModel < MAXDEBUGMODEL; nCntModel++)
     {
@@ -190,8 +237,6 @@ void UpdateDebugModel(void)
                 {
                     g_DebugModel[nCntModel].pos = pMapObject[g_SelectNum].pos;
                 }
-
-               
             }
 
             else if (nCntModel == 5)
@@ -201,12 +246,43 @@ void UpdateDebugModel(void)
                 {
                     g_DebugModel[nCntModel].pos = pMapObject[g_SelectNum].pos;
                 }
-
-
             }
 
 
+            else if (nCntModel == 5)
+            {//削除ピン
 
+                if (pStage[g_SelectNumStage].bUse == true)
+                {
+                    g_DebugModel[nCntModel].pos = pStage[g_SelectNumStage].posStage;
+                    if (pStage[g_SelectNumStage].bCollision==false)
+                    {
+                        g_DebugModel[nCntModel].ZoneColor = D3DXCOLOR(5.0f, 1.0f, 5.0f, 0.5f);
+                    }
+                    else
+                    {
+                        g_DebugModel[nCntModel].ZoneColor = D3DXCOLOR(1.0f, 1.0f, 5.0f, 0.5f);
+                    }
+                }
+            }
+
+            else if (nCntModel == 6)
+            {//削除ピン
+
+                if (pStage[g_SelectNumStage].bUse == true)
+                {
+                    g_DebugModel[nCntModel].pos = pStage[g_SelectNumStage].posStage;
+                }
+
+                if (pStage[g_SelectNumStage].bCollision == false)
+                {
+                    g_DebugModel[nCntModel].ZoneColor = D3DXCOLOR(5.0f, 1.0f, 5.0f, 0.5f);
+                }
+                else
+                {
+                    g_DebugModel[nCntModel].ZoneColor = D3DXCOLOR(1.0f, 1.0f, 5.0f, 0.5f);
+                }
+            }
 
           
 
@@ -300,7 +376,7 @@ void DrawDebugModel(void)
             for (int nCntMat = 0; nCntMat < (int)g_dwNumMatDebugModel; nCntMat++)
             {
                 //マテリアルの設定
-                pDevice->SetMaterial(&pMat[nCntMat].MatD3D);
+             //   pDevice->SetMaterial(&pMat[nCntMat].MatD3D);
 
                 //テクスチャの設定
                 pDevice->SetTexture(0, NULL);//今回は設定しない
@@ -309,7 +385,7 @@ void DrawDebugModel(void)
                 g_pMeshDebugModel[nCntMat]->DrawSubset(nCntMat);
 
                 //保存してたマテリアルを戻す
-                pDevice->SetMaterial(&matDef);
+            //    pDevice->SetMaterial(&matDef);
 
 
                 // マテリアルの設定
@@ -322,6 +398,12 @@ void DrawDebugModel(void)
 
 
             }
+
+            //保存してたマテリアルを戻す
+            pDevice->SetMaterial(&matDef);
+
+            //テクスチャを戻す
+            pDevice->SetTexture(0, NULL);
         }
     }
 
@@ -338,7 +420,10 @@ void DrawDebugDelC0mment(void)
 {
 
     DrawTextSet(D3DXVECTOR3(550.0f, 570.0f, 0.0f), 20, FONT_SOUKOUMINCHO, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), "1,2でモデル切り替え、\nDeleteでモデル削除" );
-    DrawTextSet(D3DXVECTOR3(550.0f, 630.0f, 0.0f), 20, FONT_SOUKOUMINCHO, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), "モデル%d/%d", g_SelectNum, g_NUM_Model);
+    DrawTextSet(D3DXVECTOR3(550.0f, 600.0f, 0.0f), 20, FONT_SOUKOUMINCHO, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), "モデル%d/%d", g_SelectNum, g_NUM_Model);
+
+    DrawTextSet(D3DXVECTOR3(550.0f, 430.0f, 0.0f), 20, FONT_SOUKOUMINCHO, D3DXCOLOR(1.0f, 0.5f, 1.0f, 1.0f), "1,2で壁床切り替え");
+    DrawTextSet(D3DXVECTOR3(550.0f, 460.0f, 0.0f), 20, FONT_SOUKOUMINCHO, D3DXCOLOR(1.0f, 0.5f, 1.0f, 1.0f), "壁床%d/%d", g_SelectNumStage, g_NUM_Stage);
 }
 
 
@@ -417,14 +502,7 @@ void DeleteCoveredModel(void)
             {
                 if (nCnt2 != nCntModel)
                 {//自分自身じゃないとき
-                    if (pMapObject[nCntModel].nType == MODELTYPE_SAFE && pMapObject[nCnt2].nType == MODELTYPE_SAFE)
-                    {
-                        int test;
-                        test = 2;
-                    }
-
-
-
+                    
                     if (pMapObject[nCnt2].bUse == true)
                     {
                         if (pMapObject[nCntModel].nType == pMapObject[nCnt2].nType && pMapObject[nCntModel].pos == pMapObject[nCnt2].pos && pMapObject[nCntModel].Maxpos == pMapObject[nCnt2].Maxpos)

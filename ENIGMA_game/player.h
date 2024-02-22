@@ -16,7 +16,7 @@
 
 #define VIEWPOS (D3DXVECTOR3 (20.0f,70.0f,0.0f))
 
-#define NUM_TEXTURE_1P (10)
+#define NUM_TEXTURE_1P (20)
 
 #define MOVESPEED		(0.7f)//移動速度(0.15)
 
@@ -29,11 +29,11 @@
 #define ROT_MOVESPEED		(0.04f)//旋回速度
 #define ROT_DAMPING_RATIO	(0.4f)//旋回速度の減衰比
 
-#define MAX_WORD	(8192)//読み込む文字の最大数
-#define MAX_PARTS	(60)//最大PARTS数
+#define MAX_WORD	(1024*3)//読み込む文字の最大数
+#define MAX_PARTS	(40)//最大PARTS数
 #define MAX_WORD2	(300)//最大文字数
 #define MAX_MOTION	(12)//モーション最大数
-#define MAXKEY	(120)//最大キー数
+#define MAXKEY	(60)//最大キー数
 
 //行動可能半径
 #define MAXMAREA	(3000.0f)
@@ -55,6 +55,8 @@ typedef enum
 	MOTIONTYPE_1P_JUMP,
 	MOTIONTYPE_1P_RANDING,
 	MOTIONTYPE_1P_BREND,
+	MOTIONTYPE_1P_SNEAK,
+	MOTIONTYPE_1P_DAMAGE,
 	MOTIONTYPE_1P_MAX,
 }MOTIONTYPE;
 
@@ -225,5 +227,8 @@ void LoadSet(void);//txtによるキャラのOFFSET
 void LowerBodyMotion(void);//下半身モーション
 void UpperBodyMotion(void);//上半身モーション
 
+
+//Xfireよみこみ
+void LoadXfire_Player(void);//OFFセットでの情報からモデル読み込み
 
 #endif // !_PLAYER_H_

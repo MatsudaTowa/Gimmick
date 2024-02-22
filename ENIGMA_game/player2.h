@@ -13,7 +13,7 @@
 
 #define BRENDFLAME2	(15.0f)//モーションブレンドのフレーム数
 
-#define NUM_TEXTURE_2P (10)
+#define NUM_TEXTURE_2P (20)
 
 
 #define VIEWPOS2 (D3DXVECTOR3 (22.0f,70.0f,0.0f))
@@ -29,11 +29,11 @@
 #define ROT_MOVESPEED_2P		(0.04f)//旋回速度
 #define ROT_DAMPING_RATIO_2P	(0.4f)//旋回速度の減衰比
 
-#define MAX_WORD_2P	(8192)//読み込む文字の最大数
-#define MAX_PARTS_2P	(60)//最大PARTS数
+#define MAX_WORD_2P	(1024*3)//読み込む文字の最大数
+#define MAX_PARTS_2P	(40)//最大PARTS数
 #define MAX_WORD2_2P	(200)//最大文字数
 #define MAX_MOTION_2P	(20)//モーション最大数
-#define MAXKEY_2P	(120)//最大キー数
+#define MAXKEY_2P	(60)//最大キー数
 
 //行動可能半径
 #define MAXMAREA_2P	(3000.0f)
@@ -55,6 +55,8 @@ typedef enum
 	MOTIONTYPE_2P_JUMP,
 	MOTIONTYPE_2P_RANDING,
 	MOTIONTYPE_2P_BREND,
+	MOTIONTYPE_2P_SNEAK,
+	MOTIONTYPE_2P_DAMAGE,
 	MOTIONTYPE_2P_MAX,
 }MOTIONTYPE_2P;
 
@@ -224,6 +226,9 @@ void ConversionPlayerRot2_2P(float fRot, int nCnt);//角度修正系
 void LoadSet_2P(void);//txtによるキャラのOFFSET
 void LowerBodyMotion_2P(void);//下半身モーション
 void UpperBodyMotion_2P(void);//上半身モーション
+
+//Xfireよみこみ
+void LoadXfire_Player2(void);//OFFセットでの情報からモデル読み込み
 
 
 #endif // !_PLAYER2_H_

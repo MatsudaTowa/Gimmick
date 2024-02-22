@@ -26,6 +26,10 @@ int g_PointNum[2] = {};//ポインターの位置番号
 
 int g_ItemNum2 = 0;//アイテム所持数
 
+
+//描画可能か(アップデートで変動・描画で使用)
+bool g_DrawOK[3] = {};//三番目だけ常にture
+
 //=============================
 //アイテムUIの初期化処理
 //=============================
@@ -36,8 +40,12 @@ void InitItem_UI(void)
 	g_PointNum[1] = 0;
 
 
+
 	g_ItemNum2 = 0;
 	
+	g_DrawOK[0] = false;
+	g_DrawOK[1] = false;
+	g_DrawOK[2] = true;
 
 	LPDIRECT3DDEVICE9 pDevice;	//デバイスへのポインタ
 
@@ -124,7 +132,7 @@ void InitItem_UI(void)
 	}
 
 
-	SetItem_UI(D3DXVECTOR3(SCREEN_WIDE-100.0f, 35.0f, 0), ITEM_UI_TYPE_KEYUI, ITEMTYPE_MAX, -1, 2);//鍵
+	SetItem_UI(D3DXVECTOR3(SCREEN_WIDE-100.0f, 35.0f, 0), ITEM_UI_TYPE_KEYUI, ITEMTYPE_MAX, -1, -1);//鍵--プレイヤーなし
 
 }
 //=============================
@@ -158,10 +166,9 @@ void UpdateItem_UI(bool Player1InputOK, bool Player2InputOK)
 	//頂点バッファをロックし、頂点情報へのポインタを取得
 	g_pVtxBuffItem_UI->Lock(0, 0, (void**)&pVtx, 0);
 
-	//for (int i = 0; i < 2; i++)
-	//{//ここだけIndex(1が0,2が1)
-	//	InPutControllerITEM_UI(i);//入力
-	//}
+	g_DrawOK[0] = Player1InputOK;
+	g_DrawOK[1] = Player2InputOK;
+
 
 	if (Player1InputOK==true)
 	{
@@ -415,7 +422,7 @@ void DrawItem_UI(void)
 	{
 		if (g_ItemUI[nCntItem_UI].bUse == true)
 		{//アイテムUIが使用されている
-			if (g_ItemUI[nCntItem_UI].UItype == ITEM_UI_TYPE_FRAME|| g_ItemUI[nCntItem_UI].UItype == ITEM_UI_TYPE_POINTER)
+			if (g_ItemUI[nCntItem_UI].UItype == ITEM_UI_TYPE_FRAME || g_ItemUI[nCntItem_UI].UItype == ITEM_UI_TYPE_POINTER)
 			{//枠かポインターの時
 
 
@@ -428,35 +435,40 @@ void DrawItem_UI(void)
 			}
 			else if (g_ItemUI[nCntItem_UI].UItype == ITEM_UI_TYPE_MAINBODY)
 			{//アイテム自体
-				
-					//列挙をintに
-					int EscapeNum2 = static_cast<int>(g_ItemUI[nCntItem_UI].nItemType);
 
-					//テクスチャの設定
-					pDevice->SetTexture(0, g_pTextureItem_UI[EscapeNum2 + 2]);//---------書き換え済み
+					//列挙をintに
+				int EscapeNum2 = static_cast<int>(g_ItemUI[nCntItem_UI].nItemType);
+
+				//テクスチャの設定
+				pDevice->SetTexture(0, g_pTextureItem_UI[EscapeNum2 + 2]);//---------書き換え済み
 			}
 			else if (g_ItemUI[nCntItem_UI].UItype == ITEM_UI_TYPE_KEYUI)
 			{//アイテム自体
 
-					//列挙をintに
-			//	int EscapeNum2 = static_cast<int>(g_ItemUI[nCntItem_UI].nItemType);
+				//列挙をintに
+				int EscapeNum2 = static_cast<int>(g_ItemUI[nCntItem_UI].nItemType);
 
 				//テクスチャの設定
 				pDevice->SetTexture(0, g_pTextureItem_UI[7]);//---------書き換え済み
 			}
 
-
-					//ポリゴンの描画
-			pDevice->DrawPrimitive(D3DPT_TRIANGLESTRIP,//プリミティブの種類
-				nCntItem_UI * 4,//描画する最初の頂点インデックス
-				2);//描画するプリミティブ数
+			if (g_DrawOK[g_ItemUI[nCntItem_UI].PlayerNum - 1] == true)
+			{
+				//ポリゴンの描画
+				pDevice->DrawPrimitive(D3DPT_TRIANGLESTRIP,//プリミティブの種類
+					nCntItem_UI * 4,//描画する最初の頂点インデックス
+					2);//描画するプリミティブ数
+			}
+			
+			//テクスチャを戻す
+			pDevice->SetTexture(0, NULL);
 		}
 	}
 
 
-	DrawTextSet(D3DXVECTOR3(110.0f, 460.0f, 0.0f), 25, FONT_AKABARASINDELERA, D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f), "1所持数%dポインタ位置%d",g_ItemNum,g_PointNum[0]);
+	//DrawTextSet(D3DXVECTOR3(110.0f, 460.0f, 0.0f), 25, FONT_AKABARASINDELERA, D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f), "1所持数%dポインタ位置%d",g_ItemNum,g_PointNum[0]);
 
-	DrawTextSet(D3DXVECTOR3(110.0f, 560.0f, 0.0f), 25, FONT_AKABARASINDELERA, D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f), "2所持数%dポインタ位置%d", g_ItemNum2, g_PointNum[1]);
+	//DrawTextSet(D3DXVECTOR3(110.0f, 560.0f, 0.0f), 25, FONT_AKABARASINDELERA, D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f), "2所持数%dポインタ位置%d", g_ItemNum2, g_PointNum[1]);
 }
 //=============================
 //アイテムUIの設定処理

@@ -66,6 +66,20 @@ void InitCollision_Pre(void)
     SetCollision_Pre(D3DXVECTOR3(-600.0f, 0.0f, -4000.0f), D3DXVECTOR3(-100.0f, 0.0f, -100.0f), D3DXVECTOR3(100.0f, 600.0f, 100.0f), D3DXCOLOR(5.0f, 0.0f, 5.0f, 0.5f));
     SetCollision_Pre(D3DXVECTOR3(-600.0f, 0.0f, -1800.0f), D3DXVECTOR3(-100.0f, 0.0f, -100.0f), D3DXVECTOR3(100.0f, 600.0f, 100.0f), D3DXCOLOR(5.0f, 0.0f, 5.0f, 0.5f));
 
+    //水回り
+    SetCollision_Pre(D3DXVECTOR3(3237.0f, 0.0f, -260.0f), D3DXVECTOR3(-400.0f, 0.0f, 09.0f), D3DXVECTOR3(160.0f, 300.0f, 10.0f), D3DXCOLOR(5.0f, 0.0f, 5.0f, 0.5f));
+    
+    SetCollision_Pre(D3DXVECTOR3(3500.0f, 150.0f, -100.0f), D3DXVECTOR3(-2.0f, 0.0f, -050.0f), D3DXVECTOR3(2.0f, 200.0f, 050.0f), D3DXCOLOR(5.0f, 0.0f, 5.0f, 0.5f));
+    
+    SetCollision_Pre(D3DXVECTOR3(3600.0f, 0.0f, -400.0f), D3DXVECTOR3(-100.0f, 0.0f, -250.0f), D3DXVECTOR3(100.0f, 300.0f, 250.0f), D3DXCOLOR(5.0f, 0.0f, 5.0f, 0.5f));
+    
+    SetCollision_Pre(D3DXVECTOR3(3200.0f, 120.0f, -450.0f), D3DXVECTOR3(-2.0f, 0.0f, -200.0f), D3DXVECTOR3(2.0f, 200.0f, 200.0f), D3DXCOLOR(5.0f, 0.0f, 5.0f, 0.5f));
+    
+    SetCollision_Pre(D3DXVECTOR3(3200.0f, 0.0f, -600.0f), D3DXVECTOR3(-4.0f, 0.0f, -100.0f), D3DXVECTOR3(4.0f, 120.0f, 100.0f), D3DXCOLOR(5.0f, 0.0f, 5.0f, 0.5f));
+   
+    SetCollision_Pre(D3DXVECTOR3(3200.0f, 0.0f, -320.0f), D3DXVECTOR3(-4.0f, 0.0f, -80.0f), D3DXVECTOR3(4.0f, 120.0f, 50.0f), D3DXCOLOR(5.0f, 0.0f, 5.0f, 0.5f));
+    
+    SetCollision_Pre(D3DXVECTOR3(3400.0f, 0.0f, -1800.0f), D3DXVECTOR3(-300.0f, 0.0f, -100.0f), D3DXVECTOR3(300.0f, 300.0f, 100.0f), D3DXCOLOR(5.0f, 0.0f, 5.0f, 0.5f));
 
 }
 
@@ -193,7 +207,7 @@ void DrawCollision_Pre(void)
             for (int nCntMat = 0; nCntMat < (int)g_dwNumMatCollision_Pre; nCntMat++)
             {
                 //マテリアルの設定
-                pDevice->SetMaterial(&pMat[nCntMat].MatD3D);
+            //    pDevice->SetMaterial(&pMat[nCntMat].MatD3D);
 
                 //テクスチャの設定
                 pDevice->SetTexture(0, NULL);//今回は設定しない
@@ -202,7 +216,7 @@ void DrawCollision_Pre(void)
                 g_pMeshCollision_Pre[nCntMat]->DrawSubset(nCntMat);
 
                 //保存してたマテリアルを戻す
-                pDevice->SetMaterial(&matDef);
+             //   pDevice->SetMaterial(&matDef);
 
 
                 // マテリアルの設定
@@ -219,6 +233,12 @@ void DrawCollision_Pre(void)
                 ////Zバッファに書き込まない
                 //pDevice->SetRenderState(D3DRS_ZWRITEENABLE, TRUE);
             }
+
+            //保存してたマテリアルを戻す
+            pDevice->SetMaterial(&matDef);
+
+            //テクスチャを戻す
+            pDevice->SetTexture(0, NULL);
         }
     }
 

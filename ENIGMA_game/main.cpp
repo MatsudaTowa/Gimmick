@@ -17,6 +17,9 @@
 #include "player.h"
 #include "gamefade.h"
 #include "text.h"
+#include "menu.h"
+#include "Film.h"
+#include "MenuFrame.h"
 
 //グローバル変数
 LPDIRECT3D9 g_pD3D = NULL;//direct3Dオブジェクトへのポインタ
@@ -447,13 +450,14 @@ HRESULT Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindows)
 
 
 ////----------------------------------------------------------------------------------------------------------------------------------ここまで共通
-
+//
+	//モード設定
+	Setmode(g_mode);
 
 	//フェードの初期化処理
 	InitFade(MODE(FADE_NONE));
 
-	//モード設定
-	Setmode(g_mode);
+
 	//特別
 	//InitPlayer();
 
@@ -483,6 +487,8 @@ void Uninit(void)
 	UninitResult();
 	//チュートリアル画面の終了処理
 	UninitTutorial();
+	//メニュー画面の終了処理
+	UninitMenuFrame();
 
 	UninitSound();
 
@@ -596,9 +602,10 @@ void Update(void)
 	
 	case MODE_TUTORIAL://チュートリアル画面
 		UpdateTutorial();
+		break;
 
-
-
+	case MODE_MENU://メニュー画面
+		UpdateMenuFrame();
 		break;
 
 	}
@@ -670,13 +677,20 @@ void Draw(void)
 
 			DrawTutorial();
 			break;
+
+		case MODE_MENU://メニュー画面
+		//ビューポートをもとに戻す
+			pDevice->SetViewport(&g_fullScreen_Viewport);//ビューポートの設定
+
+			DrawMenuFrame();
+			break;
 		}
 			
 	//	DrawFPS();
 		DrawDebugText();
 
 		
-		DrawTextSet(D3DXVECTOR3(900.0f, 0.0f, 0.0f), 0, FONT_DOKIDOKI, D3DXCOLOR(0.0f, 1.0f, 0.5f, 1.0f),"テストーFPS%d", g_nCountFPS);
+		DrawTextSet(D3DXVECTOR3(900.0f, 0.0f, 0.0f), 30, FONT_DOKIDOKI, D3DXCOLOR(1.0f, 1.0f, 0.5f, 1.0f),"テストーFPS%d", g_nCountFPS);
 
 
 		
@@ -694,7 +708,7 @@ void Draw(void)
 //=============================
 void Setmode(MODE g_ModeNext)
 {
-//現在の画面(モード)の設定処理
+	//現在の画面(モード)の設定処理
 	switch (g_mode)
 	{
 	case MODE_TITLE://タイトル画面
@@ -711,6 +725,10 @@ void Setmode(MODE g_ModeNext)
 
 	case MODE_TUTORIAL://チュートリアル画面
 		UninitTutorial();
+		break;
+
+	case MODE_MENU://メニュー画面
+		UninitMenuFrame();
 		break;
 
 	}
@@ -742,6 +760,10 @@ void Setmode(MODE g_ModeNext)
 
 	case MODE_TUTORIAL://チュートリアル画面
 		InitTutorial();
+		break;
+
+	case MODE_MENU://メニュー画面
+		InitMenuFrame();
 		break;
 	}
 

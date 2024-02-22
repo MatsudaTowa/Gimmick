@@ -25,8 +25,8 @@ Title g_Title[NUM_TITLE];//タイトルの情報
 D3DXCOLOR g_colorfade[NUM_TITLE];
 TITLESTATE g_TitleState;//フェード時の識別
 
-bool g_nSkipCnt=false;//Enterで始めれるかどうか
-bool g_nButtonCnt=false;//ボタン押せチカチカのやつ
+bool g_nSkipCnt = false;//Enterで始めれるかどうか
+bool g_nButtonCnt = false;//ボタン押せチカチカのやつ
 
 //=============================
 //タイトル画面の初期化処理
@@ -34,10 +34,12 @@ bool g_nButtonCnt=false;//ボタン押せチカチカのやつ
 void InitTitle(void)
 {
 	int nCntTitle = 0;
-	 g_nSkipCnt = false;
-	 g_nButtonCnt = false;
 
-	 g_TitleState = TITLE_BG;
+
+	g_nSkipCnt = false;
+	g_nButtonCnt = false;
+
+	g_TitleState = TITLE_BG;
 
 	LPDIRECT3DDEVICE9 pDevice;	//デバイスへのポインタ
 
@@ -71,10 +73,10 @@ void InitTitle(void)
 		pVtx[3].rhw = 1.0f;//値は固定]
 
 		//頂点カラーの設定
-		pVtx[0].col = D3DXCOLOR(1.0f,1.0f,1.0f,1.0f);
-		pVtx[1].col = D3DXCOLOR(1.0f,1.0f,1.0f,1.0f);
-		pVtx[2].col = D3DXCOLOR(1.0f,1.0f,1.0f,1.0f);
-		pVtx[3].col = D3DXCOLOR(1.0f,1.0f,1.0f,1.0f);
+		pVtx[0].col = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
+		pVtx[1].col = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
+		pVtx[2].col = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
+		pVtx[3].col = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
 
 		//頂点座標の更新-----------------------------------
 		pVtx[0].pos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
@@ -103,7 +105,7 @@ void UninitTitle(void)
 {
 	StopSound(SOUND_LABEL_BGM000);
 
-	int nCntTitle=0;
+	int nCntTitle = 0;
 
 	for (nCntTitle = 0; nCntTitle < NUM_TITLE; nCntTitle++)
 	{
@@ -268,10 +270,10 @@ void UpdateTitle(void)
 		if (nCntTitle == TITLE_PRESSENTER)
 		{//ボタン押せのとき
 		//頂点カラーの設定
-			pVtx[0].col = D3DXCOLOR(1.0f,1.0f, 1.0f, g_colorfade[nCntTitle].a);
-			pVtx[1].col = D3DXCOLOR(1.0f,1.0f, 1.0f, g_colorfade[nCntTitle].a);
-			pVtx[2].col = D3DXCOLOR(1.0f,1.0f, 1.0f, g_colorfade[nCntTitle].a);
-			pVtx[3].col = D3DXCOLOR(1.0f,1.0f, 1.0f, g_colorfade[nCntTitle].a);
+			pVtx[0].col = D3DXCOLOR(1.0f, 1.0f, 1.0f, g_colorfade[nCntTitle].a);
+			pVtx[1].col = D3DXCOLOR(1.0f, 1.0f, 1.0f, g_colorfade[nCntTitle].a);
+			pVtx[2].col = D3DXCOLOR(1.0f, 1.0f, 1.0f, g_colorfade[nCntTitle].a);
+			pVtx[3].col = D3DXCOLOR(1.0f, 1.0f, 1.0f, g_colorfade[nCntTitle].a);
 		}
 		else
 		{
@@ -285,7 +287,7 @@ void UpdateTitle(void)
 		pVtx += 4;
 	}
 
-	if (GetkeyboardTrigger(DIK_RETURN) == true || GetJoypadTrigger(JOYKEY_A,0) == true || GetJoypadTrigger(JOYKEY_A,1) == true)
+	if (GetkeyboardTrigger(DIK_RETURN) == true || GetJoypadTrigger(JOYKEY_A, 0) == true || GetJoypadTrigger(JOYKEY_A, 1) == true)
 	{//決定キー(Enterキー)が押された
 		if (g_nSkipCnt == false)
 		{//まだ画面動いてる中
@@ -293,8 +295,8 @@ void UpdateTitle(void)
 		}
 		else if (g_nSkipCnt == true)
 		{
-		//	PlaySound(SOUND_LABEL_SE_ENTER001);
-			SetFade(MODE_TUTORIAL);
+			//	PlaySound(SOUND_LABEL_SE_ENTER001);
+			SetFade(MODE_MENU);
 		}
 	}
 
@@ -317,7 +319,7 @@ void DrawTitle(void)
 	//頂点フォーマットの設定
 	pDevice->SetFVF(FVF_VERTEX_2D);//-------書き換え済み
 
-	int nCntTitle=0;
+	int nCntTitle = 0;
 
 	for (nCntTitle = 0; nCntTitle < NUM_TITLE; nCntTitle++)
 	{
@@ -326,7 +328,11 @@ void DrawTitle(void)
 
 		//ポリゴンの描画
 		pDevice->DrawPrimitive(D3DPT_TRIANGLESTRIP,//プリミティブの種類//----------書き換え済み
-			nCntTitle*4,//描画する最初の頂点インデックス
+			nCntTitle * 4,//描画する最初の頂点インデックス
 			2);//描画するプリミティブ数
+
+		
+		//テクスチャを戻す
+		pDevice->SetTexture(0, NULL);
 	}
 }

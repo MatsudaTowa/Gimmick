@@ -11,21 +11,17 @@
 //マクロ定義
 #define _ADVANCEDMODEL_H_//二重インクルード防止のマクロ定義
 
-//#define MAX_MODEL_AD	(10)
-
-
 #define BRENDFLAME_AD	(15.0f)//モーションブレンドのフレーム数
 
-#define MAX_WORD_AD	(8192)//読み込む文字の最大数
+#define MAX_WORD_AD	(1024*3)//読み込む文字の最大数
 #define MAX_PARTS_AD	(60)//最大PARTS数
-#define MAX_WORD2_AD	(300)//最大文字数
+#define MAX_WORD2_AD	(3200)//最大文字数
 #define MAX_MOTION_AD	(30)//モーション最大数
 #define MAXKEY_AD	(240)//最大キー数
 
 
 
-#define NUM_TEXTURE_AD	(20)
-
+#define NUM_TEXTURE_AD	(60)
 
 
 //MODELの名前
@@ -47,16 +43,6 @@ typedef enum
 	MOTIONTYPE_AD_BREND,
 	MOTIONTYPE_AD_MAX,
 }MOTIONTYPE_AD;
-
-////プレイヤーの状態
-//typedef enum
-//{
-//	ADVANCEDMODELSTATE_1P_NOMAL = 0,
-//	ADVANCEDMODELSTATE_1P_DAMEGE,
-//	ADVANCEDMODELSTATE_1P_TELEPOR,
-//	PLAERSTATE_1P_MAX,
-//}ADVANCEDMODELSTATE;
-
 
 //壁の構造体
 typedef struct
@@ -163,6 +149,8 @@ typedef struct
 //プロトタイプ宣言
 void InitAdvancedModel(void);//プレイヤーの初期化処理
 void UninitAdvancedModel(void);//プレイヤーの終了処理
+
+
 void UpdateAdvancedModel(void);//プレイヤーの更新処理
 void DrawAdvancedModel(void);//プレイヤーの描画処理
 
@@ -172,16 +160,15 @@ MODEL_AD* GetAdModel(int Index);
 
 LPD3DXMESH* GetMesh_AdvancedModel(int Index);
 
-
-//void InPutKeyboardAdvancedModel(void);//キーボード入力反映処理(移動)
-//oid InPutControllerAdvancedModel(void);//キーボード/コントローラー入力反映処理(移動)
-//int  CheckInputMove2(void);//移動キーの入力状態の有無を確認
-//void InputKeyAttack(void);//攻撃キー系
 void ConversionAdvancedModelRot2(int Index, float fRot, int nCnt);//角度修正系
 
 void LoadSet3(int Index);//txtによるキャラのOFFSET
+void LoadXfire_AdModel(int Index);//OFFセットでの情報からモデル読み込み
+
+
 void LowerBodyMotion3(int Index);//下半身モーション
-//void UpperBodyMotion(void);//上半身モーション
+
+
 
 //セット
 void SetModel_AD(MODELADTYPE ModelName, D3DXVECTOR3 pos, D3DXVECTOR3 rot);

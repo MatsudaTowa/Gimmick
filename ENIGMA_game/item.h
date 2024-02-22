@@ -12,7 +12,7 @@
 
 #include "game.h"
 
-#define NUMITEM	(320)//アイテムの最大数
+#define NUMITEM	(64)//アイテムの最大数
 //#define TEXNUM	(4)//テクスチャの数
 
 #define ITEMSPEED	 (8)//アイテムの最初の速度

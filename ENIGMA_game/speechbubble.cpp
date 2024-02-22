@@ -217,6 +217,10 @@ void DrawSpeechBubble(void)
 			//pDevice->SetRenderState(D3DRS_ZFUNC, D3DCMP_LESSEQUAL);
 			//Zバッファに書き込まない
 			pDevice->SetRenderState(D3DRS_ZWRITEENABLE, TRUE);
+
+			
+			//テクスチャを戻す
+			pDevice->SetTexture(0, NULL);
 		}
 	}
 }

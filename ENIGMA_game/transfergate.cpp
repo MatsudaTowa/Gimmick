@@ -55,7 +55,7 @@ void InitTransferGate(void)
 
     //*外から倉庫へ*
     //--外
-    SetTransferGate(D3DXVECTOR3(100.0f, 0.0f, 0.0f), D3DXVECTOR3(-50.0f, 0.0f, -60.0f), D3DXVECTOR3(50.0f, 100.0f, 60.0f), 0, 1, TRANS_ANGLE_MIN_X, D3DXCOLOR(1.0f, 0.0f, 0.0f, 0.7f),false,true);
+    SetTransferGate(D3DXVECTOR3(150.0f, 0.0f, 0.0f), D3DXVECTOR3(-50.0f, 0.0f, -60.0f), D3DXVECTOR3(50.0f, 100.0f, 60.0f), 0, 1, TRANS_ANGLE_MIN_X, D3DXCOLOR(1.0f, 0.0f, 0.0f, 0.7f),false,true);
     //--倉庫左
     SetTransferGate(D3DXVECTOR3(-50.0f, 0.0f, -1000.0f), D3DXVECTOR3(-50.0f, 0.0f, -60.0f), D3DXVECTOR3(50.0f, 100.0f, 60.0f), 1, 0, TRANS_ANGLE_MAX_X, D3DXCOLOR(1.0f, 0.0f, 0.0f, 0.7f),false, true);
 
@@ -66,14 +66,14 @@ void InitTransferGate(void)
     SetTransferGate(D3DXVECTOR3(-600.0f, 0.0f, 100.0f), D3DXVECTOR3(-50.0f, 0.0f, -60.0f), D3DXVECTOR3(50.0f, 100.0f, 60.0f), 3, 2, TRANS_ANGLE_MIN_Z, D3DXCOLOR(1.0f, 1.0f, 0.0f, 0.7f), false, true);
 
     //*とりあえず真ん中からリビング*
-    SetTransferGate(D3DXVECTOR3(200.0f, 0.0f, 0.0f), D3DXVECTOR3(-50.0f, 0.0f, -60.0f), D3DXVECTOR3(50.0f, 100.0f, 60.0f), 4, 5, TRANS_ANGLE_MIN_Z, D3DXCOLOR(0.0f, 1.0f, 1.0f, 0.7f),false, true);
+    SetTransferGate(D3DXVECTOR3(300.0f, 0.0f, 0.0f), D3DXVECTOR3(-50.0f, 0.0f, -60.0f), D3DXVECTOR3(50.0f, 100.0f, 60.0f), 4, 5, TRANS_ANGLE_MIN_Z, D3DXCOLOR(0.0f, 1.0f, 1.0f, 0.7f),false, true);
     SetTransferGate(D3DXVECTOR3(2930, 104.0f, -1530.0f), D3DXVECTOR3(-50.0f, 0.0f, -60.0f), D3DXVECTOR3(50.0f, 100.0f, 60.0f), 5, 4, TRANS_ANGLE_MAX_Z, D3DXCOLOR(0.0f, 1.0f, 1.0f, 0.7f), false, true);
     
 
     //*真ん中から浴室？？*
     // 
-    //SetTransferGate(D3DXVECTOR3(-2000.0f, 0.0f, -700.0f), D3DXVECTOR3(-100.0f, 0.0f, -60.0f), D3DXVECTOR3(100.0f, 100.0f, 60.0f), 4, 5, TRANS_ANGLE_MIN_X, D3DXCOLOR(1.0f, 0.0f, 1.0f, 0.7f), true, true);
-    //SetTransferGate(D3DXVECTOR3(-2000.0f, 0.0f, 700.0f), D3DXVECTOR3(-100.0f, 0.0f, -60.0f), D3DXVECTOR3(100.0f, 100.0f, 60.0f), 5, 4, TRANS_ANGLE_MAX_Z, D3DXCOLOR(1.0f, 0.0f, 1.0f, 0.7f), true, true);
+    SetTransferGate(D3DXVECTOR3(450.0f, 0.0f, 0.0f), D3DXVECTOR3(-50.0f, 0.0f, -60.0f), D3DXVECTOR3(50.0f, 100.0f, 60.0f), 6, 7, TRANS_ANGLE_MIN_Z, D3DXCOLOR(0.0f, 0.0f, 1.0f, 0.7f), false, true);
+    SetTransferGate(D3DXVECTOR3(3140.0f, 0.0f, 20.0f), D3DXVECTOR3(-100.0f, 0.0f, -60.0f), D3DXVECTOR3(100.0f, 100.0f, 60.0f), 7, 6, TRANS_ANGLE_MAX_Z, D3DXCOLOR(0.0f, 0.0f, 1.0f, 0.7f), false, true);
 
 
 
@@ -214,7 +214,7 @@ void DrawTransferGate(void)
                 g_pMeshGate[nCntMat]->DrawSubset(nCntMat);
 
                 //保存してたマテリアルを戻す
-                pDevice->SetMaterial(&matDef);
+            //    pDevice->SetMaterial(&matDef);
 
 
                 // マテリアルの設定
@@ -231,6 +231,12 @@ void DrawTransferGate(void)
                 ////Zバッファに書き込まない
                 //pDevice->SetRenderState(D3DRS_ZWRITEENABLE, TRUE);
             }
+            //保存してたマテリアルを戻す
+            pDevice->SetMaterial(&matDef);
+
+            //テクスチャを戻す
+            pDevice->SetTexture(0, NULL);
+
         }
     }
 

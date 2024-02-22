@@ -178,6 +178,8 @@ HRESULT InitSound(HWND hWnd)
 		CloseHandle(hFile);
 	}
 
+	//TestSoundmain();
+
 	return S_OK;
 }
 
@@ -403,4 +405,106 @@ HRESULT ReadChunkData(HANDLE hFile, void* pBuffer, DWORD dwBuffersize, DWORD dwB
 //	{//再生してない
 //		return false;
 //	}
+//}
+
+
+
+
+
+
+
+
+
+
+//
+//#include <windows.h>
+//#include <stdio.h>
+//#include <mmdeviceapi.h>
+//#include <functiondiscoverykeys_devpkey.h>
+//
+//int TestSoundmain(void)
+//{
+//	HRESULT hr;
+//	IMMDeviceEnumerator* pEnumerator = NULL;
+//	IMMDeviceCollection* pDeviceCollection = NULL;
+//	IMMDevice* pDevice = NULL;
+//	IPropertyStore* pPropertyStore = NULL;
+//
+//	//// COM ライブラリの初期化
+//	//hr = CoInitializeEx(NULL, COINIT_APARTMENTTHREADED);
+//	//if (FAILED(hr)) {
+//	//	printf("COM ライブラリの初期化に失敗しました。HRESULT = 0x%x\n", hr);
+//	//	return 1;
+//	//}
+//
+//	// IMMDeviceEnumerator オブジェクトの作成
+//	hr = CoCreateInstance(__uuidof(MMDeviceEnumerator), NULL, CLSCTX_ALL, __uuidof(IMMDeviceEnumerator), (void**)&pEnumerator);
+//	if (FAILED(hr)) {
+//		printf("IMMDeviceEnumerator オブジェクトの作成に失敗しました。HRESULT = 0x%x\n", hr);
+//		CoUninitialize();
+//		return 1;
+//	}
+//	// オーディオエンドポイントの列挙
+//	hr = pEnumerator->EnumAudioEndpoints(eRender, DEVICE_STATE_ACTIVE, &pDeviceCollection);
+//	if (FAILED(hr)) {
+//		printf("オーディオエンドポイントの列挙に失敗しました。HRESULT = 0x%x\n", hr);
+//		pEnumerator->Release();
+//		CoUninitialize();
+//		return 1;
+//	}
+//
+//	UINT deviceCount;
+//	hr = pDeviceCollection->GetCount(&deviceCount);
+//	if (FAILED(hr)) {
+//		printf("デバイス数の取得に失敗しました。HRESULT = 0x%x\n", hr);
+//		pDeviceCollection->Release();
+//		pEnumerator->Release();
+//		CoUninitialize();
+//		return 1;
+//	}
+//
+//	// デバイスの取得
+//	for (UINT i = 0; i < deviceCount; ++i) {
+//		hr = pDeviceCollection->Item(i, &pDevice);
+//		if (FAILED(hr)) {
+//			printf("デバイスの取得に失敗しました。HRESULT = 0x%x\n", hr);
+//			continue;
+//		}
+//
+//		// デバイスのプロパティ ストアの取得
+//		hr = pDevice->OpenPropertyStore(STGM_READ, &pPropertyStore);
+//		if (FAILED(hr)) {
+//			printf("デバイスのプロパティ ストアの取得に失敗しました。HRESULT = 0x%x\n", hr);
+//			pDevice->Release();
+//			continue;
+//		}
+//
+//		// プロパティの取得例 (デバイス名の取得)
+//		PROPVARIANT varName;
+//		PropVariantInit(&varName);
+//		hr = pPropertyStore->GetValue(PKEY_Device_FriendlyName, &varName);
+//		if (SUCCEEDED(hr)) {
+//			if (varName.vt == VT_LPWSTR) {
+//				wprintf(L"オーディオ デバイス名 %d: %s\n", i + 1, varName.pwszVal);
+//			}
+//			else {
+//				printf("オーディオ デバイス名の取得に失敗しました。\n");
+//			}
+//			PropVariantClear(&varName);
+//		}
+//		else {
+//			printf("オーディオ デバイス名の取得に失敗しました。HRESULT = 0x%x\n", hr);
+//		}
+//
+//		// 解放
+//		pPropertyStore->Release();
+//		pDevice->Release();
+//	}
+//
+//	// 解放
+//	pDeviceCollection->Release();
+//	pEnumerator->Release();
+//	CoUninitialize();
+//
+//	return 0;
 //}

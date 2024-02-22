@@ -95,6 +95,17 @@ typedef struct
 	bool bUseGame;
 }FieldInfo;
 
+//=============================================
+//ゲームの状態
+//=============================================
+typedef enum
+{
+	GAMESTATE_PLAY = 0,
+	GAMESTATE_TUTORIAL,
+	GAMESTATE_END,
+	GANESTATE_MAX
+}GAMESTATE;
+
 
 //制限時間
 //#define ENDFRAME	(6000)//6000は100秒
@@ -140,7 +151,7 @@ void BoxCollisionGate(D3DXVECTOR3 PlayerMin, D3DXVECTOR3 PlayerMax, D3DXVECTOR3 
 //行動エリア当たり判定
 void SphereCollisionZone(D3DXVECTOR3 PlayerPos, int PlayerIndex, int ZoneIndex);
 
-//敵の視野
+//敵の視野判定
 void SphereEnemyView(D3DXVECTOR3 PlayerPos, int PlayerIndex, int ZoneIndex);
 
 //プレイヤー箱型当たり判定--アイテム

@@ -186,6 +186,10 @@ void DrawBathGimmick(void)
 
 		//ポリゴンの描画
 		pDevice->DrawPrimitive(D3DPT_TRIANGLESTRIP, 0, 2);
+
+
+		//テクスチャを戻す
+		pDevice->SetTexture(0, NULL);
 	}
 }
 

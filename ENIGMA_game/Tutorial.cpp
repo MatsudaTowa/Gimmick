@@ -131,5 +131,9 @@ void DrawTutorial(void)
 		0,//描画する最初の頂点インデックス
 		2);//描画するプリミティブ数
 
+	
+	//テクスチャを戻す
+	pDevice->SetTexture(0, NULL);
+
 	DrawPressEnter();
 }
