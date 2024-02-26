@@ -204,8 +204,11 @@ void InitGame(void)
 void UninitGame(void)
 {
 	//振動ストップ
-	VibrationLeft(0);
-	VibrationRight(0);
+	for (int nCnt = 0; nCnt < 2; nCnt++)
+	{
+		VibrationLeft(0,nCnt);
+		VibrationRight(0,nCnt);
+	}
 
 //	UninitPause();
 //

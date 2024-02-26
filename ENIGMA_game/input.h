@@ -61,8 +61,8 @@ bool GetJoypadRepeat(JOYkey key, int PadNum);
 
 
 //コントローラー振動処理
-void VibrationLeft(int MotorSpeed);
-void VibrationRight(int MotorSpeed);
+void VibrationLeft(int MotorSpeed, int PadNum);
+void VibrationRight(int MotorSpeed, int PadNum);
 
 
 #endif

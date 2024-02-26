@@ -265,7 +265,7 @@ bool GetJoypadRepeat(JOYkey key, int PadNum)
 //=============================
 //コントローラー振動処理(左)
 //=============================
-void VibrationLeft(int MotorSpeed)
+void VibrationLeft(int MotorSpeed, int PadNum)
 {
 	XINPUT_STATE joykeystate;
 
@@ -280,14 +280,14 @@ void VibrationLeft(int MotorSpeed)
 		ZeroMemory(&vibration, sizeof(XINPUT_VIBRATION));
 		vibration.wLeftMotorSpeed = MotorSpeed; // use any value between 0-65535 here
 		//vibration.wRightMotorSpeed = 16000; // use any value between 0-65535 here
-		XInputSetState(0, &vibration);
+		XInputSetState(PadNum, &vibration);
 	}
 
 }
 //=============================
 //コントローラー振動処理(右)
 //=============================
-void VibrationRight(int MotorSpeed)
+void VibrationRight(int MotorSpeed, int PadNum)
 {
 	XINPUT_STATE joykeystate;
 
@@ -302,7 +302,7 @@ void VibrationRight(int MotorSpeed)
 		ZeroMemory(&vibration, sizeof(XINPUT_VIBRATION));
 		//vibration.wLeftMotorSpeed = 32000; // use any value between 0-65535 here
 		vibration.wRightMotorSpeed = MotorSpeed; // use any value between 0-65535 here
-		XInputSetState(0, &vibration);
+		XInputSetState(PadNum, &vibration);
 	}
 }
 

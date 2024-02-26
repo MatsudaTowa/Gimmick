@@ -192,8 +192,8 @@ void UpdateEnemy(void)
 			float fLength = sqrtf(PlayerLength_x * PlayerLength_x + PlayerLength_z * PlayerLength_z);
 			if (fLength > 800.0f)
 			{
-				VibrationLeft(0);
-				VibrationRight(0);
+				VibrationLeft(0, g_Enemy.nPlayerIdx);
+				VibrationRight(0, g_Enemy.nPlayerIdx);
 				ActionEnemy(ACTIONPATTERN_ENEMY_WALK, -1);
 			}
 			if (fLength < 20.0f)
@@ -214,8 +214,8 @@ void UpdateEnemy(void)
 			float fLength = sqrtf(PlayerLength_x * PlayerLength_x + PlayerLength_z * PlayerLength_z);
 			if (fLength > 800.0f)
 			{
-				VibrationLeft(0);
-				VibrationRight(0);
+				VibrationLeft(0, g_Enemy.nPlayerIdx);
+				VibrationRight(0, g_Enemy.nPlayerIdx);
 				ActionEnemy(ACTIONPATTERN_ENEMY_WALK, -1);
 			}
 			if (fLength < 20.0f)
@@ -404,8 +404,8 @@ void ActionEnemy(ACTIONPATTERN_ENEMY ActionPattern,int PlayerIdx)
 			g_Enemy.move.x += sinf(fAngle) * 0.05f;
 			g_Enemy.move.z += cosf(fAngle) * 0.05f;
 		}
-		VibrationLeft(25535);
-		VibrationRight(25535);
+		VibrationLeft(25535,PlayerIdx);
+		VibrationRight(25535, PlayerIdx);
 
 		g_Enemy.NowMotionDOWN = MOTIONTYPE_ENEMY_MOVE;
 	}
