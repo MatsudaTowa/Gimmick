@@ -1403,7 +1403,7 @@ void BoxCollisionEnemy(D3DXVECTOR3 EnemyMin, D3DXVECTOR3 EnemyMax, D3DXVECTOR3 H
 
 		if (pEnemy->ActionPattern == ACTIONPATTERN_ENEMY_WALK)
 		{
-			ActionEnemy(ACTIONPATTERN_ENEMY_WALK);
+			ActionEnemy(ACTIONPATTERN_ENEMY_WALK,-1);
 		}
 	}
 
@@ -1419,7 +1419,7 @@ void BoxCollisionEnemy(D3DXVECTOR3 EnemyMin, D3DXVECTOR3 EnemyMax, D3DXVECTOR3 H
 		OverPenetration = false;
 		if (pEnemy->ActionPattern == ACTIONPATTERN_ENEMY_WALK)
 		{
-			ActionEnemy(ACTIONPATTERN_ENEMY_WALK);
+			ActionEnemy(ACTIONPATTERN_ENEMY_WALK,-1);
 		}
 	}
 
@@ -1436,7 +1436,7 @@ void BoxCollisionEnemy(D3DXVECTOR3 EnemyMin, D3DXVECTOR3 EnemyMax, D3DXVECTOR3 H
 		OverPenetration = false;
 		if (pEnemy->ActionPattern == ACTIONPATTERN_ENEMY_WALK)
 		{
-			ActionEnemy(ACTIONPATTERN_ENEMY_WALK);
+			ActionEnemy(ACTIONPATTERN_ENEMY_WALK,-1);
 		}
 	}
 
@@ -1452,7 +1452,7 @@ void BoxCollisionEnemy(D3DXVECTOR3 EnemyMin, D3DXVECTOR3 EnemyMax, D3DXVECTOR3 H
 		OverPenetration = false;
 		if (pEnemy->ActionPattern == ACTIONPATTERN_ENEMY_WALK)
 		{
-			ActionEnemy(ACTIONPATTERN_ENEMY_WALK);
+			ActionEnemy(ACTIONPATTERN_ENEMY_WALK,-1);
 		}
 	}
 
@@ -2435,7 +2435,7 @@ void SphereEnemyView(D3DXVECTOR3 PlayerPos, int PlayerIndex, int ZoneIndex)
 
 			pEnemyView[ZoneIndex].ZoneColor = D3DXCOLOR(1.0f, 5.0f, 2.0f, 0.2f);
 			pEnemyView[ZoneIndex].bDrawOk = false;
-			ActionEnemy(ACTIONPATTERN_ENEMY_CHASE);
+			ActionEnemy(ACTIONPATTERN_ENEMY_CHASE,PlayerIndex);
 		}
 		else
 		{
@@ -2449,7 +2449,7 @@ void SphereEnemyView(D3DXVECTOR3 PlayerPos, int PlayerIndex, int ZoneIndex)
 
 			pEnemyView[ZoneIndex].ZoneColor = D3DXCOLOR(1.0f, 5.0f, 2.0f, 0.2f);
 			pEnemyView[ZoneIndex].bDrawOk = false;
-			ActionEnemy(ACTIONPATTERN_ENEMY_CHASE);
+			ActionEnemy(ACTIONPATTERN_ENEMY_CHASE, PlayerIndex);
 		}
 		else
 		{

@@ -12,6 +12,7 @@
 #include "model.h"
 #include "main.h"
 #include "input.h"
+#include "fade.h"
 #include "enemy_view.h"
 #include <stdio.h>//ヘッダーファイルをインクルード
 #include <string.h>//文字列を扱う変数
@@ -55,13 +56,15 @@ void InitEnemy(void)
 
 	g_Enemy.move = D3DXVECTOR3(0.0f, 0.0f, 0.0f);	//歩行スピード
 
-	g_Enemy.ActionPattern = ACTIONPATTERN_ENEMY_STANDBY;
+	g_Enemy.ActionPattern = ACTIONPATTERN_ENEMY_WALK;
 
-	ActionEnemy(g_Enemy.ActionPattern);
+	ActionEnemy(g_Enemy.ActionPattern,-1);
 
 	g_Enemy.rotmove = 0.0f;
 
 	g_Enemy.PARENT = -1;//親子関係
+
+	g_Enemy.nPlayerIdx = -1;
 
 	g_Enemy.JumpFrame = 0;
 
@@ -181,21 +184,50 @@ void UpdateEnemy(void)
 
 	if (g_Enemy.ActionPattern == ACTIONPATTERN_ENEMY_CHASE)
 	{
-		Player* pPlayer = GetPlayer();
-		//プレイヤー追従処理
-		float PlayerLength_x = pPlayer->pos.x - g_Enemy.pos.x; //プレイヤーとの距離計算
-		float PlayerLength_z = pPlayer->pos.z - g_Enemy.pos.z; //プレイヤーとの距離計算
-		float fLength = sqrtf(PlayerLength_x * PlayerLength_x + PlayerLength_z * PlayerLength_z);
-		if (fLength > 800.0f)
+		if (g_Enemy.nPlayerIdx == 0)
 		{
-			VibrationLeft(0);
-			VibrationRight(0);
-			ActionEnemy(ACTIONPATTERN_ENEMY_WALK);
+			Player* pPlayer = GetPlayer();
+			float PlayerLength_x = pPlayer->pos.x - g_Enemy.pos.x; //プレイヤーとの距離計算
+			float PlayerLength_z = pPlayer->pos.z - g_Enemy.pos.z; //プレイヤーとの距離計算
+			float fLength = sqrtf(PlayerLength_x * PlayerLength_x + PlayerLength_z * PlayerLength_z);
+			if (fLength > 800.0f)
+			{
+				VibrationLeft(0);
+				VibrationRight(0);
+				ActionEnemy(ACTIONPATTERN_ENEMY_WALK, -1);
+			}
+			if (fLength < 20.0f)
+			{
+				SetFade(MODE_RESULT);
+			}
+			float fAngle = atan2f(PlayerLength_x, PlayerLength_z);
+			g_Enemy.rot.y = (fAngle - (1.0f * D3DX_PI));
+			g_Enemy.move.x += sinf(fAngle) * 0.05f;
+			g_Enemy.move.z += cosf(fAngle) * 0.05f;
 		}
-		float fAngle = atan2f(PlayerLength_x, PlayerLength_z);
-		g_Enemy.rot.y = (fAngle - (1.0f * D3DX_PI));
-		g_Enemy.move.x += sinf(fAngle) * 0.07f;
-		g_Enemy.move.z += cosf(fAngle) * 0.07f;
+		if (g_Enemy.nPlayerIdx == 1)
+		{
+			Player_2P* pPlayer_2P = GetPlayer_2P();
+			//プレイヤー追従処理
+			float PlayerLength_x = pPlayer_2P->pos.x - g_Enemy.pos.x; //プレイヤーとの距離計算
+			float PlayerLength_z = pPlayer_2P->pos.z - g_Enemy.pos.z; //プレイヤーとの距離計算
+			float fLength = sqrtf(PlayerLength_x * PlayerLength_x + PlayerLength_z * PlayerLength_z);
+			if (fLength > 800.0f)
+			{
+				VibrationLeft(0);
+				VibrationRight(0);
+				ActionEnemy(ACTIONPATTERN_ENEMY_WALK, -1);
+			}
+			if (fLength < 20.0f)
+			{
+				SetFade(MODE_RESULT);
+			}
+			float fAngle = atan2f(PlayerLength_x, PlayerLength_z);
+			g_Enemy.rot.y = (fAngle - (1.0f * D3DX_PI));
+			g_Enemy.move.x += sinf(fAngle) * 0.05f;
+			g_Enemy.move.z += cosf(fAngle) * 0.05f;
+		}
+
 	}
 	//位置を更新
 	g_Enemy.pos += g_Enemy.move;
@@ -311,9 +343,10 @@ void UpdateEnemy(void)
 //===================================
 //エネミー行動処理
 //===================================
-void ActionEnemy(ACTIONPATTERN_ENEMY ActionPattern)
+void ActionEnemy(ACTIONPATTERN_ENEMY ActionPattern,int PlayerIdx)
 {
 	g_Enemy.ActionPattern = ActionPattern;
+	g_Enemy.nPlayerIdx = PlayerIdx;
 
 	if (ActionPattern == ACTIONPATTERN_ENEMY_STANDBY)
 	{//静止状態
@@ -348,18 +381,33 @@ void ActionEnemy(ACTIONPATTERN_ENEMY ActionPattern)
 	}
 	else if (ActionPattern == ACTIONPATTERN_ENEMY_CHASE)
 	{
-		Player* pPlayer = GetPlayer();
-		//プレイヤー追従処理
-		float PlayerLength_x = pPlayer->pos.x - g_Enemy.pos.x; //プレイヤーとの距離計算
-		float PlayerLength_z = pPlayer->pos.z - g_Enemy.pos.z; //プレイヤーとの距離計算
-		float fLength = sqrtf(PlayerLength_x * PlayerLength_x + PlayerLength_z * PlayerLength_z);
-
+		if (PlayerIdx == 0)
+		{
+			Player* pPlayer = GetPlayer();
+			float PlayerLength_x = pPlayer->pos.x - g_Enemy.pos.x; //プレイヤーとの距離計算
+			float PlayerLength_z = pPlayer->pos.z - g_Enemy.pos.z; //プレイヤーとの距離計算
+			float fLength = sqrtf(PlayerLength_x * PlayerLength_x + PlayerLength_z * PlayerLength_z);
+			float fAngle = atan2f(PlayerLength_x, PlayerLength_z);
+			g_Enemy.rot.y = (fAngle - (1.0f * D3DX_PI));
+			g_Enemy.move.x += sinf(fAngle) * 0.05f;
+			g_Enemy.move.z += cosf(fAngle) * 0.05f;
+		}
+		if (PlayerIdx == 1)
+		{
+			Player_2P* pPlayer_2P = GetPlayer_2P();
+			//プレイヤー追従処理
+			float PlayerLength_x = pPlayer_2P->pos.x - g_Enemy.pos.x; //プレイヤーとの距離計算
+			float PlayerLength_z = pPlayer_2P->pos.z - g_Enemy.pos.z; //プレイヤーとの距離計算
+			float fLength = sqrtf(PlayerLength_x * PlayerLength_x + PlayerLength_z * PlayerLength_z);
+			float fAngle = atan2f(PlayerLength_x, PlayerLength_z);
+			g_Enemy.rot.y = (fAngle - (1.0f * D3DX_PI));
+			g_Enemy.move.x += sinf(fAngle) * 0.05f;
+			g_Enemy.move.z += cosf(fAngle) * 0.05f;
+		}
 		VibrationLeft(25535);
 		VibrationRight(25535);
-		float fAngle = atan2f(PlayerLength_x, PlayerLength_z);
-		g_Enemy.rot.y = (fAngle - (1.0f * D3DX_PI));
-		g_Enemy.move.x += sinf(fAngle) * 0.05f;
-		g_Enemy.move.z += cosf(fAngle) * 0.05f;
+
+		g_Enemy.NowMotionDOWN = MOTIONTYPE_ENEMY_MOVE;
 	}
 	LowerBodyEnemy3();
 

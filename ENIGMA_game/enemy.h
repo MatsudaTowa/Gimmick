@@ -72,6 +72,8 @@ typedef struct
 
 	int PARENT;//親子関係-１は何にも属さない
 
+	int nPlayerIdx; //追従するプレイヤー
+
 //	MOTIONTYPE NowMotionUP;//現在のモーション状態上
 	MOTIONTYPE_ENEMY NowMotionDOWN;//現在のモーション状態下
 
@@ -170,7 +172,7 @@ typedef struct
 void InitEnemy(void);//プレイヤーの初期化処理
 void UninitEnemy(void);//プレイヤーの終了処理
 void UpdateEnemy(void);//プレイヤーの更新処理
-void ActionEnemy(ACTIONPATTERN_ENEMY ActionPattern); //アクションパターンによって処理変更
+void ActionEnemy(ACTIONPATTERN_ENEMY ActionPattern,int PlayerIdx); //アクションパターンによって処理変更
 void DrawEnemy(void);//プレイヤーの描画処理
 
 ENEMYMODEL* GetEnemy(void);
