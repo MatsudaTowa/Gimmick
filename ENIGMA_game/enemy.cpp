@@ -186,6 +186,12 @@ void UpdateEnemy(void)
 		float PlayerLength_x = pPlayer->pos.x - g_Enemy.pos.x; //プレイヤーとの距離計算
 		float PlayerLength_z = pPlayer->pos.z - g_Enemy.pos.z; //プレイヤーとの距離計算
 		float fLength = sqrtf(PlayerLength_x * PlayerLength_x + PlayerLength_z * PlayerLength_z);
+		if (fLength > 800.0f)
+		{
+			VibrationLeft(0);
+			VibrationRight(0);
+			ActionEnemy(ACTIONPATTERN_ENEMY_WALK);
+		}
 		float fAngle = atan2f(PlayerLength_x, PlayerLength_z);
 		g_Enemy.rot.y = (fAngle - (1.0f * D3DX_PI));
 		g_Enemy.move.x += sinf(fAngle) * 0.07f;
@@ -347,11 +353,9 @@ void ActionEnemy(ACTIONPATTERN_ENEMY ActionPattern)
 		float PlayerLength_x = pPlayer->pos.x - g_Enemy.pos.x; //プレイヤーとの距離計算
 		float PlayerLength_z = pPlayer->pos.z - g_Enemy.pos.z; //プレイヤーとの距離計算
 		float fLength = sqrtf(PlayerLength_x * PlayerLength_x + PlayerLength_z * PlayerLength_z);
-		//if (fLength < 40.0f)
-		//{
-			VibrationLeft(20000);
-			VibrationRight(25535);
-		//}
+
+		VibrationLeft(25535);
+		VibrationRight(25535);
 		float fAngle = atan2f(PlayerLength_x, PlayerLength_z);
 		g_Enemy.rot.y = (fAngle - (1.0f * D3DX_PI));
 		g_Enemy.move.x += sinf(fAngle) * 0.05f;
