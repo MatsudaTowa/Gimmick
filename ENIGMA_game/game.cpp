@@ -386,8 +386,8 @@ void UpdateGame(void)
 //		{//ゲームオーバー
 			
 		 //振動ストップ
-			VibrationLeft(0);
-			VibrationRight(0);
+			//VibrationLeft(0);
+			//VibrationRight(0);
 
 			if (g_EndGameFrame > 0)
 			{//余韻用

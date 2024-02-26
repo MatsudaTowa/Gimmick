@@ -673,8 +673,8 @@ void UpdatePlayer_2P(void)
 			g_Player_2P.PlayerState = PLAYERSTATE_2P_NOMAL;
 
 			//振動ストップ
-			VibrationLeft(0);
-			VibrationRight(0);
+			//VibrationLeft(0);
+			//VibrationRight(0);
 		}
 	}
 }
