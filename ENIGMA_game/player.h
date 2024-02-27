@@ -14,7 +14,7 @@
 #define BRENDFLAME	(15.0f)//モーションブレンドのフレーム数
 
 
-#define VIEWPOS (D3DXVECTOR3 (20.0f,70.0f,0.0f))
+#define VIEWPOS (D3DXVECTOR3 (18.0f,70.0f,0.0f))
 
 #define NUM_TEXTURE_1P (20)
 

@@ -15,7 +15,7 @@
 #define NUM_MENUFRAME	(1)// 背景の数
 
 // グローバル変数
-LPDIRECT3DTEXTURE9 g_apTextureMenuFrame[NUM_MENUFRAME] = {};	// テクスチャ（３枚分）へのポインタ
+LPDIRECT3DTEXTURE9 g_apTextureMenuFrame[NUM_MENUFRAME] = {};	// テクスチャ（1枚分）へのポインタ
 LPDIRECT3DVERTEXBUFFER9 g_pVtxBuffMenuFrame = NULL;	// 頂点バッファへのポインタ
 
 // 背景の初期化処理
@@ -140,7 +140,9 @@ void DrawMenuFrame(void)
 		pDevice->SetTexture(0, g_apTextureMenuFrame[nCntMenuFrame]);
 
 		// ポリゴンの描画
-		pDevice->DrawPrimitive(D3DPT_TRIANGLESTRIP, nCntMenuFrame * 4, 2);
+		pDevice->DrawPrimitive(D3DPT_TRIANGLESTRIP,
+			nCntMenuFrame * 4,
+			2);
 
 	}
 

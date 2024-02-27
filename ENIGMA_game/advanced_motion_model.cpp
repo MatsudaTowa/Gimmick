@@ -141,13 +141,12 @@ void InitAdvancedModel(void)
 			}
 		}
 
-		//////ここでセット
-		SetModel_AD(MODEL_AD_TYPE_Test1, D3DXVECTOR3(-50.0f, 0.0f, -500.0f), D3DXVECTOR3(0.0f, 3.14f, 0.0f));
-		LoadXfire_AdModel(MODEL_AD_TYPE_Test1);
-
-		
-		SetModel_AD(MODEL_AD_TYPE_Test2, D3DXVECTOR3(-50.0f, 0.0f, -200.0f), D3DXVECTOR3(0.0f, 3.14f, 0.0f));
-		LoadXfire_AdModel(MODEL_AD_TYPE_Test2);
+		////////ここでセット
+		//SetModel_AD(MODEL_AD_TYPE_Test1, D3DXVECTOR3(-50.0f, 0.0f, -500.0f), D3DXVECTOR3(0.0f, 3.14f, 0.0f));
+		//LoadXfire_AdModel(MODEL_AD_TYPE_Test1);
+		//
+		//SetModel_AD(MODEL_AD_TYPE_Test2, D3DXVECTOR3(-50.0f, 0.0f, -200.0f), D3DXVECTOR3(0.0f, 3.14f, 0.0f));
+		//LoadXfire_AdModel(MODEL_AD_TYPE_Test2);
 	}
 }
 //=============================

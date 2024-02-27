@@ -156,7 +156,7 @@ void DrawActionZone(void)
                 //ワールドマトリックスの初期化
                 D3DXMatrixIdentity(&g_ActionZone[nCntZone].mtxWorld);
 
-                // モデルのサイズを変更
+                 //モデルのサイズを変更
                 D3DXMatrixScaling(&g_ActionZone[nCntZone].mtxWorld, g_ActionZone[nCntZone].SizeMag.x, g_ActionZone[nCntZone].SizeMag.y, g_ActionZone[nCntZone].SizeMag.z);
 
                 ////向きを反映
@@ -186,8 +186,7 @@ void DrawActionZone(void)
                     //テクスチャの設定
                     pDevice->SetTexture(0, NULL);//今回は設定しない
 
-                    //モデル(パーツ)の描画
-                    g_pMeshZone[nCntMat]->DrawSubset(nCntMat);
+                  
 
                     //保存してたマテリアルを戻す
                   //  pDevice->SetMaterial(&matDef);
@@ -199,6 +198,9 @@ void DrawActionZone(void)
                     // ディフューズカラーを変更（例: 赤い色）
                     pMat[nCntMat].MatD3D.Diffuse = D3DXCOLOR(g_ActionZone[nCntZone].ZoneColor.r * g_ActionZone[nCntZone].SizeMag.x, g_ActionZone[nCntZone].ZoneColor.g * g_ActionZone[nCntZone].SizeMag.x, g_ActionZone[nCntZone].ZoneColor.b * g_ActionZone[nCntZone].SizeMag.x, g_ActionZone[nCntZone].ZoneColor.a);
 
+                //モデル(パーツ)の描画
+                    g_pMeshZone[nCntMat]->DrawSubset(nCntMat);
+                
                 }
                 //保存してたマテリアルを戻す
                 pDevice->SetMaterial(&matDef);

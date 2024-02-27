@@ -63,7 +63,7 @@ void InitItem_UI(void)
 	D3DXCreateTextureFromFile(pDevice, "data\\TEXTURE\\item002.png", &g_pTextureItem_UI[4]);//鍵だし
 	D3DXCreateTextureFromFile(pDevice, "data\\TEXTURE\\item003.png", &g_pTextureItem_UI[5]);//身代わり
 	D3DXCreateTextureFromFile(pDevice, "data\\TEXTURE\\item004.png", &g_pTextureItem_UI[6]);//式神
-	D3DXCreateTextureFromFile(pDevice, "data\\TEXTURE\\key000.png", &g_pTextureItem_UI[7]);//式神
+	D3DXCreateTextureFromFile(pDevice, "data\\TEXTURE\\key000.png", &g_pTextureItem_UI[7]);//
 
 	
 	//アイテムUIの情報の初期化(いわゆる初期地点)
@@ -445,20 +445,29 @@ void DrawItem_UI(void)
 			else if (g_ItemUI[nCntItem_UI].UItype == ITEM_UI_TYPE_KEYUI)
 			{//アイテム自体
 
-				//列挙をintに
-				int EscapeNum2 = static_cast<int>(g_ItemUI[nCntItem_UI].nItemType);
-
 				//テクスチャの設定
 				pDevice->SetTexture(0, g_pTextureItem_UI[7]);//---------書き換え済み
 			}
 
-			if (g_DrawOK[g_ItemUI[nCntItem_UI].PlayerNum - 1] == true)
-			{
+
+			if (g_ItemUI[nCntItem_UI].UItype == ITEM_UI_TYPE_KEYUI)
+			{//アイテム自体
 				//ポリゴンの描画
 				pDevice->DrawPrimitive(D3DPT_TRIANGLESTRIP,//プリミティブの種類
 					nCntItem_UI * 4,//描画する最初の頂点インデックス
 					2);//描画するプリミティブ数
 			}
+			else
+			{
+				if (g_DrawOK[g_ItemUI[nCntItem_UI].PlayerNum - 1] == true)
+				{
+					//ポリゴンの描画
+					pDevice->DrawPrimitive(D3DPT_TRIANGLESTRIP,//プリミティブの種類
+						nCntItem_UI * 4,//描画する最初の頂点インデックス
+						2);//描画するプリミティブ数
+				}
+			}
+		
 			
 			//テクスチャを戻す
 			pDevice->SetTexture(0, NULL);

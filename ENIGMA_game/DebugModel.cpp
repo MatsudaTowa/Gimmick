@@ -416,7 +416,7 @@ void DrawDebugModel(void)
 //=============================
 //設置用コメント
 //=============================
-void DrawDebugDelC0mment(void)
+void DrawDebugDelComment(void)
 {
 
     DrawTextSet(D3DXVECTOR3(550.0f, 570.0f, 0.0f), 20, FONT_SOUKOUMINCHO, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), "1,2でモデル切り替え、\nDeleteでモデル削除" );

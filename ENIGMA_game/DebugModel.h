@@ -84,7 +84,7 @@ void SetDebugModelSphere(float Radius,D3DXCOLOR ZoneColor,bool Beacon);
 
 
 //設置用コメント
-void DrawDebugDelC0mment(void);
+void DrawDebugDelComment(void);
 
 //被りモデルを削除する処理
 void DeleteCoveredModel(void);

@@ -81,8 +81,10 @@ void InitCollision_Pre(void)
     
     SetCollision_Pre(D3DXVECTOR3(3400.0f, 0.0f, -1800.0f), D3DXVECTOR3(-300.0f, 0.0f, -100.0f), D3DXVECTOR3(300.0f, 300.0f, 100.0f), D3DXCOLOR(5.0f, 0.0f, 5.0f, 0.5f));
 
-}
+    //ÉgÉCÉåâ°
+    SetCollision_Pre(D3DXVECTOR3(3525.0f, 0.0f, 20.0f), D3DXVECTOR3(-130.0f, 0.0f, -70.0f), D3DXVECTOR3(130.0f, 300.0f, 70.0f), D3DXCOLOR(5.0f, 0.0f, 5.0f, 0.5f));
 
+}
 //=============================
 // ìñÇΩÇËîªíËî≤ÇØñhé~èIóπèàóù
 //=============================

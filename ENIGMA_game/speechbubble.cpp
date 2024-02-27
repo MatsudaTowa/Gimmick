@@ -51,6 +51,7 @@ void InitSpeechBubble(void)
 
 		g_SpeechBubble[nSpeechBubble].nBubbleCnt = 0;
 		g_SpeechBubble[nSpeechBubble].bOK = false;
+		g_SpeechBubble[nSpeechBubble].BubbleSType = SPEECHBUBBLETYPE_MAX;
 
 		//頂点座標の設定
 		pVtx[0].pos = D3DXVECTOR3(-0.0f, 0.0f, 0.0f);
@@ -236,7 +237,7 @@ SPEECHBUBBLE* GetSpeechBubble(void)
 //=============================
 //バレットの設定処理
 //=============================
-void SetSpeechBubble(D3DXVECTOR3 Pos, int ActionIndex,int SetType)
+void SetSpeechBubble(D3DXVECTOR3 Pos,int ActionIndex,int SetType, D3DXVECTOR3 CorrectionValue, SPEECHBUBBLETYPE UI_TYPE)
 {//壁の設定-------------------------------SetNum[登録番号--かぶらぬように]---[SetType-0が出現、１が縮小]
 
 //	VERTEX_3D* pVtx;//頂点情報へのポインタ
@@ -247,8 +248,9 @@ void SetSpeechBubble(D3DXVECTOR3 Pos, int ActionIndex,int SetType)
 
 	//if (g_SpeechBubble[SetNum].bUse == false)
 	//{
-	g_SpeechBubble[ActionIndex].pos = D3DXVECTOR3(Pos.x, Pos.y + 80.0f, Pos.z);//位置
-
+	g_SpeechBubble[ActionIndex].pos = D3DXVECTOR3(Pos.x, Pos.y, Pos.z);//位置
+	g_SpeechBubble[ActionIndex].pos += CorrectionValue;
+	g_SpeechBubble[ActionIndex].BubbleSType = UI_TYPE;
 
 
 		

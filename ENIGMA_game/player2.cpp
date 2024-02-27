@@ -95,7 +95,7 @@ void InitPlayer_2P(void)
 
 	if (MenutoGame == START_MENU_GAME)
 	{//メニューで「ゲームスタート」を選んだ場合
-		g_Player_2P.pos = D3DXVECTOR3(-50.0f, 10.0f, 0.0f);	//初期位置
+		g_Player_2P.pos = D3DXVECTOR3(0.0f, 10.0f, 0.0f);	//初期位置
 	}
 	else
 	{//それ以外(チュートリアルを選んだ場合)
@@ -341,21 +341,6 @@ void UpdatePlayer_2P(void)
 		}
 
 
-
-		//行動エリア/-----------------------------------------------------------------------------------------------------------------------------------------
-		ACTIONZONE* pActionZone;
-		pActionZone = GetActionZone();
-
-		for (int nCntZone = 0; nCntZone < MAXZONE; nCntZone++)
-		{
-			if (pActionZone[nCntZone].bUse == true)
-			{
-
-				SphereCollisionZone(g_Player_2P.pos, 1, nCntZone);
-				//	break;
-			}
-		}
-
 		//----------------------------------------------------------------------------モデル接触
 		MAPOBJECT* pMapObject;
 		pMapObject = GetMapObject();
@@ -374,6 +359,21 @@ void UpdatePlayer_2P(void)
 				}
 			}
 		}
+
+		//行動エリア/-----------------------------------------------------------------------------------------------------------------------------------------
+		ACTIONZONE* pActionZone;
+		pActionZone = GetActionZone();
+
+		for (int nCntZone = 0; nCntZone < MAXZONE; nCntZone++)
+		{
+			if (pActionZone[nCntZone].bUse == true)
+			{
+
+				SphereCollisionZone(g_Player_2P.pos, 1, nCntZone);
+				//	break;
+			}
+		}
+
 
 		//敵の視野/-----------------------------------------------------------------------------------------------------------------------------------------
 		ENEMYVIEW* pEnemyView;
@@ -420,9 +420,7 @@ void UpdatePlayer_2P(void)
 			{
 				D3DXVECTOR3 ColisionPreMin = D3DXVECTOR3(pColisionPre[i].pos + pColisionPre[i].Min);
 				D3DXVECTOR3 ColisionPreMax = D3DXVECTOR3(pColisionPre[i].pos + pColisionPre[i].Max);
-
-				//プレイヤー同士当たり判定
-				BoxCollisionPlayer(PlayerMin_2P, PlayerMax_2P, ColisionPreMin, ColisionPreMax, 1);
+				BoxCollisionPlayer(PlayerMin_2P, PlayerMax_2P, ColisionPreMin, ColisionPreMax, 2);
 
 			}
 		}
@@ -500,24 +498,24 @@ void UpdatePlayer_2P(void)
 			}
 		}
 
-		//侵入不可エリア(限界エリア)----------------------
-		if (g_Player_2P.pos.x > MAXMAREA_2P)
-		{
-			g_Player_2P.pos.x = (MAXMAREA_2P - 1.0f);
-		}
-		else if (g_Player_2P.pos.x < -MAXMAREA_2P)
-		{
-			g_Player_2P.pos.x = -(MAXMAREA_2P - 1.0f);
-		}
+		////侵入不可エリア(限界エリア)----------------------
+		//if (g_Player_2P.pos.x > MAXMAREA_2P)
+		//{
+		//	g_Player_2P.pos.x = (MAXMAREA_2P - 1.0f);
+		//}
+		//else if (g_Player_2P.pos.x < -MAXMAREA_2P)
+		//{
+		//	g_Player_2P.pos.x = -(MAXMAREA_2P - 1.0f);
+		//}
 
-		if (g_Player_2P.pos.z > MAXMAREA_2P)
-		{
-			g_Player_2P.pos.z = (MAXMAREA_2P - 1.0f);
-		}
-		else if (g_Player_2P.pos.z < -MAXMAREA_2P)
-		{
-			g_Player_2P.pos.z = -(MAXMAREA_2P - 1.0f);
-		}
+		//if (g_Player_2P.pos.z > MAXMAREA_2P)
+		//{
+		//	g_Player_2P.pos.z = (MAXMAREA_2P - 1.0f);
+		//}
+		//else if (g_Player_2P.pos.z < -MAXMAREA_2P)
+		//{
+		//	g_Player_2P.pos.z = -(MAXMAREA_2P - 1.0f);
+		//}
 
 		//影
 		SetPositionShadow(g_Player_2P.nldShadow, g_Player_2P.pos, SHADOWSIZE_PLAYER);
@@ -672,7 +670,7 @@ void UpdatePlayer_2P(void)
 		{
 			g_Player_2P.PlayerState = PLAYERSTATE_2P_NOMAL;
 
-			//振動ストップ
+			////振動ストップ
 			//VibrationLeft(0);
 			//VibrationRight(0);
 		}
@@ -820,6 +818,8 @@ void DrawPlayer_2P(int CameraLoopNum)
 
 				//モデル(パーツ)の描画
 				g_pMeshModel_2P[nCnt]->DrawSubset(nCntMat);
+
+			
 
 			}
 		}

@@ -15,16 +15,10 @@
 #include "fade.h"
 #include "sound.h"
 
-//=========================================================
-//マクロ定義
-//=========================================================
-#define NUM_RESULT	(2) //リザルトの種類
-
 //プロトタイプ宣言
 void InitResult(void);
 void UninitResult(void);
 void UpdateResult(void);
 void DrawResult(void);
-void SetResult(MODE mode);
 
 #endif // !_RESULT_H_

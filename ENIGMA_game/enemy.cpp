@@ -59,7 +59,7 @@ void InitEnemy(void)
 
 	g_Enemy.ActionPattern = ACTIONPATTERN_ENEMY_WALK;
 
-	ActionEnemy(g_Enemy.ActionPattern,-1);
+	ActionEnemy(g_Enemy.ActionPattern, -1);
 
 	g_Enemy.rotmove = 0.0f;
 
@@ -137,13 +137,13 @@ void UninitEnemy(void)
 	{
 		//メッシュの破棄
 		if (g_pMeshModel_Enemy[nCntModel] != NULL)
-		{				 
+		{
 			g_pMeshModel_Enemy[nCntModel]->Release();
 			g_pMeshModel_Enemy[nCntModel] = NULL;
 		}
 		//マテリアルの破棄
 		if (g_pBuffMatModel_Enemy[nCntModel] != NULL)
-		{					
+		{
 			g_pBuffMatModel_Enemy[nCntModel]->Release();
 			g_pBuffMatModel_Enemy[nCntModel] = NULL;
 		}
@@ -178,7 +178,7 @@ void UpdateEnemy(void)
 	//{
 	//	g_Enemy.move = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 	//}
-	 
+
 
 	//古いposを代入
 	g_Enemy.oldPos = g_Enemy.pos;
@@ -199,7 +199,7 @@ void UpdateEnemy(void)
 			}
 			if (fLength < 20.0f)
 			{
-				SetFade(MODE_GAMEOVER);
+				//SetFade(MODE_GAMEOVER);
 			}
 			float fAngle = atan2f(PlayerLength_x, PlayerLength_z);
 			g_Enemy.rot.y = (fAngle - (1.0f * D3DX_PI));
@@ -221,12 +221,12 @@ void UpdateEnemy(void)
 			}
 			if (fLength < 20.0f)
 			{
-				SetFade(MODE_GAMEOVER);
+				//SetFade(MODE_GAMEOVER);
 			}
 			float fAngle = atan2f(PlayerLength_x, PlayerLength_z);
 			g_Enemy.rot.y = (fAngle - (1.0f * D3DX_PI));
-			g_Enemy.move.x += sinf(fAngle) * 0.05f;
-			g_Enemy.move.z += cosf(fAngle) * 0.05f;
+			g_Enemy.move.x += sinf(fAngle) * 0.01f;
+			g_Enemy.move.z += cosf(fAngle) * 0.01f;
 		}
 
 	}
@@ -344,7 +344,7 @@ void UpdateEnemy(void)
 //===================================
 //エネミー行動処理
 //===================================
-void ActionEnemy(ACTIONPATTERN_ENEMY ActionPattern,int PlayerIdx)
+void ActionEnemy(ACTIONPATTERN_ENEMY ActionPattern, int PlayerIdx)
 {
 	g_Enemy.ActionPattern = ActionPattern;
 	g_Enemy.nPlayerIdx = PlayerIdx;
@@ -405,7 +405,7 @@ void ActionEnemy(ACTIONPATTERN_ENEMY ActionPattern,int PlayerIdx)
 			g_Enemy.move.x += sinf(fAngle) * 0.05f;
 			g_Enemy.move.z += cosf(fAngle) * 0.05f;
 		}
-		VibrationLeft(25535,PlayerIdx);
+		VibrationLeft(25535, PlayerIdx);
 		VibrationRight(25535, PlayerIdx);
 
 		g_Enemy.NowMotionDOWN = MOTIONTYPE_ENEMY_MOVE;
@@ -1070,7 +1070,7 @@ void LowerBodyEnemy3(void)
 			}
 		}
 	}
-	
+
 }
 
 //===================================
@@ -1082,8 +1082,8 @@ void SetModel_Enemy(D3DXVECTOR3 pos, D3DXVECTOR3 rot)
 	g_Enemy.rot = rot;	//向き
 	g_Enemy.bUse = true;
 	SetEnemy_View(D3DXVECTOR3(g_Enemy.pos)
-		,250.0f
-		,true
-		,D3DXCOLOR(1.0f,0.0f,1.0f,0.4f));
+		, 250.0f
+		, true
+		, D3DXCOLOR(1.0f, 0.0f, 1.0f, 0.4f));
 	LoadSetEnemy3();//---------------------------------------------------------こいつがロード
 }

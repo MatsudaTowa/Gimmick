@@ -18,23 +18,20 @@
 #define MAPTEXUINUM	(3)//テクスチャ最大数
 #define MAXMAP	(16)//最大数
 
-#define MAPSIZE	(20.0f)//サイズ
+//#define MAPSIZE	(8.0f)//サイズ
 
-#define MAPSIZE2	(36.0f)//サイズ
+#define MAPSIZE2	(22.0f)//サイズ
 
 #define ADDMAP	(0.22f)//地図倍率
 
 
-#define UVSize	(0.25f)
+#define UVSize	(0.2f)
 
-//#define MAXGETITEM	(3)//アイテム最大所持数
-
-//#define ITEMMOVESPEED_UI	(10.0f)
-
+#define MOVESIZE	(0.0001f)
 
 #define MAP0_START_POS_0 (D3DXVECTOR2(0.5f,0.5f))//地図１スタート地点0
 
-#define MAP1_START_POS_0 (D3DXVECTOR2(0.2f,0.5f))//地図2スタート地点1
+#define MAP1_START_POS_0 (D3DXVECTOR2(0.25f,0.25f))//地図2スタート地点1
 
 
 
@@ -51,7 +48,7 @@ typedef enum
 	MAP_UI_TYPE_PLAYERPIN_1P_1,//プレイヤーピン1_1
 	MAP_UI_TYPE_PLAYERPIN_2P_1,//プレイヤーピン2_1
 	MAP_UI_TYPE_MAP1, //地図１
-	MAP_UI_TYPE_MAP2,//地図２
+//	MAP_UI_TYPE_MAP2,//地図２
 	MAP_UI_TYPE_MAX
 
 }MAP_UI_TYPE;

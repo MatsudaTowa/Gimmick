@@ -58,6 +58,7 @@ static const char* MODEL_NAME[NUM_MODEL] =
 	"data\\MODEL\\Washbasin.x",
 	"data\\MODEL\\cube.x",
 	"data\\MODEL\\safe.x",
+	"data\\MODEL\\escapedoor.x",
 };
 
 //=============================================
@@ -211,68 +212,6 @@ void UninitModel(void)
 void UpdateModel(void)
 {
 
-	//int nNumVtx; //頂点数
-	//DWORD sizeFVF; //頂点フォーマットのサイズ
-	//BYTE* pVtxBuff; //頂点バッファのポインタ
-
-
-	//for (int nCnt = 0; nCnt < MAX_MODEL; nCnt++)
-	//{
-	//	////頂点数の取得
-	//	nNumVtx = g_aModel[g_aModel[nCnt].nType].pMesh->GetNumVertices();
-	//	////頂点フォーマットのサイズを取得
-	//	//sizeFVF = D3DXGetFVFVertexSize(g_aModel[g_aModel[nCnt].nType].pMesh->GetFVF());
-
-	//	//g_aModel[nCnt].pos = D3DXVECTOR3(0.0f, 0.0f, 0.0f); //モデルの初期位置
-	//	//g_aModel[nCnt].Minpos = D3DXVECTOR3(100000.0f, 1000000.0f, 1000000.0f); //モデルの最小位置
-	//	//g_aModel[nCnt].Maxpos = D3DXVECTOR3(-10000.0f, -1000000.0f, -100000.0f); //モデルの最大位置
-	//	//g_aModel[nCnt].rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f); //初期の方向
-	//	//g_aModel[nCnt].move = D3DXVECTOR3(0.0f, 0.0f, 0.0f); //初期の移動速度
-	//	//g_aModel[nCnt].nShadow = -1;
-	//	//g_aModel[nCnt].nType = MODELTYPE_BATH;
-	//	//g_aModel[nCnt].bUse = false;
-
-	//	//頂点バッファのロック
-	//	g_aModel[g_aModel[nCnt].nType].pMesh->LockVertexBuffer(D3DLOCK_READONLY, (void**)&pVtxBuff);
-	//	for (int nCntVtx = 0; nCntVtx < nNumVtx; nCntVtx++)
-	//	{
-	//	//	//頂点座標の代入
-	//	//	D3DXVECTOR3 vtx = *(D3DXVECTOR3*)pVtxBuff;
-
-	//	//	if (vtx.x > g_aModel[nCnt].Maxpos.x)
-	//	//	{
-	//	//		g_aModel[nCnt].Maxpos.x = vtx.x;
-	//	//	}
-	//	//	if (vtx.x < g_aModel[nCnt].Minpos.x)
-	//	//	{
-	//	//		g_aModel[nCnt].Minpos.x = vtx.x;
-	//	//	}
-
-	//	//	if (vtx.y > g_aModel[nCnt].Maxpos.y)
-	//	//	{
-	//	//		g_aModel[nCnt].Maxpos.y = vtx.y;
-	//	//	}
-	//	//	if (vtx.y < g_aModel[nCnt].Minpos.y)
-	//	//	{
-	//	//		g_aModel[nCnt].Minpos.y = vtx.y;
-	//	//	}
-
-	//	//	if (vtx.z > g_aModel[nCnt].Maxpos.z)
-	//	//	{
-	//	//		g_aModel[nCnt].Maxpos.z = vtx.z;
-	//	//	}
-	//	//	if (vtx.z < g_aModel[nCnt].Minpos.z)
-	//	//	{
-	//	//		g_aModel[nCnt].Minpos.z = vtx.z;
-	//	//	}
-
-
-	//		g_aModel[nCnt].Maxpos;
-	//		g_aModel[nCnt].Minpos;
-	//	}
-
-	//	g_aModel[g_aModel[nCnt].nType].pMesh->UnlockVertexBuffer();
-	//}
 }
 
 //=============================================
@@ -483,6 +422,19 @@ MAPOBJECT* GetMapObject(void)
 //=============================================
 void ExclusionCollision(void)
 {
+	for (int nCnt = 0; nCnt < MAX_MODEL; nCnt++)
+	{
+		if (g_aModel[nCnt].bUse == true)
+		{
+			if (g_aModel[nCnt].nType== MODELTYPE_STAIRS)
+			{
+				g_aModel[nCnt].bCollision = false;
+			}
+		}
+	}
+
+
+
 	//ここで記載されたものは当たり判定を除外される
 	for (int nCnt = 3; nCnt < 24; nCnt++)
 	{

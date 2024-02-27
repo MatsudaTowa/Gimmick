@@ -431,9 +431,10 @@ void ExclusionCollision_Stage(void)
 	g_Stage[31].bCollision = false;
 	g_Stage[36].bCollision = false;
 	g_Stage[37].bCollision = false;
+	g_Stage[38].bCollision = false;
 	g_Stage[39].bCollision = false;
 	g_Stage[40].bCollision = false;
-	for (int m = 42; m <= 49; m++)
+	for (int m = 41; m <= 49; m++)
 	{
 		g_Stage[m].bCollision = false;
 	}

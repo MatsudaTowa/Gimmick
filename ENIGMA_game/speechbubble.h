@@ -12,7 +12,7 @@
 
 #include "game.h"
 
-#define NUMSPEECHBUBBLE	(648)//弾の数
+#define NUMSPEECHBUBBLE	(264)//弾の数
 
 #define TEXNUM	(4)//テクスチャの数
 
@@ -23,8 +23,8 @@
 
 typedef enum
 {
-	SPEECHBUBBLETYPE_Player = 0,
-	SPEECHBUBBLETYPE_Enemy,
+	SPEECHBUBBLETYPE_ACTION = 0,
+	SPEECHBUBBLETYPE_TRANCE,
 	SPEECHBUBBLETYPE_MAX,
 }SPEECHBUBBLETYPE;
 
@@ -41,7 +41,7 @@ typedef struct
 {
 	D3DXVECTOR3 pos;	//位置
 	D3DXMATRIX mtxWorldSpeechBubble;//ワールドマトリックス
-//	SPEECHBUBBLESTATE BubbleState;//状態
+	SPEECHBUBBLETYPE BubbleSType;//状態
 	int nBubbleCnt;//
 	bool bOK;//何処かのタイミングでOKになってればデクリメントさせない
 	bool bUse;
@@ -57,8 +57,8 @@ void DrawSpeechBubble(void);
 
 SPEECHBUBBLE* GetSpeechBubble(void);
 
-//壁の設定-------------------------------アクション番号---[SetType-0が出現、１が縮小]
-void SetSpeechBubble(D3DXVECTOR3 Pos,int ActionIndex,int SetType);
+//壁の設定-------------------------------アクション番号---[SetType-0が出現、１が縮小]---UI表示の補正値
+void SetSpeechBubble(D3DXVECTOR3 Pos,int ActionIndex,int SetType, D3DXVECTOR3 CorrectionValue, SPEECHBUBBLETYPE UI_TYPE);
 
 
 // 予測交差点を計算する関数

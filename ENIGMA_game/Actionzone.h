@@ -18,7 +18,7 @@
 // +playerに転移直後かboolで無限跳躍を防ぐ予定
 //+++++++++++++++++++++++++++++++++++++++++
 
-#define MAXZONE	(260)//アクションエリア最大数
+#define MAXZONE	(264)//アクションエリア最大数
 
 
 //転移エリアサイズ(当たり判定用)
@@ -39,6 +39,7 @@ typedef enum
 	ACTION_TYPE_KEY_2, //鍵ギミック
 	ACTION_TYPE_KEY_3, //鍵ギミック
 	ACTION_TYPE_EYETRAP, //視界トラップ
+	ACTION_TYPE_ESCAPE,//移動
 	ACTION_TYPE_MAX,//--進行方向に転移
 }ACTIONTYPE;
 

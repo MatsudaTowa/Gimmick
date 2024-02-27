@@ -20,8 +20,6 @@ void InitLight(void)
 
 	D3DXVECTOR3 vecDir;	//設定用方向ベクトル
 
-	
-
 	for (int nCntLIght = 0; nCntLIght < LIGHTNUM; nCntLIght++)
 	{
 		//ライト情報をクリアする
@@ -42,21 +40,26 @@ void InitLight(void)
 		else if (nCntLIght == 1)
 		{
 			//ライトの方向を設定
-			vecDir = D3DXVECTOR3(0.2f, -0.8f, -0.4f);
+	//		vecDir = D3DXVECTOR3(0.2f, -0.8f, -0.4f);
+									//ライトの方向を設定
+			vecDir = D3DXVECTOR3(-0.2f, 0.8f, -0.4f);
 		}
 		else if (nCntLIght == 2)
 		{
 			//ライトの方向を設定
-			vecDir = D3DXVECTOR3(-0.2f, -0.8f, -0.4f);
+	//		vecDir = D3DXVECTOR3(-0.2f, -0.8f, -0.4f);
 
 
 			//ライトの方向を設定
 		//	vecDir = D3DXVECTOR3(0.0f, -1.0f, 0.0f);
+
+						//ライトの方向を設定
+			vecDir = D3DXVECTOR3(-0.1f, 0.1f, -0.1f);
 		}
 		else if (nCntLIght == 3)
 		{
 			//ライトの方向を設定
-			vecDir = D3DXVECTOR3(0.1f, 0.1f, 0.1f);
+//			vecDir = D3DXVECTOR3(0.1f, 0.1f, 0.1f);
 
 		}
 

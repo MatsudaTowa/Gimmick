@@ -77,8 +77,7 @@ typedef enum
 {
 	MODE_TITLE = 0,//タイトル画面
 	MODE_GAME,//ゲーム画面
-	MODE_CLEAR,//クリア画面
-	MODE_GAMEOVER,//ゲームオーバー画面
+	MODE_RESULT,//リザルト画面
 	MODE_TUTORIAL,//チュートリアル画面
 	MODE_MENU,//メニュー画面
 	MODE_MAX,

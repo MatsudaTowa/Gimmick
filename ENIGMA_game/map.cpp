@@ -46,9 +46,8 @@ void InitMap(void)
 
 	//テクスチャの読み込み
 	D3DXCreateTextureFromFile(pDevice, "data\\TEXTURE\\PlayerPin.png", &g_pTextureMap[0]);//プレイヤーピン
-	
-	D3DXCreateTextureFromFile(pDevice, "data\\TEXTURE\\TestMap.png", &g_pTextureMap[1]);//地図
-	D3DXCreateTextureFromFile(pDevice, "data\\TEXTURE\\TestMap.png", &g_pTextureMap[2]);//地図
+	D3DXCreateTextureFromFile(pDevice, "data\\TEXTURE\\TestMap3.png", &g_pTextureMap[1]);//地図
+	D3DXCreateTextureFromFile(pDevice, "data\\TEXTURE\\TestMap3.png", &g_pTextureMap[2]);//地図
 
 
 
@@ -114,29 +113,6 @@ void InitMap(void)
 	//右
 	SetMap(D3DXVECTOR3(SCREEN_WIDE * 0.38f, SCREEN_HEIGHT * 0.8f, 0.0f), MAP_UI_TYPE_PLAYERPIN_1P_1, 1);
 	SetMap(D3DXVECTOR3(SCREEN_WIDE * 0.88f, SCREEN_HEIGHT * 0.8f, 0.0f), MAP_UI_TYPE_PLAYERPIN_2P_1, 1);
-
-
-
-
-
-//	SetMap(D3DXVECTOR3(MAPSIZE + 10.0f, 460.0f, 0), MAP_UI_TYPE_POINTER, ITEMTYPE_MAX, -1, 1);//ポインター初期位置
-
-//	SetMap(D3DXVECTOR3(MAPSIZE + 640.0f, 460.0f, 0), MAP_UI_TYPE_POINTER, ITEMTYPE_MAX, -1, 2);//ポインター初期位置
-
-	//	//表示場所の設定
-	//for (int SetCnt = 0; SetCnt < MAXGETITEM; SetCnt++)
-	//{
-	//	SetMap(D3DXVECTOR3(MAPSIZE + 10.0f + (MAPSIZE * 2.1f * SetCnt), 460.0f, 0), ITEM_UI_TYPE_FRAME, ITEMTYPE_MAX, -1, 1);//枠
-	//}
-	////表示場所の設定
-	//for (int SetCnt2 = 0; SetCnt2 < MAXGETITEM; SetCnt2++)
-	//{
-	//	SetMap(D3DXVECTOR3(MAPSIZE + 640.0f + (MAPSIZE * 2.1f * SetCnt2), 460.0f, 0), ITEM_UI_TYPE_FRAME, ITEMTYPE_MAX, -1, 2);//枠
-	//}
-
-
-	//SetMap(D3DXVECTOR3(SCREEN_WIDE - 100.0f, 35.0f, 0), ITEM_UI_TYPE_KEYUI, ITEMTYPE_MAX, -1, 2);//鍵
-
 }
 //=============================
 //マップUIの終了処理
@@ -191,10 +167,10 @@ void UpdateMap(bool Draw1OK, bool Draw2OK)
 			{
 			case MAP_UI_TYPE_PLAYERPIN_1P_0:
 
-				EscapeUV.x = -pPlayer->pos.x * 0.005f;
-				EscapeUV.y = pPlayer->pos.z * 0.005f;
+				EscapeUV.x = -pPlayer->pos.x * MOVESIZE;
+				EscapeUV.y = pPlayer->pos.z * MOVESIZE;
 
-				g_UVpos[0] = EscapeUV;//UV上の位置
+				g_UVpos[0] = EscapeUV;//UV上の位置//------------------------------------初期スポーン分ずらす必要あり
 				
 				//テクスチャ座標を設定
 				pVtx[0].tex = D3DXVECTOR2(0.0f, 0.0f);//左上
@@ -206,10 +182,10 @@ void UpdateMap(bool Draw1OK, bool Draw2OK)
 
 			case MAP_UI_TYPE_PLAYERPIN_2P_1:
 
-				EscapeUV.x =-pPlayer2->pos.x * 0.005f;
-				EscapeUV.y = pPlayer2->pos.z * 0.005f;
+				EscapeUV.x =-pPlayer2->pos.x * MOVESIZE;
+				EscapeUV.y = pPlayer2->pos.z * MOVESIZE;
 
-				g_UVpos [1]= EscapeUV;//UV上の位置
+				g_UVpos [1]= EscapeUV;//UV上の位置//------------------------------------初期スポーン分ずらす必要あり
 
 				//テクスチャ座標を設定
 				pVtx[0].tex = D3DXVECTOR2(0.0f, 0.0f);//左上
@@ -246,6 +222,7 @@ void UpdateMap(bool Draw1OK, bool Draw2OK)
 			case MAP_UI_TYPE_MAP1:
 				
 				g_UVpos[0] += MAP0_START_POS_0;
+				g_UVpos[1] += MAP1_START_POS_0;
 
 				//テクスチャ座標を設定
 				pVtx[0].tex = D3DXVECTOR2(g_UVpos[g_Map[nCntMap].ScreenNum].x - UVSize,g_UVpos[g_Map[nCntMap].ScreenNum].y - UVSize);//左上
@@ -255,17 +232,17 @@ void UpdateMap(bool Draw1OK, bool Draw2OK)
 				
 				break;
 
-			case MAP_UI_TYPE_MAP2:
-				
-				g_UVpos[0] += MAP1_START_POS_0;
+			//case MAP_UI_TYPE_MAP2:
+			//	
+			////	g_UVpos[1] += MAP1_START_POS_0;
 
-				//テクスチャ座標を設定
-				pVtx[0].tex = D3DXVECTOR2(g_UVpos[g_Map[nCntMap].ScreenNum].x - UVSize, g_UVpos[g_Map[nCntMap].ScreenNum].y - UVSize);//左上
-				pVtx[1].tex = D3DXVECTOR2(g_UVpos[g_Map[nCntMap].ScreenNum].x + UVSize, g_UVpos[g_Map[nCntMap].ScreenNum].y - UVSize);//右上
-				pVtx[2].tex = D3DXVECTOR2(g_UVpos[g_Map[nCntMap].ScreenNum].x - UVSize, g_UVpos[g_Map[nCntMap].ScreenNum].y + UVSize);//左下
-				pVtx[3].tex = D3DXVECTOR2(g_UVpos[g_Map[nCntMap].ScreenNum].x + UVSize, g_UVpos[g_Map[nCntMap].ScreenNum].y + UVSize);//右下
-			
-				break;
+			//	//テクスチャ座標を設定
+			//	pVtx[0].tex = D3DXVECTOR2(g_UVpos[g_Map[nCntMap].ScreenNum].x - UVSize, g_UVpos[g_Map[nCntMap].ScreenNum].y - UVSize);//左上
+			//	pVtx[1].tex = D3DXVECTOR2(g_UVpos[g_Map[nCntMap].ScreenNum].x + UVSize, g_UVpos[g_Map[nCntMap].ScreenNum].y - UVSize);//右上
+			//	pVtx[2].tex = D3DXVECTOR2(g_UVpos[g_Map[nCntMap].ScreenNum].x - UVSize, g_UVpos[g_Map[nCntMap].ScreenNum].y + UVSize);//左下
+			//	pVtx[3].tex = D3DXVECTOR2(g_UVpos[g_Map[nCntMap].ScreenNum].x + UVSize, g_UVpos[g_Map[nCntMap].ScreenNum].y + UVSize);//右下
+			//
+			//	break;
 			}
 
 
@@ -330,9 +307,9 @@ void DrawMap(void)
 				SelectTex = 1;
 				break;
 
-			case MAP_UI_TYPE_MAP2:
+			/*case MAP_UI_TYPE_MAP2:
 				SelectTex = 2;
-				break;
+				break;*/
 			}
 			//テクスチャの設定
 			pDevice->SetTexture(0, g_pTextureMap[SelectTex]);//---------書き換え済み
@@ -506,27 +483,27 @@ void SetMap(D3DXVECTOR3 pos, MAP_UI_TYPE MAPType,int ScreenNum)
 
 					break;
 
-				case MAP_UI_TYPE_MAP2:
+				//case MAP_UI_TYPE_MAP2:
 
-					//頂点座標の更新-----------------------------------
-					pVtx[0].pos = D3DXVECTOR3(g_Map[nCntMap].pos.x - ((SCREEN_WIDE * 0.5f) * ADDMAP), g_Map[nCntMap].pos.y - ((SCREEN_WIDE * 0.5f) * ADDMAP), 0.0f);
-					pVtx[1].pos = D3DXVECTOR3(g_Map[nCntMap].pos.x + ((SCREEN_WIDE * 0.5f) * ADDMAP), g_Map[nCntMap].pos.y - ((SCREEN_WIDE * 0.5f) * ADDMAP), 0.0f);
-					pVtx[2].pos = D3DXVECTOR3(g_Map[nCntMap].pos.x - ((SCREEN_WIDE * 0.5f) * ADDMAP), g_Map[nCntMap].pos.y + ((SCREEN_WIDE * 0.5f) * ADDMAP), 0.0f);
-					pVtx[3].pos = D3DXVECTOR3(g_Map[nCntMap].pos.x + ((SCREEN_WIDE * 0.5f) * ADDMAP), g_Map[nCntMap].pos.y + ((SCREEN_WIDE * 0.5f) * ADDMAP), 0.0f);
+				//	//頂点座標の更新-----------------------------------
+				//	pVtx[0].pos = D3DXVECTOR3(g_Map[nCntMap].pos.x - ((SCREEN_WIDE * 0.5f) * ADDMAP), g_Map[nCntMap].pos.y - ((SCREEN_WIDE * 0.5f) * ADDMAP), 0.0f);
+				//	pVtx[1].pos = D3DXVECTOR3(g_Map[nCntMap].pos.x + ((SCREEN_WIDE * 0.5f) * ADDMAP), g_Map[nCntMap].pos.y - ((SCREEN_WIDE * 0.5f) * ADDMAP), 0.0f);
+				//	pVtx[2].pos = D3DXVECTOR3(g_Map[nCntMap].pos.x - ((SCREEN_WIDE * 0.5f) * ADDMAP), g_Map[nCntMap].pos.y + ((SCREEN_WIDE * 0.5f) * ADDMAP), 0.0f);
+				//	pVtx[3].pos = D3DXVECTOR3(g_Map[nCntMap].pos.x + ((SCREEN_WIDE * 0.5f) * ADDMAP), g_Map[nCntMap].pos.y + ((SCREEN_WIDE * 0.5f) * ADDMAP), 0.0f);
 
-					//頂点カラーの設定
-					pVtx[0].col = D3DCOLOR_RGBA(255, 255, 255, 200);
-					pVtx[1].col = D3DCOLOR_RGBA(255, 255, 255, 200);
-					pVtx[2].col = D3DCOLOR_RGBA(255, 255, 255, 200);
-					pVtx[3].col = D3DCOLOR_RGBA(255, 255, 255, 200);
+				//	//頂点カラーの設定
+				//	pVtx[0].col = D3DCOLOR_RGBA(255, 255, 255, 200);
+				//	pVtx[1].col = D3DCOLOR_RGBA(255, 255, 255, 200);
+				//	pVtx[2].col = D3DCOLOR_RGBA(255, 255, 255, 200);
+				//	pVtx[3].col = D3DCOLOR_RGBA(255, 255, 255, 200);
 
-					//テクスチャ座標を設定
-					pVtx[0].tex = D3DXVECTOR2(g_UVpos[g_Map[nCntMap].ScreenNum].x - UVSize, g_UVpos[g_Map[nCntMap].ScreenNum].y - UVSize);//左上
-					pVtx[1].tex = D3DXVECTOR2(g_UVpos[g_Map[nCntMap].ScreenNum].x + UVSize, g_UVpos[g_Map[nCntMap].ScreenNum].y - UVSize);//右上
-					pVtx[2].tex = D3DXVECTOR2(g_UVpos[g_Map[nCntMap].ScreenNum].x - UVSize, g_UVpos[g_Map[nCntMap].ScreenNum].y + UVSize);//左下
-					pVtx[3].tex = D3DXVECTOR2(g_UVpos[g_Map[nCntMap].ScreenNum].x + UVSize, g_UVpos[g_Map[nCntMap].ScreenNum].y + UVSize);//右下
-					
-					break;
+				//	//テクスチャ座標を設定
+				//	pVtx[0].tex = D3DXVECTOR2(g_UVpos[g_Map[nCntMap].ScreenNum].x - UVSize, g_UVpos[g_Map[nCntMap].ScreenNum].y - UVSize);//左上
+				//	pVtx[1].tex = D3DXVECTOR2(g_UVpos[g_Map[nCntMap].ScreenNum].x + UVSize, g_UVpos[g_Map[nCntMap].ScreenNum].y - UVSize);//右上
+				//	pVtx[2].tex = D3DXVECTOR2(g_UVpos[g_Map[nCntMap].ScreenNum].x - UVSize, g_UVpos[g_Map[nCntMap].ScreenNum].y + UVSize);//左下
+				//	pVtx[3].tex = D3DXVECTOR2(g_UVpos[g_Map[nCntMap].ScreenNum].x + UVSize, g_UVpos[g_Map[nCntMap].ScreenNum].y + UVSize);//右下
+				//	
+				//	break;
 				}
 
 				

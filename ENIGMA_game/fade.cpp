@@ -108,7 +108,7 @@ void UpdateFade(void)
 		{//フェードアウト状態
 			g_colorfade.a += 0.1f;	//ポリゴンを不透明にしていく
 
-			if (g_colorfade.a >= 1.0f)
+			if (g_colorfade.a >= 1.1f)
 			{
 				g_colorfade.a = 1.0f;
 

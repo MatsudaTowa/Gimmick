@@ -673,7 +673,7 @@ void UpdatePlayer(void)
 		{
 			g_Player.PlayerState = PLAYERSTATE_1P_NOMAL;
 
-			//振動ストップ
+			////振動ストップ
 			//VibrationLeft(0);
 			//VibrationRight(0);
 		}

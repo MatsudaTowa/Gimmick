@@ -13,7 +13,6 @@
 #include "camera.h"
 #include "light.h"
 #include "stage.h"
-#include "result.h"
 
 #include "player.h"//----------------------------------------------------------------------OK
 #include "player2.h"//---------------------------------------------------------------------NG
@@ -36,7 +35,7 @@
 #include "speechbubble.h"
 #include "text.h"
 
-//#include"DebugModel.h"
+#include"DebugModel.h"
 
 #include "item.h"
 #include "particle.h"
@@ -136,13 +135,13 @@ void InitGame(void)
 	
 	InitSky();
 
-
+	InitSpeechBubble();
 	InitTransferGate();
 	InitCollision_Pre();
 	InitActionZone();
 	InitGameFade();
 	InitScreenUI();
-	InitSpeechBubble();
+	
 	InitParticle();
 	InitSimpleModel();
 	InitEyeTrap();
@@ -182,7 +181,7 @@ void InitGame(void)
 #if _DEBUG
 
 	//デバッグモデル
-//	InitDebugModel();
+	InitDebugModel();
 #endif
 
 	//----------------------------制限時間
@@ -193,11 +192,16 @@ void InitGame(void)
 	//-----------------------------
 
 
+	TRANSFERGATE* pTransferGate;
+	pTransferGate = GetTransferGate();
 
-
-
-	int test;
-	test = 0;
+	for (int i = 0; i < MAXGATE; i++)
+	{
+		if (pTransferGate[i].bUse == true)
+		{
+			SetActionZone(D3DXVECTOR3(pTransferGate[i].pos.x, pTransferGate[i].pos.y, pTransferGate[i].pos.z), 100, ACTION_TYPE_ESCAPE, D3DXCOLOR(0.0f, 1.0f, 0.0f, 0.4f));
+		}
+	}
 }
 //=============================
 //ゲーム画面の終了処理
@@ -207,8 +211,8 @@ void UninitGame(void)
 	//振動ストップ
 	for (int nCnt = 0; nCnt < 2; nCnt++)
 	{
-		VibrationLeft(0,nCnt);
-		VibrationRight(0,nCnt);
+		VibrationLeft(0, nCnt);
+		VibrationRight(0, nCnt);
 	}
 
 //	UninitPause();
@@ -250,14 +254,14 @@ void UninitGame(void)
 //	UninitDebugModel();
 //#endif
 
-	UninitLimitTime();//
+	UninitLimitTime();
 
 #if _DEBUG
 	//デバッグモデル
-//	UninitDebugModel();//
+	UninitDebugModel();//
 #endif
 
-	
+
 
 #if _DEBUG
 	UninitLine();//
@@ -268,12 +272,13 @@ void UninitGame(void)
 	UninitEyeTrap();//
 	UninitSimpleModel();//
 	UninitParticle();//
-	UninitSpeechBubble();//
+
 	UninitScreenUI();//
 	UninitGameFade();//
 	UninitActionZone();//
 	UninitCollision_Pre();//
 	UninitTransferGate();//
+	UninitSpeechBubble();//
 	UninitSky();//
 	UninitPlayer_2P();//
 	UninitPlayer();//
@@ -348,8 +353,7 @@ void UpdateGame(void)
 		if (GetkeyboardPress(DIK_O) == true /*|| GetJoypadTrigger(JOYKEY_A, 0) == true*/)
 		{//oが押された(デバッグ用)
 			//モード設定(フェードの後リザルト画面に移行)
-
-			SetFade(MODE_CLEAR);
+			SetFade(MODE_RESULT);
 		}
 
 		if (GetkeyboardPress(DIK_F5) == true)//トリガー
@@ -357,7 +361,23 @@ void UpdateGame(void)
 			if (GameLoopSave == false)
 			{
 #if _DEBUG
-				Model_DebugSave();
+				MAPOBJECT* pMapObject;
+				pMapObject = GetMapObject();
+
+				for (int i = 0; i < MAX_MODEL; i++)
+				{
+					if (pMapObject[i].bUse == true)
+					{
+						if (pMapObject[i].nType == MODELTYPE_ESCAPEDOOR)
+						{
+							pMapObject[i].bUse = false;//とりあえず
+						}
+					}
+				}
+
+				
+
+				Model_DebugSave();//-----------------------------------------------------//SetModelを保存
 				GameLoopSave = true;
 #endif
 			}
@@ -382,7 +402,7 @@ void UpdateGame(void)
 			else
 			{//余韻がたった
 				//モード設定(フェードの後リザルト画面に移行)
-				SetFade(MODE_CLEAR);
+				SetFade(MODE_RESULT);
 			}
 		}
 
@@ -390,7 +410,7 @@ void UpdateGame(void)
 //		if (pNowtime->NowTime <= 0 || pPlayer->bUse == false || pPlayer2->bUse == false)
 //		{//ゲームオーバー
 			
-		 //振動ストップ
+		 ////振動ストップ
 			//VibrationLeft(0);
 			//VibrationRight(0);
 
@@ -402,7 +422,7 @@ void UpdateGame(void)
 			{//余韻がたった
 
 				//モード設定(フェードの後リザルト画面に移行)
-				SetFade(MODE_GAMEOVER);
+				SetFade(MODE_RESULT);
 			}
 //		}
 		//--------------------------------------------------------------------------------クリア、敗北条件ここまで
@@ -475,7 +495,7 @@ void UpdateGame(void)
 		UpdateShadow();
 #if _DEBUG
 		UpdateLine();
-	//	UpdateDebugModel();
+		UpdateDebugModel();
 #endif
 		UpdateScreenUI();
 		UpdateSpeechBubble();
@@ -553,7 +573,7 @@ void DrawGame(void)
 		DrawActionZone();
 		DrawLine();
 		DrawEnemy_View();
-	//	DrawDebugModel();
+		DrawDebugModel();
 #endif
 		//αテストを有効
 		pDevice->SetRenderState(D3DRS_ALPHATESTENABLE, TRUE);
@@ -596,6 +616,8 @@ void DrawGame(void)
 	DrawGameFade();
 	DrawLimitTime();
 	DrawScreenUI();
+	
+	DrawMap();
 
 	DrawEyeTrap();
 	DrawHaveKey(g_nHaveKey);
@@ -609,7 +631,7 @@ void DrawGame(void)
 	}
 	
 		DrawItem_UI();
-		DrawMap();
+	
 	
 
 
@@ -621,7 +643,7 @@ void DrawGame(void)
 	DrawTextSet(D3DXVECTOR3(550.0f, 700.0f, 0.0f), 20, FONT_AKABARASINDELERA, D3DXCOLOR(1.0f, 1.0f, 0.0f, 1.0f), "Xボタンでとりあえずアイテム出現");
 
 
-//	DrawDebugDelC0mment();
+	DrawDebugDelComment();
 
 	if (g_bPause == true)
 	{
@@ -1188,6 +1210,8 @@ void AdjustPlayerPositionToCollision_VIEWPOS(D3DXVECTOR3 playerPos, int PlayerIn
 void BoxCollisionKill(D3DXVECTOR3 PlayerMin, D3DXVECTOR3 PlayerMax, D3DXVECTOR3 HitMin, D3DXVECTOR3 HitMax, int PlayerIndex)
 {//当たり判定
 
+#if !_DEBUG
+
 	//1Pのとき
 	if (PlayerIndex == 1)
 	{
@@ -1208,7 +1232,7 @@ void BoxCollisionKill(D3DXVECTOR3 PlayerMin, D3DXVECTOR3 PlayerMax, D3DXVECTOR3 
 			pPlayer->pos.x = HitMin.x + (PlayerMin.x - pPlayer->pos.x) - 0.1f;
 
 			OverPenetration = false;
-			SetFade(MODE_GAMEOVER);
+			SetFade(MODE_RESULT);
 
 		}
 
@@ -1222,7 +1246,7 @@ void BoxCollisionKill(D3DXVECTOR3 PlayerMin, D3DXVECTOR3 PlayerMax, D3DXVECTOR3 
 			pPlayer->move.x = 0.0f;
 			pPlayer->pos.x = HitMax.x + (PlayerMax.x - pPlayer->pos.x) + 0.1f;
 			OverPenetration = false;
-			SetFade(MODE_GAMEOVER);
+			SetFade(MODE_RESULT);
 
 		}
 
@@ -1237,7 +1261,7 @@ void BoxCollisionKill(D3DXVECTOR3 PlayerMin, D3DXVECTOR3 PlayerMax, D3DXVECTOR3 
 			pPlayer->move.z = 0.0f;
 			pPlayer->pos.z = HitMax.z - (PlayerMin.z - pPlayer->pos.z) + 0.1f;
 			OverPenetration = false;
-			SetFade(MODE_GAMEOVER);
+			SetFade(MODE_RESULT);
 
 		}
 
@@ -1251,7 +1275,7 @@ void BoxCollisionKill(D3DXVECTOR3 PlayerMin, D3DXVECTOR3 PlayerMax, D3DXVECTOR3 
 			pPlayer->move.z = 0.0f;
 			pPlayer->pos.z = HitMin.z - (PlayerMax.z - pPlayer->pos.z) - 0.1f;
 			OverPenetration = false;
-			SetFade(MODE_GAMEOVER);
+			SetFade(MODE_RESULT);
 
 		}
 
@@ -1307,7 +1331,7 @@ void BoxCollisionKill(D3DXVECTOR3 PlayerMin, D3DXVECTOR3 PlayerMax, D3DXVECTOR3 
 			pPlayer2->move.x = 0.0f;
 			pPlayer2->pos.x = HitMin.x + (PlayerMin.x - pPlayer2->pos.x) - 0.1f;
 			OverPenetration = false;
-			SetFade(MODE_GAMEOVER);
+			SetFade(MODE_RESULT);
 
 		}
 
@@ -1321,8 +1345,7 @@ void BoxCollisionKill(D3DXVECTOR3 PlayerMin, D3DXVECTOR3 PlayerMax, D3DXVECTOR3 
 			pPlayer2->move.x = 0.0f;
 			pPlayer2->pos.x = HitMax.x + (PlayerMax.x - pPlayer2->pos.x) + 0.1f;
 			OverPenetration = false;
-
-			SetFade(MODE_GAMEOVER);
+			SetFade(MODE_RESULT);
 
 		}
 
@@ -1337,8 +1360,7 @@ void BoxCollisionKill(D3DXVECTOR3 PlayerMin, D3DXVECTOR3 PlayerMax, D3DXVECTOR3 
 			pPlayer2->move.z = 0.0f;
 			pPlayer2->pos.z = HitMax.z - (PlayerMin.z - pPlayer2->pos.z) + 0.1f;
 			OverPenetration = false;
-
-			SetFade(MODE_GAMEOVER);
+			SetFade(MODE_RESULT);
 
 		}
 
@@ -1352,8 +1374,7 @@ void BoxCollisionKill(D3DXVECTOR3 PlayerMin, D3DXVECTOR3 PlayerMax, D3DXVECTOR3 
 			pPlayer2->move.z = 0.0f;
 			pPlayer2->pos.z = HitMin.z - (PlayerMax.z - pPlayer2->pos.z) - 0.1f;
 			OverPenetration = false;
-
-			SetFade(MODE_GAMEOVER);
+			SetFade(MODE_RESULT);
 
 		}
 
@@ -1382,6 +1403,7 @@ void BoxCollisionKill(D3DXVECTOR3 PlayerMin, D3DXVECTOR3 PlayerMax, D3DXVECTOR3 
 		}
 	}
 
+#endif
 
 }
 
@@ -1411,7 +1433,7 @@ void BoxCollisionEnemy(D3DXVECTOR3 EnemyMin, D3DXVECTOR3 EnemyMax, D3DXVECTOR3 H
 
 		if (pEnemy->ActionPattern == ACTIONPATTERN_ENEMY_WALK)
 		{
-			ActionEnemy(ACTIONPATTERN_ENEMY_WALK,-1);
+			ActionEnemy(ACTIONPATTERN_ENEMY_WALK, -1);
 		}
 	}
 
@@ -1427,7 +1449,7 @@ void BoxCollisionEnemy(D3DXVECTOR3 EnemyMin, D3DXVECTOR3 EnemyMax, D3DXVECTOR3 H
 		OverPenetration = false;
 		if (pEnemy->ActionPattern == ACTIONPATTERN_ENEMY_WALK)
 		{
-			ActionEnemy(ACTIONPATTERN_ENEMY_WALK,-1);
+			ActionEnemy(ACTIONPATTERN_ENEMY_WALK, -1);
 		}
 	}
 
@@ -1444,7 +1466,7 @@ void BoxCollisionEnemy(D3DXVECTOR3 EnemyMin, D3DXVECTOR3 EnemyMax, D3DXVECTOR3 H
 		OverPenetration = false;
 		if (pEnemy->ActionPattern == ACTIONPATTERN_ENEMY_WALK)
 		{
-			ActionEnemy(ACTIONPATTERN_ENEMY_WALK,-1);
+			ActionEnemy(ACTIONPATTERN_ENEMY_WALK, -1);
 		}
 	}
 
@@ -1460,7 +1482,7 @@ void BoxCollisionEnemy(D3DXVECTOR3 EnemyMin, D3DXVECTOR3 EnemyMax, D3DXVECTOR3 H
 		OverPenetration = false;
 		if (pEnemy->ActionPattern == ACTIONPATTERN_ENEMY_WALK)
 		{
-			ActionEnemy(ACTIONPATTERN_ENEMY_WALK,-1);
+			ActionEnemy(ACTIONPATTERN_ENEMY_WALK, -1);
 		}
 	}
 
@@ -1547,13 +1569,16 @@ void BoxCollisionGate(D3DXVECTOR3 PlayerMin, D3DXVECTOR3 PlayerMax, D3DXVECTOR3 
 	EscapeRot_Player = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 
 	D3DXVECTOR3 EscapeRot_Camera;
-	EscapeRot_Camera = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+	EscapeRot_Camera = D3DXVECTOR3(0.0f, 0.0f, 0.0f); 
 
 	Camera* pCamera;
 	pCamera = GetCamera();
 
 	TRANSFERGATE* pTransferGate;
 	pTransferGate = GetTransferGate();
+
+	//SPEECHBUBBLE* pSpeachBubble = GetSpeechBubble();
+
 
 	//転移先
 	D3DXVECTOR3 ParentGateMin = D3DXVECTOR3(pTransferGate[ParentIndex].pos + pTransferGate[ParentIndex].GateMin);
@@ -1687,6 +1712,9 @@ void BoxCollisionGate(D3DXVECTOR3 PlayerMin, D3DXVECTOR3 PlayerMax, D3DXVECTOR3 
 
 			if (bHit == true)
 			{//接触判定時
+			
+					
+
 
 				pPlayer->PlayerState = PLAYERSTATE_1P_TELEPOR;
 
@@ -1740,6 +1768,7 @@ void BoxCollisionGate(D3DXVECTOR3 PlayerMin, D3DXVECTOR3 PlayerMax, D3DXVECTOR3 
 					SetGameFade(1, ESCAPEMOVE, EscapeRot_Camera, EscapeRot_Player);
 				}
 			}
+		
 		}
 		else if (PlayerIndex == 1)
 		{//2Pの時
@@ -2147,13 +2176,29 @@ void SphereCollisionZone(D3DXVECTOR3 PlayerPos, int PlayerIndex, int ZoneIndex)
 
 		if (bIn == true)
 		{//接触判定時
-			SetSpeechBubble(pActionZone[ZoneIndex].pos, ZoneIndex, 0);
+
+					//動作ごとに分岐
+			if (pActionZone[ZoneIndex].ActionType == ACTION_TYPE_ESCAPE)
+			{//
+				SetSpeechBubble(pActionZone[ZoneIndex].pos, ZoneIndex, 0, D3DXVECTOR3(0.0f, 80.0f, 0.0f),SPEECHBUBBLETYPE_TRANCE);
+			}
+			else/* if (pActionZone[ZoneIndex].ActionType == ACTION_TYPE_MAX)*/
+			{//
+				SetSpeechBubble(pActionZone[ZoneIndex].pos, ZoneIndex, 0, D3DXVECTOR3(0.0f, 30.0f, 0.0f), SPEECHBUBBLETYPE_ACTION);
+			}
 		}
 		else
 		{
-			SetSpeechBubble(pActionZone[ZoneIndex].pos, ZoneIndex, 1);
+			//動作ごとに分岐
+			if (pActionZone[ZoneIndex].ActionType == ACTION_TYPE_ESCAPE)
+			{//
+				SetSpeechBubble(pActionZone[ZoneIndex].pos, ZoneIndex, 1, D3DXVECTOR3(0.0f, 80.0f, 0.0f), SPEECHBUBBLETYPE_TRANCE);
+			}
+			else/* if (pActionZone[ZoneIndex].ActionType == ACTION_TYPE_MAX)*/
+			{//
+				SetSpeechBubble(pActionZone[ZoneIndex].pos, ZoneIndex, 1, D3DXVECTOR3(0.0f, 30.0f, 0.0f), SPEECHBUBBLETYPE_ACTION);
+			}
 		}
-
 
 	//1Pのとき
 	if (PlayerIndex == 0)

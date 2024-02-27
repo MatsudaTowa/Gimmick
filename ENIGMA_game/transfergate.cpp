@@ -75,10 +75,14 @@ void InitTransferGate(void)
     SetTransferGate(D3DXVECTOR3(450.0f, 0.0f, 0.0f), D3DXVECTOR3(-50.0f, 0.0f, -60.0f), D3DXVECTOR3(50.0f, 100.0f, 60.0f), 6, 7, TRANS_ANGLE_MIN_Z, D3DXCOLOR(0.0f, 0.0f, 1.0f, 0.7f), false, true);
     SetTransferGate(D3DXVECTOR3(3140.0f, 0.0f, 20.0f), D3DXVECTOR3(-100.0f, 0.0f, -60.0f), D3DXVECTOR3(100.0f, 100.0f, 60.0f), 7, 6, TRANS_ANGLE_MAX_Z, D3DXCOLOR(0.0f, 0.0f, 1.0f, 0.7f), false, true);
 
+    //è\éöòHâEÇ©ÇÁéÊÇËçáÇ¶Ç∑èoå˚ãÛä‘
+    SetTransferGate(D3DXVECTOR3(-1490.0f, 0.0f, -2900.0f), D3DXVECTOR3(-50.0f, 0.0f, -60.0f), D3DXVECTOR3(50.0f, 100.0f, 60.0f), 8, 9, TRANS_ANGLE_MIN_X, D3DXCOLOR(0.0f, 0.0f, 1.0f, 0.7f), false, true);
+    SetTransferGate(D3DXVECTOR3(-2000.0f, 0.0f, -2900.0f), D3DXVECTOR3(-100.0f, 0.0f, -60.0f), D3DXVECTOR3(100.0f, 100.0f, 60.0f), 9, 8, TRANS_ANGLE_MAX_X, D3DXCOLOR(0.0f, 0.0f, 1.0f, 0.7f), false, true);
+
 
 
     
-
+    //--------------
 }
 
 //=============================
@@ -264,6 +268,7 @@ void SetTransferGate(D3DXVECTOR3 Pos, D3DXVECTOR3 GateMin, D3DXVECTOR3 GateMax, 
     {
         if (g_TransferGate[nCntGate].bUse == false)
         {
+      
             g_TransferGate[nCntGate].pos = Pos;
             g_TransferGate[nCntGate].GateMin = GateMin;
             g_TransferGate[nCntGate].GateMax = GateMax;

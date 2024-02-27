@@ -16,7 +16,7 @@
 #define NUM_MENUUI (4)//メニューの表示ポリゴンの数
 #define NUM_SELECTUI	(3)//選択肢の数
 #define MAX_WIDE				(216)//横幅
-#define MAX_H				(30)//縦幅
+#define MAX_HEIGH				(30)//縦幅
 
 //グローバル変数
 LPDIRECT3DTEXTURE9 g_pTextureMenu[NUM_MENUUI] = {};//テクスチャへのポインタ
@@ -66,10 +66,10 @@ void InitMenu(void)
 		g_aMenu[nCountMenu].pos = D3DXVECTOR3(SCREEN_WIDE / 2, SCREEN_HEIGHT / 2, 0.0f);
 
 		//頂点座標の設定
-		pVtx[0].pos = D3DXVECTOR3(g_aMenu[nCountMenu].pos.x - MAX_WIDE, g_aMenu[nCountMenu].pos.y - MAX_H, 0.0f);
-		pVtx[1].pos = D3DXVECTOR3(g_aMenu[nCountMenu].pos.x + MAX_WIDE, g_aMenu[nCountMenu].pos.y - MAX_H, 0.0f);
-		pVtx[2].pos = D3DXVECTOR3(g_aMenu[nCountMenu].pos.x - MAX_WIDE, g_aMenu[nCountMenu].pos.y + MAX_H, 0.0f);
-		pVtx[3].pos = D3DXVECTOR3(g_aMenu[nCountMenu].pos.x + MAX_WIDE, g_aMenu[nCountMenu].pos.y + MAX_H, 0.0f);
+		pVtx[0].pos = D3DXVECTOR3(g_aMenu[nCountMenu].pos.x - MAX_WIDE, g_aMenu[nCountMenu].pos.y - MAX_HEIGH, 0.0f);
+		pVtx[1].pos = D3DXVECTOR3(g_aMenu[nCountMenu].pos.x + MAX_WIDE, g_aMenu[nCountMenu].pos.y - MAX_HEIGH, 0.0f);
+		pVtx[2].pos = D3DXVECTOR3(g_aMenu[nCountMenu].pos.x - MAX_WIDE, g_aMenu[nCountMenu].pos.y + MAX_HEIGH, 0.0f);
+		pVtx[3].pos = D3DXVECTOR3(g_aMenu[nCountMenu].pos.x + MAX_WIDE, g_aMenu[nCountMenu].pos.y + MAX_HEIGH, 0.0f);
 
 		//rhwの設定
 		pVtx[0].rhw = 1.0f;
@@ -147,16 +147,24 @@ void UpdateMenu(void)
 		if (GetkeyboardTrigger(DIK_W) == true || GetJoypadTrigger(JOYKEY_UP, 0) == true || GetJoypadTrigger(JOYKEY_UP, 1) == true || joykeystate.Gamepad.sThumbLY >= XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE || GetkeyboardTrigger(DIK_UP))
 		{//Wがおされた(上)
 			if (g_Menu > START_MENU_GAME)
-			{
+			{//ゲームスタートに到達するまではマイナスする
 				g_Menu--;
+			}
+			else
+			{//ゲームスタートより下に行こうとしたら一番下(タイトル)に戻る
+				g_Menu = START_MENU_TITLE;
 			}
 
 		}
 		else if (GetkeyboardTrigger(DIK_S) == true || GetJoypadTrigger(JOYKEY_DOWN, 0) == true || GetJoypadTrigger(JOYKEY_DOWN, 1) == true || joykeystate.Gamepad.sThumbLY <= -XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE || GetkeyboardTrigger(DIK_DOWN))
 		{//Sがおされた(下)
 			if (g_Menu < START_MENU_TITLE)
-			{
+			{//タイトルに到達するまでプラスする
 				g_Menu++;
+			}
+			else
+			{//タイトルより上に行こうとしたら一番上(ゲームスタート)に戻る
+				g_Menu = START_MENU_GAME;
 			}
 		}
 	}
@@ -168,12 +176,20 @@ void UpdateMenu(void)
 			{
 				g_Menu--;
 			}
+			else
+			{//ゲームスタートより下に行こうとしたら一番下(タイトル)に戻る
+				g_Menu = START_MENU_TITLE;
+			}
 		}
 		else if (GetkeyboardTrigger(DIK_S) == true || GetkeyboardTrigger(DIK_DOWN))
 		{//Sがおされた(下)
 			if (g_Menu < START_MENU_TITLE)
 			{
 				g_Menu++;
+			}
+			else
+			{//タイトルより上に行こうとしたら一番上(ゲームスタート)に戻る
+				g_Menu = START_MENU_GAME;
 			}
 		}
 	}
@@ -202,30 +218,30 @@ void UpdateMenu(void)
 			g_aMenu[nCountMenu].pos = D3DXVECTOR3(SCREEN_WIDE / 4, SCREEN_HEIGHT / 3.0f, 0.0f);// ここで文字の位置変える
 
 			//頂点座標の設定
-			pVtx[0].pos = D3DXVECTOR3(g_aMenu[nCountMenu].pos.x - (MAX_WIDE * 1), g_aMenu[nCountMenu].pos.y - (MAX_H * 1), 0.0f);
-			pVtx[1].pos = D3DXVECTOR3(g_aMenu[nCountMenu].pos.x + (MAX_WIDE * 1), g_aMenu[nCountMenu].pos.y - (MAX_H * 1), 0.0f);
-			pVtx[2].pos = D3DXVECTOR3(g_aMenu[nCountMenu].pos.x - (MAX_WIDE * 1), g_aMenu[nCountMenu].pos.y + (MAX_H * 1), 0.0f);
-			pVtx[3].pos = D3DXVECTOR3(g_aMenu[nCountMenu].pos.x + (MAX_WIDE * 1), g_aMenu[nCountMenu].pos.y + (MAX_H * 1), 0.0f);
+			pVtx[0].pos = D3DXVECTOR3(g_aMenu[nCountMenu].pos.x - (MAX_WIDE * 1), g_aMenu[nCountMenu].pos.y - (MAX_HEIGH * 1), 0.0f);
+			pVtx[1].pos = D3DXVECTOR3(g_aMenu[nCountMenu].pos.x + (MAX_WIDE * 1), g_aMenu[nCountMenu].pos.y - (MAX_HEIGH * 1), 0.0f);
+			pVtx[2].pos = D3DXVECTOR3(g_aMenu[nCountMenu].pos.x - (MAX_WIDE * 1), g_aMenu[nCountMenu].pos.y + (MAX_HEIGH * 1), 0.0f);
+			pVtx[3].pos = D3DXVECTOR3(g_aMenu[nCountMenu].pos.x + (MAX_WIDE * 1), g_aMenu[nCountMenu].pos.y + (MAX_HEIGH * 1), 0.0f);
 		}
 		else if (nCountMenu == START_MENU_TUTORIAL)
 		{
 			g_aMenu[nCountMenu].pos = D3DXVECTOR3(SCREEN_WIDE / 4, SCREEN_HEIGHT / 1.75f, 0.0f);
 
 			//頂点座標の設定
-			pVtx[0].pos = D3DXVECTOR3(g_aMenu[nCountMenu].pos.x - (MAX_WIDE * 1), g_aMenu[nCountMenu].pos.y - (MAX_H * 1), 0.0f);
-			pVtx[1].pos = D3DXVECTOR3(g_aMenu[nCountMenu].pos.x + (MAX_WIDE * 1), g_aMenu[nCountMenu].pos.y - (MAX_H * 1), 0.0f);
-			pVtx[2].pos = D3DXVECTOR3(g_aMenu[nCountMenu].pos.x - (MAX_WIDE * 1), g_aMenu[nCountMenu].pos.y + (MAX_H * 1), 0.0f);
-			pVtx[3].pos = D3DXVECTOR3(g_aMenu[nCountMenu].pos.x + (MAX_WIDE * 1), g_aMenu[nCountMenu].pos.y + (MAX_H * 1), 0.0f);
+			pVtx[0].pos = D3DXVECTOR3(g_aMenu[nCountMenu].pos.x - (MAX_WIDE * 1), g_aMenu[nCountMenu].pos.y - (MAX_HEIGH * 1), 0.0f);
+			pVtx[1].pos = D3DXVECTOR3(g_aMenu[nCountMenu].pos.x + (MAX_WIDE * 1), g_aMenu[nCountMenu].pos.y - (MAX_HEIGH * 1), 0.0f);
+			pVtx[2].pos = D3DXVECTOR3(g_aMenu[nCountMenu].pos.x - (MAX_WIDE * 1), g_aMenu[nCountMenu].pos.y + (MAX_HEIGH * 1), 0.0f);
+			pVtx[3].pos = D3DXVECTOR3(g_aMenu[nCountMenu].pos.x + (MAX_WIDE * 1), g_aMenu[nCountMenu].pos.y + (MAX_HEIGH * 1), 0.0f);
 		}
 		else if (nCountMenu == START_MENU_TITLE)
 		{
 			g_aMenu[nCountMenu].pos = D3DXVECTOR3(SCREEN_WIDE / 4, SCREEN_HEIGHT / 1.23f, 0.0f);
 
 			//頂点座標の設定
-			pVtx[0].pos = D3DXVECTOR3(g_aMenu[nCountMenu].pos.x - (MAX_WIDE * 1), g_aMenu[nCountMenu].pos.y - (MAX_H * 1), 0.0f);
-			pVtx[1].pos = D3DXVECTOR3(g_aMenu[nCountMenu].pos.x + (MAX_WIDE * 1), g_aMenu[nCountMenu].pos.y - (MAX_H * 1), 0.0f);
-			pVtx[2].pos = D3DXVECTOR3(g_aMenu[nCountMenu].pos.x - (MAX_WIDE * 1), g_aMenu[nCountMenu].pos.y + (MAX_H * 1), 0.0f);
-			pVtx[3].pos = D3DXVECTOR3(g_aMenu[nCountMenu].pos.x + (MAX_WIDE * 1), g_aMenu[nCountMenu].pos.y + (MAX_H * 1), 0.0f);
+			pVtx[0].pos = D3DXVECTOR3(g_aMenu[nCountMenu].pos.x - (MAX_WIDE * 1), g_aMenu[nCountMenu].pos.y - (MAX_HEIGH * 1), 0.0f);
+			pVtx[1].pos = D3DXVECTOR3(g_aMenu[nCountMenu].pos.x + (MAX_WIDE * 1), g_aMenu[nCountMenu].pos.y - (MAX_HEIGH * 1), 0.0f);
+			pVtx[2].pos = D3DXVECTOR3(g_aMenu[nCountMenu].pos.x - (MAX_WIDE * 1), g_aMenu[nCountMenu].pos.y + (MAX_HEIGH * 1), 0.0f);
+			pVtx[3].pos = D3DXVECTOR3(g_aMenu[nCountMenu].pos.x + (MAX_WIDE * 1), g_aMenu[nCountMenu].pos.y + (MAX_HEIGH * 1), 0.0f);
 		}
 
 		if (nCountMenu == g_Menu)
