@@ -13,6 +13,7 @@
 #include "camera.h"
 #include "light.h"
 #include "stage.h"
+#include "result.h"
 
 #include "player.h"//----------------------------------------------------------------------OK
 #include "player2.h"//---------------------------------------------------------------------NG
@@ -347,7 +348,8 @@ void UpdateGame(void)
 		if (GetkeyboardPress(DIK_O) == true /*|| GetJoypadTrigger(JOYKEY_A, 0) == true*/)
 		{//oが押された(デバッグ用)
 			//モード設定(フェードの後リザルト画面に移行)
-			SetFade(MODE_RESULT);
+
+			SetFade(MODE_CLEAR);
 		}
 
 		if (GetkeyboardPress(DIK_F5) == true)//トリガー
@@ -380,7 +382,7 @@ void UpdateGame(void)
 			else
 			{//余韻がたった
 				//モード設定(フェードの後リザルト画面に移行)
-				SetFade(MODE_RESULT);
+				SetFade(MODE_CLEAR);
 			}
 		}
 
@@ -400,7 +402,7 @@ void UpdateGame(void)
 			{//余韻がたった
 
 				//モード設定(フェードの後リザルト画面に移行)
-				SetFade(MODE_RESULT);
+				SetFade(MODE_GAMEOVER);
 			}
 //		}
 		//--------------------------------------------------------------------------------クリア、敗北条件ここまで
@@ -1206,7 +1208,7 @@ void BoxCollisionKill(D3DXVECTOR3 PlayerMin, D3DXVECTOR3 PlayerMax, D3DXVECTOR3 
 			pPlayer->pos.x = HitMin.x + (PlayerMin.x - pPlayer->pos.x) - 0.1f;
 
 			OverPenetration = false;
-			SetFade(MODE_RESULT);
+			SetFade(MODE_GAMEOVER);
 
 		}
 
@@ -1220,7 +1222,7 @@ void BoxCollisionKill(D3DXVECTOR3 PlayerMin, D3DXVECTOR3 PlayerMax, D3DXVECTOR3 
 			pPlayer->move.x = 0.0f;
 			pPlayer->pos.x = HitMax.x + (PlayerMax.x - pPlayer->pos.x) + 0.1f;
 			OverPenetration = false;
-			SetFade(MODE_RESULT);
+			SetFade(MODE_GAMEOVER);
 
 		}
 
@@ -1235,7 +1237,7 @@ void BoxCollisionKill(D3DXVECTOR3 PlayerMin, D3DXVECTOR3 PlayerMax, D3DXVECTOR3 
 			pPlayer->move.z = 0.0f;
 			pPlayer->pos.z = HitMax.z - (PlayerMin.z - pPlayer->pos.z) + 0.1f;
 			OverPenetration = false;
-			SetFade(MODE_RESULT);
+			SetFade(MODE_GAMEOVER);
 
 		}
 
@@ -1249,7 +1251,7 @@ void BoxCollisionKill(D3DXVECTOR3 PlayerMin, D3DXVECTOR3 PlayerMax, D3DXVECTOR3 
 			pPlayer->move.z = 0.0f;
 			pPlayer->pos.z = HitMin.z - (PlayerMax.z - pPlayer->pos.z) - 0.1f;
 			OverPenetration = false;
-			SetFade(MODE_RESULT);
+			SetFade(MODE_GAMEOVER);
 
 		}
 
@@ -1305,7 +1307,7 @@ void BoxCollisionKill(D3DXVECTOR3 PlayerMin, D3DXVECTOR3 PlayerMax, D3DXVECTOR3 
 			pPlayer2->move.x = 0.0f;
 			pPlayer2->pos.x = HitMin.x + (PlayerMin.x - pPlayer2->pos.x) - 0.1f;
 			OverPenetration = false;
-			SetFade(MODE_RESULT);
+			SetFade(MODE_GAMEOVER);
 
 		}
 
@@ -1319,7 +1321,8 @@ void BoxCollisionKill(D3DXVECTOR3 PlayerMin, D3DXVECTOR3 PlayerMax, D3DXVECTOR3 
 			pPlayer2->move.x = 0.0f;
 			pPlayer2->pos.x = HitMax.x + (PlayerMax.x - pPlayer2->pos.x) + 0.1f;
 			OverPenetration = false;
-			SetFade(MODE_RESULT);
+
+			SetFade(MODE_GAMEOVER);
 
 		}
 
@@ -1334,7 +1337,8 @@ void BoxCollisionKill(D3DXVECTOR3 PlayerMin, D3DXVECTOR3 PlayerMax, D3DXVECTOR3 
 			pPlayer2->move.z = 0.0f;
 			pPlayer2->pos.z = HitMax.z - (PlayerMin.z - pPlayer2->pos.z) + 0.1f;
 			OverPenetration = false;
-			SetFade(MODE_RESULT);
+
+			SetFade(MODE_GAMEOVER);
 
 		}
 
@@ -1348,7 +1352,8 @@ void BoxCollisionKill(D3DXVECTOR3 PlayerMin, D3DXVECTOR3 PlayerMax, D3DXVECTOR3 
 			pPlayer2->move.z = 0.0f;
 			pPlayer2->pos.z = HitMin.z - (PlayerMax.z - pPlayer2->pos.z) - 0.1f;
 			OverPenetration = false;
-			SetFade(MODE_RESULT);
+
+			SetFade(MODE_GAMEOVER);
 
 		}
 

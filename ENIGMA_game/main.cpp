@@ -596,7 +596,11 @@ void Update(void)
 		UpdateFade();
 		break;
 
-	case MODE_RESULT://リザルト画面
+	case MODE_CLEAR://クリア画面
+		UpdateResult();
+		break;
+
+	case MODE_GAMEOVER://クリア画面
 		UpdateResult();
 		break;
 	
@@ -664,7 +668,14 @@ void Draw(void)
 			
 			break;
 
-		case MODE_RESULT://リザルト画面
+		case MODE_CLEAR://リザルト画面
+			//ビューポートをもとに戻す
+			pDevice->SetViewport(&g_fullScreen_Viewport);//ビューポートの設定
+
+			DrawResult();
+			break;
+
+		case MODE_GAMEOVER://リザルト画面
 			//ビューポートをもとに戻す
 			pDevice->SetViewport(&g_fullScreen_Viewport);//ビューポートの設定
 
@@ -719,7 +730,11 @@ void Setmode(MODE g_ModeNext)
 		UninitGame();
 		break;
 
-	case MODE_RESULT://リザルト画面
+	case MODE_CLEAR://リザルト画面
+		UninitResult();
+		break;
+
+	case MODE_GAMEOVER://リザルト画面
 		UninitResult();
 		break;
 
@@ -754,8 +769,15 @@ void Setmode(MODE g_ModeNext)
 
 		break;
 
-	case MODE_RESULT://リザルト画面
+	case MODE_CLEAR://リザルト画面
 		InitResult();
+		SetResult(MODE_CLEAR);
+		break;
+
+	case MODE_GAMEOVER://リザルト画面
+		InitResult();
+		SetResult(MODE_GAMEOVER);
+
 		break;
 
 	case MODE_TUTORIAL://チュートリアル画面

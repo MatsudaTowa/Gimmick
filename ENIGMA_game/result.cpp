@@ -27,9 +27,6 @@ void InitResult(void)
 
 	VERTEX_2D* pVtx;//頂点情報のポインタ
 
-	//テクスチャの読み込み
-	D3DXCreateTextureFromFile(pDevice, "data\\TEXTURE\\Result000.png", &g_pTextureResult);//--------書き換え済み
-
 	//頂点バッファの生成
 	pDevice->CreateVertexBuffer(sizeof(VERTEX_2D) * 4, D3DUSAGE_WRITEONLY, FVF_VERTEX_2D, D3DPOOL_MANAGED, &g_pVtxBuffResult, NULL);
 
@@ -79,12 +76,14 @@ void InitResult(void)
 //=============================
 void UninitResult(void)
 {
+
 	//テクスチャの破棄
 	if (g_pTextureResult != NULL)
 	{
 		g_pTextureResult->Release();
 		g_pTextureResult = NULL;
 	}
+	
 	//頂点バッファの破棄
 	if (g_pVtxBuffResult != NULL)
 	{
@@ -113,6 +112,7 @@ void UpdateResult(void)
 		SetFade(MODE_TITLE);
 	}
 }
+
 //=============================
 //リザルト画面の描画処理
 //=============================
@@ -129,9 +129,9 @@ void DrawResult(void)
 	//頂点フォーマットの設定
 	pDevice->SetFVF(FVF_VERTEX_2D);//-------書き換え済み
 
+
 	//テクスチャの設定
 	pDevice->SetTexture(0, g_pTextureResult);//---------書き換え済み
-
 	//ポリゴンの描画
 	pDevice->DrawPrimitive(D3DPT_TRIANGLESTRIP,//プリミティブの種類//----------書き換え済み
 		0,//描画する最初の頂点インデックス
@@ -141,4 +141,57 @@ void DrawResult(void)
 	//テクスチャを戻す
 	pDevice->SetTexture(0, NULL);
 	DrawPressEnter();
+}
+
+//=============================
+//リザルト画面の設定
+//=============================
+void SetResult(MODE mode)
+{
+	LPDIRECT3DDEVICE9 pDevice;	//デバイスへのポインタ
+
+//デバイスの取得
+	pDevice = GetDevice();
+
+	VERTEX_2D* pVtx;//頂点情報のポインタ
+
+	if (mode == MODE_CLEAR)
+	{
+		//テクスチャの読み込み
+		D3DXCreateTextureFromFile(pDevice, "data\\TEXTURE\\Result000.png", &g_pTextureResult);//--------書き換え済み
+
+	}
+	else if (mode == MODE_GAMEOVER)
+	{
+		//テクスチャの読み込み
+		D3DXCreateTextureFromFile(pDevice, "data\\TEXTURE\\gameover000.png", &g_pTextureResult);//--------書き換え済み
+	}
+	//頂点バッファをロックし、頂点情報へのポインタを取得
+	g_pVtxBuffResult->Lock(0, 0, (void**)&pVtx, 0);
+	//頂点座標の更新-----------------------------------
+	pVtx[0].pos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+	pVtx[1].pos = D3DXVECTOR3(SCREEN_WIDE, 0.0f, 0.0f);
+	pVtx[2].pos = D3DXVECTOR3(0.0f, SCREEN_HEIGHT, 0.0f);
+	pVtx[3].pos = D3DXVECTOR3(SCREEN_WIDE, SCREEN_HEIGHT, 0.0f);
+
+	//rhwの設定
+	pVtx[0].rhw = 1.0f;//値は固定
+	pVtx[1].rhw = 1.0f;//値は固定
+	pVtx[2].rhw = 1.0f;//値は固定
+	pVtx[3].rhw = 1.0f;//値は固定
+
+	//頂点カラーの設定
+	pVtx[0].col = D3DCOLOR_RGBA(255, 255, 255, 255);
+	pVtx[1].col = D3DCOLOR_RGBA(255, 255, 255, 255);
+	pVtx[2].col = D3DCOLOR_RGBA(255, 255, 255, 255);
+	pVtx[3].col = D3DCOLOR_RGBA(255, 255, 255, 255);
+
+	//テクスチャ座標を設定
+	pVtx[0].tex = D3DXVECTOR2(0.0f, 0.0f);//左上
+	pVtx[1].tex = D3DXVECTOR2(1.0f, 0.0f);//右上
+	pVtx[2].tex = D3DXVECTOR2(0.0f, 1.0f);//左下
+	pVtx[3].tex = D3DXVECTOR2(1.0f, 1.0f);//右下
+
+	//頂点バッファをアンロックする
+	g_pVtxBuffResult->Unlock();
 }

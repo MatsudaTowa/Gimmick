@@ -8,6 +8,7 @@
 #include "stage.h"
 #include "player.h"
 #include "player2.h"
+#include "result.h"
 #include "hitcollision_mistake_prevention.h"
 #include "model.h"
 #include "main.h"
@@ -198,7 +199,7 @@ void UpdateEnemy(void)
 			}
 			if (fLength < 20.0f)
 			{
-				SetFade(MODE_RESULT);
+				SetFade(MODE_GAMEOVER);
 			}
 			float fAngle = atan2f(PlayerLength_x, PlayerLength_z);
 			g_Enemy.rot.y = (fAngle - (1.0f * D3DX_PI));
@@ -220,7 +221,7 @@ void UpdateEnemy(void)
 			}
 			if (fLength < 20.0f)
 			{
-				SetFade(MODE_RESULT);
+				SetFade(MODE_GAMEOVER);
 			}
 			float fAngle = atan2f(PlayerLength_x, PlayerLength_z);
 			g_Enemy.rot.y = (fAngle - (1.0f * D3DX_PI));
