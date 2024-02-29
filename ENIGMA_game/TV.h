@@ -14,6 +14,7 @@
 #define TVVISION_WIDE	(50.0f)
 #define TVVISION_HEIGHT	(33.0f)
 #define NUM_CHANNEL	(5)
+#define TV_TEX_MOVE	(1.0f/(float)NUM_CHANNEL)
 
 //=============================================
 //テレビ画面の構想体の定義
@@ -25,6 +26,7 @@ typedef struct
 	int nSelectChannel; //選択されてるチャンネル
 	float fWide;
 	float fHeight;
+	float fTexU;
 	bool bUse;
 	bool bOn; //テレビをつけるかどうか
 }TV_VISION;

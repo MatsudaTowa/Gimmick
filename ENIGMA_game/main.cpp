@@ -35,6 +35,7 @@ LPD3DXFONT g_pFont = NULL;//フォントへのポインタ
 //MODE g_mode = MODE_TITLE;//現在のモード(初期にtitle画面を使用)
 
 MODE g_mode = MODE_TITLE;//現在のモード(初期にゲーム画面を使用)-----------------------------デバッグ仕様
+MODE g_OldMode = MODE_TITLE;//過去のモード(初期にゲーム画面を使用)-----------------------------デバッグ仕様
 
 bool g_mesh = false;								//ワイヤーフレーム切り替え用
 float g_fFogDensity;	//フォグ密度指定用
@@ -733,6 +734,7 @@ void Setmode(MODE g_ModeNext)
 
 	}
 
+	g_OldMode = g_mode;
 	g_mode = g_ModeNext;//現在の画面(モード)を切り替える
 
 	//現在の画面(モード)の初期化処理
@@ -777,6 +779,13 @@ void Setmode(MODE g_ModeNext)
 MODE GetMode(void)
 {
 	return g_mode;
+}
+//=============================
+//過去モードの取得
+//=============================
+MODE GetOldMode(void)
+{
+	return g_OldMode;
 }
 //=============================
 //全画面用ビューポート取得

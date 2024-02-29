@@ -28,7 +28,7 @@ void InitTV(void)
 
 	//テクスチャの読み込み
 	D3DXCreateTextureFromFile(pDevice,
-		"data\\TEXTURE\\bathwater.jpg",
+		"data\\TEXTURE\\TV.png",
 		&g_pTextureTV
 	);
 
@@ -37,6 +37,7 @@ void InitTV(void)
 	g_TV_VISION.rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 	g_TV_VISION.fWide = TVVISION_WIDE;
 	g_TV_VISION.fHeight = TVVISION_HEIGHT;
+	g_TV_VISION.fTexU = TV_TEX_MOVE;
 	g_TV_VISION.bUse = false;
 	g_TV_VISION.bOn = false;
 
@@ -67,9 +68,9 @@ void InitTV(void)
 
 	//テクスチャの座標指定
 	pVtx[0].tex = D3DXVECTOR2(0.0f, 0.0f);
-	pVtx[1].tex = D3DXVECTOR2(1.0f, 0.0f);
+	pVtx[1].tex = D3DXVECTOR2(g_TV_VISION.fTexU, 0.0f);
 	pVtx[2].tex = D3DXVECTOR2(0.0f, 1.0f);
-	pVtx[3].tex = D3DXVECTOR2(1.0f, 1.0f);
+	pVtx[3].tex = D3DXVECTOR2(g_TV_VISION.fTexU, 1.0f);
 
 	g_pVtxBuffTV->Unlock();
 }
@@ -99,6 +100,41 @@ void UninitTV(void)
 //=============================================
 void UpdateTV(void)
 {
+	if (GetJoypadTrigger(JOYKEY_UP, 0) == true
+		|| GetJoypadTrigger(JOYKEY_UP, 1) == true)
+	{
+
+		g_TV_VISION.nSelectChannel++;
+
+		if (g_TV_VISION.nSelectChannel >= NUM_CHANNEL)
+		{
+			g_TV_VISION.nSelectChannel = 0;
+		}
+	}
+	if (GetJoypadTrigger(JOYKEY_DOWN, 0) == true
+		|| GetJoypadTrigger(JOYKEY_DOWN, 1) == true)
+	{
+
+		g_TV_VISION.nSelectChannel--;
+
+		if (g_TV_VISION.nSelectChannel < 0)
+		{
+			g_TV_VISION.nSelectChannel = NUM_CHANNEL - 1;
+		}
+	}
+
+	VERTEX_3D* pVtx;
+
+	//頂点バッファをロックし頂点情報へのポインタを取得
+	g_pVtxBuffTV->Lock(0, 0, (void**)&pVtx, 0);
+
+	//テクスチャの座標指定
+	pVtx[0].tex = D3DXVECTOR2(g_TV_VISION.fTexU * g_TV_VISION.nSelectChannel, 0.0f);
+	pVtx[1].tex = D3DXVECTOR2(g_TV_VISION.fTexU * (g_TV_VISION.nSelectChannel + 1), 0.0f);
+	pVtx[2].tex = D3DXVECTOR2(g_TV_VISION.fTexU * g_TV_VISION.nSelectChannel, 1.0f);
+	pVtx[3].tex = D3DXVECTOR2(g_TV_VISION.fTexU * (g_TV_VISION.nSelectChannel + 1), 1.0f);
+
+	g_pVtxBuffTV->Unlock();
 }
 
 //=============================================
@@ -111,7 +147,7 @@ void DrawTV(void)
 
 	D3DXMATRIX mtxRot, mtxTrans; //計算用マトリックス
 
-	if (g_TV_VISION.bUse == true&&g_TV_VISION.bOn == true)
+	if (g_TV_VISION.bUse == true && g_TV_VISION.bOn == true)
 	{
 		//マトリックスの初期化
 		D3DXMatrixIdentity(&g_mtxWorldTV);

@@ -91,7 +91,7 @@
 //=============================
 void InitGame(void)
 {
-	g_EndGameFrame = GAME_END_DELAY;//クリアからゲーム終了までの余韻
+	g_EndGameFrame = GAME_END_DELAY;//クリアからゲーム終了までの余韻 
 
 	g_nLoopCnt = 0;//ゲームループリセット
 
@@ -415,7 +415,14 @@ void UpdateGame(void)
 	//		DeleteCoveredModel();
 #endif
 		}
-
+		MODE pOldMode = GetOldMode();
+		if (pOldMode == MODE_TUTORIAL)
+		{
+			if (g_nHaveKey == 3)
+			{
+				SetFade(MODE_MENU);
+			}
+		}
 		if (g_ClearFlag == true)
 		{
 	
