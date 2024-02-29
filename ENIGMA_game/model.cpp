@@ -8,6 +8,7 @@
 #include "model.h"
 #include "input.h"
 #include "camera.h"
+#include "TV.h"
 //#include "field.h"
 #include "shadow.h"
 #include "bathgimmick.h"
@@ -316,6 +317,14 @@ void SetModel(D3DXVECTOR3 pos, D3DXVECTOR3 rot, ModelType nType)
 			if (g_aModel[nCnt].nType == MODELTYPE_SAFE)
 			{
 				SetActionZone(g_aModel[nCnt].pos, BATH_ACTIONZONE_RADIUS, ACTION_TYPE_MONEYBOX, D3DXCOLOR(0.0f, 0.5f, 0.0f, 0.7f));
+			}
+			if (g_aModel[nCnt].nType == MODELTYPE_TV)
+			{
+				SetActionZone(g_aModel[nCnt].pos, BATH_ACTIONZONE_RADIUS, ACTION_TYPE_TV, D3DXCOLOR(0.0f, 0.5f, 0.0f, 0.7f));
+				SetTVVision(D3DXVECTOR3(g_aModel[nCnt].pos.x - 17.0f, g_aModel[nCnt].pos.y + 28.0f, g_aModel[nCnt].pos.z)
+					, g_aModel[nCnt].rot
+					, TVVISION_WIDE
+					, TVVISION_HEIGHT);
 			}
 			//SetActionZone(g_aModel[nCnt].pos, BATH_ACTIONZONE_RADIUS, ACTION_TYPE_MAX, D3DXCOLOR(1.0f, 1.0f, 0.0f, 0.7f));
 

@@ -21,6 +21,7 @@
 #include "moneybox.h"
 #include "moneyboxdigit.h"
 #include "bathgimmick.h"
+#include "TV.h"
 #include "steam.h"
 #include "password.h"
 
@@ -126,6 +127,7 @@ void InitGame(void)
 	InitMoneyboxDigit();
 	InitPassword();
 	InitBathGimmick();
+	InitTV();
 	InitSteam();
 
 	InitPlayer();
@@ -291,6 +293,7 @@ void UninitGame(void)
 	UninitPassword();//
 	UninitMoneyboxDigit();//
 	UninitMoneybox();//
+	UninitTV();
 	UninitShadow();//
 	UninitAdvancedModel();//
 	UninitStage();//
@@ -489,6 +492,7 @@ void UpdateGame(void)
 
 		UpdateBathGimmick();
 		UpdateSteam();
+		UpdateTV();
 
 		UpdateTransferGate();
 		UpdateActionZone();
@@ -551,6 +555,7 @@ void DrawGame(void)
 		DrawShadow();
 		
 		DrawBathGimmick();
+		DrawTV();
 		DrawSteam();
 		DrawModel();
 		DrawSimpleModel();
@@ -618,6 +623,7 @@ void DrawGame(void)
 	DrawGameFade();
 	DrawLimitTime();
 	DrawScreenUI();
+
 	
 	DrawMap();
 
@@ -2299,6 +2305,13 @@ void SphereCollisionZone(D3DXVECTOR3 PlayerPos, int PlayerIndex, int ZoneIndex)
 		{//外に出たら解除
 			pPlayer->bMoneyBoxGimmick = false;
 		}
+		if (pActionZone[ZoneIndex].ActionType == ACTION_TYPE_TV && bIn == true)
+		{//テレビのギミック
+			if (GetJoypadTrigger(JOYKEY_X, 0) == true)
+			{
+				TVController();
+			}
+		}
 		if (pActionZone[ZoneIndex].ActionType == ACTION_TYPE_BATH && bIn == true)
 		{//お風呂のギミック（1P）
 			if (GetJoypadTrigger(JOYKEY_X, 0) == true)
@@ -2406,6 +2419,13 @@ void SphereCollisionZone(D3DXVECTOR3 PlayerPos, int PlayerIndex, int ZoneIndex)
 		if (pActionZone[ZoneIndex].ActionType == ACTION_TYPE_MAX)
 		{//
 
+		}
+		if (pActionZone[ZoneIndex].ActionType == ACTION_TYPE_TV && bIn == true)
+		{//テレビのギミック
+			if (GetJoypadTrigger(JOYKEY_X, 1) == true)
+			{
+				TVController();
+			}
 		}
 		if (pActionZone[ZoneIndex].ActionType == ACTION_TYPE_BATH && bIn == true)
 		{//お風呂のギミック（1P）
