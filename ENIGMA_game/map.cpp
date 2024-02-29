@@ -13,6 +13,7 @@
 #include "camera.h"
 #include "player2.h"
 #include "text.h"
+#include "menu.h"
 
 
 //グローバル変数
@@ -46,9 +47,9 @@ void InitMap(void)
 
 	//テクスチャの読み込み
 	D3DXCreateTextureFromFile(pDevice, "data\\TEXTURE\\PlayerPin.png", &g_pTextureMap[0]);//プレイヤーピン
-	D3DXCreateTextureFromFile(pDevice, "data\\TEXTURE\\TestMap3.png", &g_pTextureMap[1]);//地図
-	D3DXCreateTextureFromFile(pDevice, "data\\TEXTURE\\TestMap3.png", &g_pTextureMap[2]);//地図
-
+	D3DXCreateTextureFromFile(pDevice, "data\\TEXTURE\\TestMap2.png", &g_pTextureMap[1]);//地図
+	D3DXCreateTextureFromFile(pDevice, "data\\TEXTURE\\TestMap2.png", &g_pTextureMap[2]);//地図
+	//ここから隠すテクスチャを用意
 
 
 	//マップUIの情報の初期化(いわゆる初期地点)
@@ -100,19 +101,18 @@ void InitMap(void)
 	//頂点バッファをアンロックする
 	g_pVtxBuffMap->Unlock();
 
-	//
 	//地図
-	SetMap(D3DXVECTOR3(SCREEN_WIDE * 0.38f, SCREEN_HEIGHT * 0.8f, 0.0f), MAP_UI_TYPE_MAP1, 0);
+	SetMap(D3DXVECTOR3(SCREEN_WIDE * 0.4f, SCREEN_HEIGHT * 0.77f, 0.0f), MAP_UI_TYPE_MAP1, 0);
 	//地図
-	SetMap(D3DXVECTOR3(SCREEN_WIDE * 0.88f, SCREEN_HEIGHT * 0.8f, 0.0f), MAP_UI_TYPE_MAP1, 1);
+	SetMap(D3DXVECTOR3(SCREEN_WIDE * 0.9f, SCREEN_HEIGHT * 0.77f, 0.0f), MAP_UI_TYPE_MAP1, 1);
 
 	//左
-	SetMap(D3DXVECTOR3(SCREEN_WIDE * 0.88f, SCREEN_HEIGHT * 0.8f, 0.0f), MAP_UI_TYPE_PLAYERPIN_2P_0, 0);
-	SetMap(D3DXVECTOR3(SCREEN_WIDE * 0.38f, SCREEN_HEIGHT * 0.8f, 0.0f), MAP_UI_TYPE_PLAYERPIN_1P_0, 0);
+	SetMap(D3DXVECTOR3(SCREEN_WIDE * 0.9f, SCREEN_HEIGHT * 0.77f, 0.0f), MAP_UI_TYPE_PLAYERPIN_2P_0, 0);
+	SetMap(D3DXVECTOR3(SCREEN_WIDE * 0.4f, SCREEN_HEIGHT * 0.77f, 0.0f), MAP_UI_TYPE_PLAYERPIN_1P_0, 0);
 
 	//右
-	SetMap(D3DXVECTOR3(SCREEN_WIDE * 0.38f, SCREEN_HEIGHT * 0.8f, 0.0f), MAP_UI_TYPE_PLAYERPIN_1P_1, 1);
-	SetMap(D3DXVECTOR3(SCREEN_WIDE * 0.88f, SCREEN_HEIGHT * 0.8f, 0.0f), MAP_UI_TYPE_PLAYERPIN_2P_1, 1);
+	SetMap(D3DXVECTOR3(SCREEN_WIDE * 0.4f, SCREEN_HEIGHT * 0.77f, 0.0f), MAP_UI_TYPE_PLAYERPIN_1P_1, 1);
+	SetMap(D3DXVECTOR3(SCREEN_WIDE * 0.9f, SCREEN_HEIGHT * 0.77f, 0.0f), MAP_UI_TYPE_PLAYERPIN_2P_1, 1);
 }
 //=============================
 //マップUIの終了処理
@@ -457,10 +457,10 @@ void SetMap(D3DXVECTOR3 pos, MAP_UI_TYPE MAPType,int ScreenNum)
 
 				case MAP_UI_TYPE_MAP1:
 					//頂点座標の更新-----------------------------------
-					pVtx[0].pos = D3DXVECTOR3(g_Map[nCntMap].pos.x - ((SCREEN_WIDE*0.5f)* ADDMAP), g_Map[nCntMap].pos.y - ((SCREEN_WIDE * 0.5f) * ADDMAP), 0.0f);
-					pVtx[1].pos = D3DXVECTOR3(g_Map[nCntMap].pos.x + ((SCREEN_WIDE * 0.5f) * ADDMAP), g_Map[nCntMap].pos.y - ((SCREEN_WIDE * 0.5f) * ADDMAP), 0.0f);
-					pVtx[2].pos = D3DXVECTOR3(g_Map[nCntMap].pos.x - ((SCREEN_WIDE * 0.5f) * ADDMAP), g_Map[nCntMap].pos.y + ((SCREEN_WIDE * 0.5f) * ADDMAP), 0.0f);
-					pVtx[3].pos = D3DXVECTOR3(g_Map[nCntMap].pos.x + ((SCREEN_WIDE * 0.5f) * ADDMAP), g_Map[nCntMap].pos.y + ((SCREEN_WIDE * 0.5f) * ADDMAP), 0.0f);
+					pVtx[0].pos = D3DXVECTOR3(g_Map[nCntMap].pos.x - ((SCREEN_WIDE* ADDMAP_2)* ADDMAP), g_Map[nCntMap].pos.y - ((SCREEN_WIDE * ADDMAP_2) * ADDMAP), 0.0f);
+					pVtx[1].pos = D3DXVECTOR3(g_Map[nCntMap].pos.x + ((SCREEN_WIDE * ADDMAP_2) * ADDMAP), g_Map[nCntMap].pos.y - ((SCREEN_WIDE * ADDMAP_2) * ADDMAP), 0.0f);
+					pVtx[2].pos = D3DXVECTOR3(g_Map[nCntMap].pos.x - ((SCREEN_WIDE * ADDMAP_2) * ADDMAP), g_Map[nCntMap].pos.y + ((SCREEN_WIDE * ADDMAP_2) * ADDMAP), 0.0f);
+					pVtx[3].pos = D3DXVECTOR3(g_Map[nCntMap].pos.x + ((SCREEN_WIDE * ADDMAP_2) * ADDMAP), g_Map[nCntMap].pos.y + ((SCREEN_WIDE * ADDMAP_2) * ADDMAP), 0.0f);
 
 					//頂点カラーの設定
 					pVtx[0].col = D3DCOLOR_RGBA(255, 255, 255, 200);

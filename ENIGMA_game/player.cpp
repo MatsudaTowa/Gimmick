@@ -101,7 +101,7 @@ void InitPlayer(void)
 
 	if (MenutoGame == START_MENU_GAME)
 	{//メニューで「ゲームスタート」を選んだ場合
-		g_Player.pos = D3DXVECTOR3(0.0f, 10.0f, 0.0f);	//位置
+		g_Player.pos = D3DXVECTOR3(3300.0f, 104.5f, -2000.0f);	//位置
 	}
 	else
 	{//それ以外(チュートリアルを選んだ場合)

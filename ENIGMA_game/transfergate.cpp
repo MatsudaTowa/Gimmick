@@ -53,38 +53,39 @@ void InitTransferGate(void)
 
     //-----基本はボタンで移動かつみんなで移動になるかも
 
-    //*外から倉庫へ*
-    //--外
-    SetTransferGate(D3DXVECTOR3(150.0f, 0.0f, 0.0f), D3DXVECTOR3(-50.0f, 0.0f, -60.0f), D3DXVECTOR3(50.0f, 100.0f, 60.0f), 0, 1, TRANS_ANGLE_MIN_X, D3DXCOLOR(1.0f, 0.0f, 0.0f, 0.7f),false,true);
+
+
+   //0～３が十字路--転移先をランダム
+    //十字路右
+    SetTransferGate(D3DXVECTOR3(-1520.0f, 0.0f, -2900.0f), D3DXVECTOR3(-50.0f, 0.0f, -60.0f), D3DXVECTOR3(50.0f, 100.0f, 60.0f), 0, RONDOMTRANS_NUM, TRANS_ANGLE_RANDOM, D3DXCOLOR(0.0f, 0.0f, 1.0f, 0.7f), true, true);
+    //十字路左
+    SetTransferGate(D3DXVECTOR3(330.0f, 0.0f, -2900.0f), D3DXVECTOR3(-50.0f, 0.0f, -60.0f), D3DXVECTOR3(50.0f, 100.0f, 60.0f), 1, RONDOMTRANS_NUM, TRANS_ANGLE_RANDOM, D3DXCOLOR(0.0f, 0.0f, 1.0f, 0.7f), true, true);
+
+    //十字路下
+    SetTransferGate(D3DXVECTOR3(-600.0f, 0.0f, -1920.0f), D3DXVECTOR3(-50.0f, 0.0f, -50.0f), D3DXVECTOR3(50.0f, 100.0f, 50.0f), 2, RONDOMTRANS_NUM, TRANS_ANGLE_RANDOM, D3DXCOLOR(1.0f, 1.0f, 0.0f, 0.7f), true, true);
+    //十字路上
+    SetTransferGate(D3DXVECTOR3(-600.0f, 0.0f, -3880.0f), D3DXVECTOR3(-50.0f, 0.0f, -50.0f), D3DXVECTOR3(50.0f, 100.0f, 50.0f), 3, RONDOMTRANS_NUM, TRANS_ANGLE_RANDOM, D3DXCOLOR(1.0f, 1.0f, 0.0f, 0.7f), true, true);
+
+
+   //4～7を十字路に
+
     //--倉庫左
-    SetTransferGate(D3DXVECTOR3(-50.0f, 0.0f, -1000.0f), D3DXVECTOR3(-50.0f, 0.0f, -60.0f), D3DXVECTOR3(50.0f, 100.0f, 60.0f), 1, 0, TRANS_ANGLE_MAX_X, D3DXCOLOR(1.0f, 0.0f, 0.0f, 0.7f),false, true);
-
-    //*倉庫下から十字路へ？？*
+    SetTransferGate(D3DXVECTOR3(-10.0f, 0.0f, -930.0f), D3DXVECTOR3(-50.0f, 0.0f, -60.0f), D3DXVECTOR3(50.0f, 100.0f, 60.0f), 4, CROSSROAD_NUM, TRANS_ANGLE_MAX_X, D3DXCOLOR(1.0f, 0.0f, 0.0f, 0.7f), true, true);
+ 
     //倉庫下
-    SetTransferGate(D3DXVECTOR3(-600.0f, 0.0f, -2100.0f), D3DXVECTOR3(-50.0f, 0.0f, -60.0f), D3DXVECTOR3(50.0f, 100.0f, 60.0f), 2, 3, TRANS_ANGLE_MIN_Z, D3DXCOLOR(1.0f, 1.0f, 0.0f, 0.7f), false, true);
-    //十字路
-    SetTransferGate(D3DXVECTOR3(-600.0f, 0.0f, 100.0f), D3DXVECTOR3(-50.0f, 0.0f, -60.0f), D3DXVECTOR3(50.0f, 100.0f, 60.0f), 3, 2, TRANS_ANGLE_MIN_Z, D3DXCOLOR(1.0f, 1.0f, 0.0f, 0.7f), false, true);
+    SetTransferGate(D3DXVECTOR3(-600.0f, 0.0f, 90.0f), D3DXVECTOR3(-60.0f, 0.0f, -55.0f), D3DXVECTOR3(60.0f, 100.0f, 55.0f), 5, CROSSROAD_NUM, TRANS_ANGLE_MIN_Z, D3DXCOLOR(1.0f, 1.0f, 0.0f, 0.7f), true, true);
 
-    //*とりあえず真ん中からリビング*
-    SetTransferGate(D3DXVECTOR3(300.0f, 0.0f, 0.0f), D3DXVECTOR3(-50.0f, 0.0f, -60.0f), D3DXVECTOR3(50.0f, 100.0f, 60.0f), 4, 5, TRANS_ANGLE_MIN_Z, D3DXCOLOR(0.0f, 1.0f, 1.0f, 0.7f),false, true);
-    SetTransferGate(D3DXVECTOR3(2930, 104.0f, -1530.0f), D3DXVECTOR3(-50.0f, 0.0f, -60.0f), D3DXVECTOR3(50.0f, 100.0f, 60.0f), 5, 4, TRANS_ANGLE_MAX_Z, D3DXCOLOR(0.0f, 1.0f, 1.0f, 0.7f), false, true);
+    //リビング下
+    SetTransferGate(D3DXVECTOR3(3000, 104.0f, -1460.0f), D3DXVECTOR3(-50.0f, 0.0f, -60.0f), D3DXVECTOR3(50.0f, 100.0f, 60.0f), 6, CROSSROAD_NUM, TRANS_ANGLE_MAX_Z, D3DXCOLOR(0.0f, 1.0f, 1.0f, 0.7f), true, true);
     
-
-    //*真ん中から浴室？？*
-    // 
-    SetTransferGate(D3DXVECTOR3(450.0f, 0.0f, 0.0f), D3DXVECTOR3(-50.0f, 0.0f, -60.0f), D3DXVECTOR3(50.0f, 100.0f, 60.0f), 6, 7, TRANS_ANGLE_MIN_Z, D3DXCOLOR(0.0f, 0.0f, 1.0f, 0.7f), false, true);
-    SetTransferGate(D3DXVECTOR3(3140.0f, 0.0f, 20.0f), D3DXVECTOR3(-100.0f, 0.0f, -60.0f), D3DXVECTOR3(100.0f, 100.0f, 60.0f), 7, 6, TRANS_ANGLE_MAX_Z, D3DXCOLOR(0.0f, 0.0f, 1.0f, 0.7f), false, true);
-
-    //十字路右から取り合えす出口空間
-    SetTransferGate(D3DXVECTOR3(-1490.0f, 0.0f, -2900.0f), D3DXVECTOR3(-50.0f, 0.0f, -60.0f), D3DXVECTOR3(50.0f, 100.0f, 60.0f), 8, 9, TRANS_ANGLE_MIN_X, D3DXCOLOR(0.0f, 0.0f, 1.0f, 0.7f), false, true);
-    SetTransferGate(D3DXVECTOR3(-2000.0f, 0.0f, -2900.0f), D3DXVECTOR3(-100.0f, 0.0f, -60.0f), D3DXVECTOR3(100.0f, 100.0f, 60.0f), 9, 8, TRANS_ANGLE_MAX_X, D3DXCOLOR(0.0f, 0.0f, 1.0f, 0.7f), false, true);
-
+    //浴室
+    SetTransferGate(D3DXVECTOR3(3000.0f, 0.0f, 40.0f), D3DXVECTOR3(-50.0f, 0.0f, -50.0f), D3DXVECTOR3(50.0f, 100.0f, 50.0f), 7, CROSSROAD_NUM, TRANS_ANGLE_MAX_Z, D3DXCOLOR(0.0f, 0.0f, 1.0f, 0.7f), true, true);
 
 
     
-    //--------------
+
+
 }
-
 //=============================
 // 転移門終了処理
 //=============================

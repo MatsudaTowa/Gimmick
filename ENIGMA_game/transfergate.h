@@ -21,6 +21,9 @@
 
 #define MAXGATE	(30)//転移門最大数
 
+//転移先暗号
+#define CROSSROAD_NUM	(MAXGATE - 3)
+#define RONDOMTRANS_NUM	(MAXGATE - 2)
 
 //転移エリアサイズ(当たり判定用)
 //#define GATEMIN	(D3DXVECTOR3(-170.0f,0.0f,-170.0f))
@@ -37,6 +40,7 @@ typedef enum
 	TRANS_ANGLE_MAX_Y,
 	TRANS_ANGLE_MIN_Z,
 	TRANS_ANGLE_MAX_Z,
+	TRANS_ANGLE_RANDOM,
 	TRANS_ANGLE_MAX,//--進行方向に転移
 }TRANSANGLE;
 

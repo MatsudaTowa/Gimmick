@@ -396,3 +396,8 @@ FodyWeavers.xsd
 
 # JetBrains Rider
 *.sln.iml
+/ENIGMA_game/data/desktop.ini
+/ENIGMA_game/data/ARRANGEMENTS_MODEL/desktop.ini
+/ENIGMA_game/*.ini
+/ENIGMA_game/data/TEXTURE/desktop.ini
+/ENIGMA_game/data/MODEL/runningman/*.ini

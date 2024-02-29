@@ -20,12 +20,12 @@
 
 //#define MAPSIZE	(8.0f)//サイズ
 
-#define MAPSIZE2	(22.0f)//サイズ
+#define MAPSIZE2	(24.0f)//サイズ
 
-#define ADDMAP	(0.22f)//地図倍率
+#define ADDMAP	(0.12f)//地図倍率
 
 
-#define UVSize	(0.2f)
+#define UVSize	(0.12f)
 
 #define MOVESIZE	(0.0001f)
 
@@ -33,7 +33,7 @@
 
 #define MAP1_START_POS_0 (D3DXVECTOR2(0.25f,0.25f))//地図2スタート地点1
 
-
+#define	ADDMAP_2	(0.7f)
 
 
 

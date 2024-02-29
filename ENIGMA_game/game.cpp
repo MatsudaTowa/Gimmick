@@ -202,6 +202,8 @@ void InitGame(void)
 			SetActionZone(D3DXVECTOR3(pTransferGate[i].pos.x, pTransferGate[i].pos.y, pTransferGate[i].pos.z), 100, ACTION_TYPE_ESCAPE, D3DXCOLOR(0.0f, 1.0f, 0.0f, 0.4f));
 		}
 	}
+	//乱数の種を設定
+	srand((unsigned int)time(0));
 }
 //=============================
 //ゲーム画面の終了処理
@@ -357,7 +359,7 @@ void UpdateGame(void)
 		}
 
 		if (GetkeyboardPress(DIK_F5) == true)//トリガー
-		{//F4が押された(デバッグ用)
+		{//F5が押された(デバッグ用)
 			if (GameLoopSave == false)
 			{
 #if _DEBUG
@@ -1581,404 +1583,201 @@ void BoxCollisionGate(D3DXVECTOR3 PlayerMin, D3DXVECTOR3 PlayerMax, D3DXVECTOR3 
 
 
 	//転移先
-	D3DXVECTOR3 ParentGateMin = D3DXVECTOR3(pTransferGate[ParentIndex].pos + pTransferGate[ParentIndex].GateMin);
-	D3DXVECTOR3 ParentGateMax = D3DXVECTOR3(pTransferGate[ParentIndex].pos + pTransferGate[ParentIndex].GateMax);
+	D3DXVECTOR3 ParentGateMin = D3DXVECTOR3(0.0f,1000.0f,0.0f);//初期計算--後に不要になる??
+	D3DXVECTOR3 ParentGateMax = D3DXVECTOR3(0.0f,1200.0f,0.0f);
 
 	//移動量避難
 	D3DXVECTOR3 ESCAPEMOVE = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 
 	float PlayerCenterCorre = 45.0f;
+		int nEscapeIndex = 0;
+	if (pTransferGate[GateIndex].nParentIndex == CROSSROAD_NUM)
+	{//転移先番号が十字路
+		nEscapeIndex = (rand() % 4);//0～3
 
-	if (pTransferGate[ParentIndex].bActiomTrans == false)
-	{//アクショントランスじゃない時
-
-		//1Pのとき
-		if (PlayerIndex == 0)
+		//決まった転移先番号を使用し転移(転移方向はifでマニュアル入力
+		switch (nEscapeIndex)
 		{
-			//接触したか
-			bool bHit = false;
+		case 0:
+			pTransferGate[GateIndex].ParentTransAngle = TRANS_ANGLE_MAX_X;
+			break;
 
-			Player* pPlayer;
-			pPlayer = GetPlayer();
+		case 1:
+			pTransferGate[GateIndex].ParentTransAngle = TRANS_ANGLE_MIN_X;
+			break;
 
-			//---------------------------------------X方向
-			if (PlayerMin.z < GateMax.z &&
-				PlayerMax.z > GateMin.z &&
-				PlayerMax.x - pPlayer->pos.x + pPlayer->oldPos.x <= GateMin.x &&
-				PlayerMax.x > GateMin.x &&
-				PlayerMin.y < GateMax.y &&
-				PlayerMax.y > GateMin.y)
-			{//+X
-				bHit = true;
+		case 2:
+			pTransferGate[GateIndex].ParentTransAngle = TRANS_ANGLE_MIN_Z;
+			break;
 
-				if (pTransferGate[GateIndex].ParentTransAngle == TRANS_ANGLE_MAX)
-				{//初期値の時--進行方向に転移
-
-					ESCAPEMOVE.x = ParentGateMax.x + (PlayerMax.x - pPlayer->pos.x) + 0.1f;
-					ESCAPEMOVE.y = pTransferGate[ParentIndex].pos.y;
-					ESCAPEMOVE.z = pTransferGate[ParentIndex].pos.z;
-
-					pPlayer->move = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-					EscapeRot_Player.y = -D3DX_PI*0.5f;
-					EscapeRot_Camera.y = -D3DX_PI * 0.5f;
-				}
-			}
-			else if (PlayerMin.z < GateMax.z &&
-				PlayerMax.z > GateMin.z &&
-				PlayerMin.x - pPlayer->pos.x + pPlayer->oldPos.x >= GateMax.x &&
-				PlayerMin.x < GateMax.x &&
-				PlayerMin.y < GateMax.y &&
-				PlayerMax.y > GateMin.y)
-			{//-X
-				bHit = true;
-
-				if (pTransferGate[GateIndex].ParentTransAngle == TRANS_ANGLE_MAX)
-				{//初期値の時--進行方向に転移
-
-					ESCAPEMOVE.x = ParentGateMin.x + (PlayerMin.x - pPlayer->pos.x) - 0.1f;
-					ESCAPEMOVE.y = pTransferGate[ParentIndex].pos.y;
-					ESCAPEMOVE.z = pTransferGate[ParentIndex].pos.z;
-
-					pPlayer->move = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-					EscapeRot_Player.y = D3DX_PI * 0.5f;
-					EscapeRot_Camera.y = D3DX_PI * 0.5f;
-				}
-			}
-			//---------------------------------------Z方向
-			else if (PlayerMin.x < GateMax.x &&
-				PlayerMax.x > GateMin.x &&
-				PlayerMin.z - pPlayer->pos.z + pPlayer->oldPos.z >= GateMax.z &&
-				PlayerMin.z < GateMax.z &&
-				PlayerMin.y < GateMax.y &&
-				PlayerMax.y > GateMin.y)
-			{//+Z
-				bHit = true;
-
-				if (pTransferGate[GateIndex].ParentTransAngle == TRANS_ANGLE_MAX)
-				{//初期値の時--進行方向に転移
-
-					ESCAPEMOVE.z = ParentGateMin.z - (PlayerMax.z - pPlayer->pos.z) - 0.1f;
-					ESCAPEMOVE.x = pTransferGate[ParentIndex].pos.x;
-					ESCAPEMOVE.y = pTransferGate[ParentIndex].pos.y;
-					EscapeRot_Player.y = D3DX_PI;
-					EscapeRot_Camera.y = 0.0f;
-
-					pPlayer->move = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-				}
-			}
-			else  if (PlayerMin.x < GateMax.x &&
-				PlayerMax.x > GateMin.x &&
-				PlayerMax.z - pPlayer->pos.z + pPlayer->oldPos.z <= GateMin.z &&
-				PlayerMax.z > GateMin.z &&
-				PlayerMin.y < GateMax.y &&
-				PlayerMax.y > GateMin.y)
-			{//-ｚ
-				bHit = true;
-
-				if (pTransferGate[GateIndex].ParentTransAngle == TRANS_ANGLE_MAX)
-				{//初期値の時--進行方向に転移
-					ESCAPEMOVE.z = ParentGateMax.z - (PlayerMin.z - pPlayer->pos.z) + 0.1f;
-					ESCAPEMOVE.x = pTransferGate[ParentIndex].pos.x;
-					ESCAPEMOVE.y = pTransferGate[ParentIndex].pos.y;
-
-					pPlayer->move = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-					EscapeRot_Player.y = 0.0f;
-					EscapeRot_Camera.y = D3DX_PI;
-				}
-			}
-
-			////------------------------------------Y方向
-			//if (PlayerMin.x < GateMax.x &&
-			//	PlayerMax.x > GateMin.x &&
-			//	PlayerMin.z < GateMax.z &&
-			//	PlayerMax.z > GateMin.z &&
-			//	PlayerMin.y - pPlayer->pos.y + pPlayer->oldPos.y >= GateMax.y &&
-			//	PlayerMin.y < GateMax.y)
-			//{
-			//	pPlayer->move.y = 0.0f;
-			//	pPlayer->pos.y = GateMax.y + (PlayerMin.y - pPlayer->pos.y);
-
-			//	if (pPlayer->NowMotionDOWN == MOTIONTYPE_1P_JUMP)
-			//	{
-			//		pPlayer->NowMotionDOWN = MOTIONTYPE_1P_RANDING;
-			//	}
-			//	else if (pPlayer->NowMotionDOWN == MOTIONTYPE_1P_MOVE)
-			//	{
-			//		pPlayer->NowMotionDOWN = MOTIONTYPE_1P_MOVE;
-			//	}
-
-			//	pPlayer->bLandingNow = true;
-			//}
-
-			if (bHit == true)
-			{//接触判定時
-			
-					
-
-
-				pPlayer->PlayerState = PLAYERSTATE_1P_TELEPOR;
-
-				if (pTransferGate[GateIndex].ParentTransAngle == TRANS_ANGLE_MAX_X)
-				{//+X
-					ESCAPEMOVE.x = ParentGateMax.x + (PlayerMax.x - pPlayer->pos.x) + 11.1f;
-					ESCAPEMOVE.y = pTransferGate[ParentIndex].pos.y;
-					ESCAPEMOVE.z = pTransferGate[ParentIndex].pos.z;
-
-					pPlayer->move = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-					EscapeRot_Player.y = -D3DX_PI * 0.5f;
-					EscapeRot_Camera.y = -D3DX_PI * 0.5f;
-				}
-				else if (pTransferGate[GateIndex].ParentTransAngle == TRANS_ANGLE_MIN_X)
-				{//-X
-					ESCAPEMOVE.x = ParentGateMin.x + (PlayerMin.x - pPlayer->pos.x) - 11.1f;
-					ESCAPEMOVE.y = pTransferGate[ParentIndex].pos.y;
-					ESCAPEMOVE.z = pTransferGate[ParentIndex].pos.z;
-
-					pPlayer->move = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-					EscapeRot_Player.y = D3DX_PI * 0.5f;
-					EscapeRot_Camera.y = D3DX_PI * 0.5f;
-				}
-				else if (pTransferGate[GateIndex].ParentTransAngle == TRANS_ANGLE_MAX_Z)
-				{//+Z
-					ESCAPEMOVE.z = ParentGateMax.z - (PlayerMin.z - pPlayer->pos.z) + 11.1f;
-					ESCAPEMOVE.x = pTransferGate[ParentIndex].pos.x;
-					ESCAPEMOVE.y = pTransferGate[ParentIndex].pos.y;
-
-					pPlayer->move = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-
-					EscapeRot_Player.y = D3DX_PI;
-					EscapeRot_Camera.y = 0.0f;
-				}
-				else if (pTransferGate[GateIndex].ParentTransAngle == TRANS_ANGLE_MIN_Z)
-				{//-Z
-					ESCAPEMOVE.z = ParentGateMin.z - (PlayerMax.z - pPlayer->pos.z) - 11.1f;
-					ESCAPEMOVE.x = pTransferGate[ParentIndex].pos.x;
-					ESCAPEMOVE.y = pTransferGate[ParentIndex].pos.y;
-
-					pPlayer->move = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-
-					EscapeRot_Player.y = 0.0f;
-					EscapeRot_Camera.y = D3DX_PI;
-				}
-
-				SetGameFade(0, ESCAPEMOVE, EscapeRot_Camera, EscapeRot_Player);
-
-				if (pTransferGate[ParentIndex].bCompulsionTrans == true)
-				{//プレイヤー２も転移
-					SetGameFade(1, ESCAPEMOVE, EscapeRot_Camera, EscapeRot_Player);
-				}
-			}
-		
+		case 3:
+			pTransferGate[GateIndex].ParentTransAngle = TRANS_ANGLE_MAX_Z;
+			break;
 		}
-		else if (PlayerIndex == 1)
-		{//2Pの時
-			Player_2P* pPlayer2;
-			pPlayer2 = GetPlayer_2P();
 
-			//接触したか
-			bool bHit = false;
+		ParentIndex = nEscapeIndex;
+	}
+	else if (pTransferGate[GateIndex].nParentIndex == RONDOMTRANS_NUM)
+	{//転移先番号がランダム転移のとき
+		nEscapeIndex = (((rand() % 4) + 4));//4～7----増えたら変動
 
-			//---------------------------------------X方向
+		//決まった転移先番号を使用し転移(転移方向はifでマニュアル入力
+		switch (nEscapeIndex)
+		{
+		case 4:
+			pTransferGate[GateIndex].ParentTransAngle = TRANS_ANGLE_MIN_X;
+			break;
 
-			if (PlayerMin.z < GateMax.z &&
-				PlayerMax.z > GateMin.z &&
-				PlayerMax.x - pPlayer2->pos.x + pPlayer2->oldPos.x <= GateMin.x &&
-				PlayerMax.x > GateMin.x &&
-				PlayerMin.y < GateMax.y &&
-				PlayerMax.y > GateMin.y)
+		case 5:
+			pTransferGate[GateIndex].ParentTransAngle = TRANS_ANGLE_MIN_Z;
+			break;
+
+		case 6:
+			pTransferGate[GateIndex].ParentTransAngle = TRANS_ANGLE_MIN_Z;
+			break;
+
+		case 7:
+			pTransferGate[GateIndex].ParentTransAngle = TRANS_ANGLE_MIN_Z;
+			break;
+		}
+		ParentIndex = nEscapeIndex;
+	}
+
+	ParentGateMin = D3DXVECTOR3(pTransferGate[ParentIndex].pos + pTransferGate[ParentIndex].GateMin);
+	ParentGateMax = D3DXVECTOR3(pTransferGate[ParentIndex].pos + pTransferGate[ParentIndex].GateMax);
+
+
+	if (pTransferGate[ParentIndex].bUse == true)
+	{
+
+		if (pTransferGate[ParentIndex].bActiomTrans == false)
+		{//アクショントランスじゃない時
+			//1Pのとき
+			if (PlayerIndex == 0)
 			{
-				bHit = true;
+				//接触したか
+				bool bHit = false;
 
-				if (pTransferGate[GateIndex].ParentTransAngle == TRANS_ANGLE_MAX)
-				{//初期値の時--進行方向に転移
+				Player* pPlayer;
+				pPlayer = GetPlayer();
 
-					ESCAPEMOVE.x = ParentGateMax.x + (PlayerMax.x - pPlayer2->pos.x) + 0.1f;
-					ESCAPEMOVE.y = pTransferGate[ParentIndex].pos.y;
-					ESCAPEMOVE.z = pTransferGate[ParentIndex].pos.z;
-					pPlayer2->move = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-					EscapeRot_Player.y =  -D3DX_PI * 0.5f;
-					EscapeRot_Camera.y =  -D3DX_PI * 0.5f;
-				}
-			}
-			else if (PlayerMin.z < GateMax.z &&
+				//---------------------------------------X方向
+				if (PlayerMin.z < GateMax.z &&
 					PlayerMax.z > GateMin.z &&
-					PlayerMin.x - pPlayer2->pos.x + pPlayer2->oldPos.x >= GateMax.x &&
+					PlayerMax.x - pPlayer->pos.x + pPlayer->oldPos.x <= GateMin.x &&
+					PlayerMax.x > GateMin.x &&
+					PlayerMin.y < GateMax.y &&
+					PlayerMax.y > GateMin.y)
+				{//+X
+					bHit = true;
+
+					if (pTransferGate[GateIndex].ParentTransAngle == TRANS_ANGLE_MAX)
+					{//初期値の時--進行方向に転移
+
+						ESCAPEMOVE.x = ParentGateMax.x + (PlayerMax.x - pPlayer->pos.x) + 0.1f;
+						ESCAPEMOVE.y = pTransferGate[ParentIndex].pos.y;
+						ESCAPEMOVE.z = pTransferGate[ParentIndex].pos.z;
+
+						pPlayer->move = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+						EscapeRot_Player.y = -D3DX_PI * 0.5f;
+						EscapeRot_Camera.y = -D3DX_PI * 0.5f;
+					}
+				}
+				else if (PlayerMin.z < GateMax.z &&
+					PlayerMax.z > GateMin.z &&
+					PlayerMin.x - pPlayer->pos.x + pPlayer->oldPos.x >= GateMax.x &&
 					PlayerMin.x < GateMax.x &&
 					PlayerMin.y < GateMax.y &&
 					PlayerMax.y > GateMin.y)
-			{
-
-				bHit = true;
-
-				if (pTransferGate[GateIndex].ParentTransAngle == TRANS_ANGLE_MAX)
-				{//初期値の時--進行方向に転移
-					ESCAPEMOVE.x = ParentGateMin.x + (PlayerMin.x - pPlayer2->pos.x) - 0.1f;
-					ESCAPEMOVE.y = pTransferGate[ParentIndex].pos.y;
-					ESCAPEMOVE.z = pTransferGate[ParentIndex].pos.z;
-
-					pPlayer2->move = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-					EscapeRot_Player.y =  D3DX_PI * 0.5f;
-					EscapeRot_Camera.y =  D3DX_PI * 0.5f;
-				}
-			}
-			//---------------------------------------Z方向
-			else if (PlayerMin.x < GateMax.x &&
-				PlayerMax.x > GateMin.x &&
-				PlayerMin.z - pPlayer2->pos.z + pPlayer2->oldPos.z >= GateMax.z &&
-				PlayerMin.z < GateMax.z &&
-				PlayerMin.y < GateMax.y &&
-				PlayerMax.y > GateMin.y)
-			{//+Z
-				bHit = true;
-
-				if (pTransferGate[GateIndex].ParentTransAngle == TRANS_ANGLE_MAX)
-				{//初期値の時--進行方向に転移
-					ESCAPEMOVE.z = ParentGateMin.z - (PlayerMax.z - pPlayer2->pos.z) - 0.1f;
-					ESCAPEMOVE.x = pTransferGate[ParentIndex].pos.x;
-					ESCAPEMOVE.y = pTransferGate[ParentIndex].pos.y;
-
-					EscapeRot_Player.y = D3DX_PI;
-					EscapeRot_Camera.y = 0.0f;
-
-					pPlayer2->move = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-				}
-			}
-			else if (PlayerMin.x < GateMax.x &&
-				PlayerMax.x > GateMin.x &&
-				PlayerMax.z - pPlayer2->pos.z + pPlayer2->oldPos.z <= GateMin.z &&
-				PlayerMax.z > GateMin.z &&
-				PlayerMin.y < GateMax.y &&
-				PlayerMax.y > GateMin.y)
-			{//-Z
-				bHit = true;
-
-				if (pTransferGate[GateIndex].ParentTransAngle == TRANS_ANGLE_MAX)
-				{//初期値の時--進行方向に転移
-					ESCAPEMOVE.z = ParentGateMax.z - (PlayerMin.z - pPlayer2->pos.z) + 0.1f;
-					ESCAPEMOVE.x = pTransferGate[ParentIndex].pos.x;
-					ESCAPEMOVE.y = pTransferGate[ParentIndex].pos.y;
-
-					EscapeRot_Player.y = 0.0f;
-					EscapeRot_Camera.y = D3DX_PI;
-
-					pPlayer2->move = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-				}
-			}
-
-			//------------------------------------Y方向
-			/*if (PlayerMin.x < GateMax.x &&
-				PlayerMax.x > GateMin.x &&
-				PlayerMin.z < GateMax.z &&
-				PlayerMax.z > GateMin.z &&
-				PlayerMin.y - pPlayer2->pos.y + pPlayer2->oldPos.y >= GateMax.y &&
-				PlayerMin.y < GateMax.y)
-			{
-				pPlayer2->move.y = 0.0f;
-				pPlayer2->pos.y = GateMax.y + (PlayerMin.y - pPlayer2->pos.y);
-
-				if (pPlayer2->NowMotionDOWN == MOTIONTYPE_2P_JUMP)
-				{
-					pPlayer2->NowMotionDOWN = MOTIONTYPE_2P_RANDING;
-				}
-				else if (pPlayer2->NowMotionDOWN == MOTIONTYPE_2P_MOVE)
-				{
-					pPlayer2->NowMotionDOWN = MOTIONTYPE_2P_MOVE;
-				}
-
-				pPlayer2->bLandingNow = true;
-			}*/
-
-			if (bHit == true)
-			{//接触判定時
-
-				pPlayer2->PlayerState = PLAYERSTATE_2P_TELEPOR;
-
-				if (pTransferGate[GateIndex].ParentTransAngle == TRANS_ANGLE_MAX_X)
-				{//+X
-					ESCAPEMOVE.x = ParentGateMax.x + (PlayerMax.x - pPlayer2->pos.x) + 11.1f;
-					ESCAPEMOVE.y = pTransferGate[ParentIndex].pos.y;
-					ESCAPEMOVE.z = pTransferGate[ParentIndex].pos.z;
-
-					pPlayer2->move = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-					EscapeRot_Player.y = -D3DX_PI*0.5f;
-					EscapeRot_Camera.y = -D3DX_PI * 0.5f;
-				}
-				else if (pTransferGate[GateIndex].ParentTransAngle == TRANS_ANGLE_MIN_X)
 				{//-X
-					ESCAPEMOVE.x = ParentGateMin.x + (PlayerMin.x - pPlayer2->pos.x) - 11.1f;
-					ESCAPEMOVE.y = pTransferGate[ParentIndex].pos.y;
-					ESCAPEMOVE.z = pTransferGate[ParentIndex].pos.z;
+					bHit = true;
 
-					pPlayer2->move = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-					EscapeRot_Player.y = D3DX_PI*0.5f;
-					EscapeRot_Camera.y = D3DX_PI * 0.5f;
-				}
-				else if (pTransferGate[GateIndex].ParentTransAngle == TRANS_ANGLE_MAX_Z)
-				{//+Z
-					ESCAPEMOVE.z = ParentGateMax.z - (PlayerMin.z - pPlayer2->pos.z) + 11.1f;
-					ESCAPEMOVE.x = pTransferGate[ParentIndex].pos.x;
-					ESCAPEMOVE.y = pTransferGate[ParentIndex].pos.y;
+					if (pTransferGate[GateIndex].ParentTransAngle == TRANS_ANGLE_MAX)
+					{//初期値の時--進行方向に転移
 
-					pPlayer2->move = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+						ESCAPEMOVE.x = ParentGateMin.x + (PlayerMin.x - pPlayer->pos.x) - 0.1f;
+						ESCAPEMOVE.y = pTransferGate[ParentIndex].pos.y;
+						ESCAPEMOVE.z = pTransferGate[ParentIndex].pos.z;
 
-					EscapeRot_Player.y = D3DX_PI;
-					EscapeRot_Camera.y = 0.0f;
-				}
-				else if (pTransferGate[GateIndex].ParentTransAngle == TRANS_ANGLE_MIN_Z)
-				{//-Z
-					ESCAPEMOVE.z = ParentGateMin.z - (PlayerMax.z - pPlayer2->pos.z) - 11.1f;
-					ESCAPEMOVE.x = pTransferGate[ParentIndex].pos.x;
-					ESCAPEMOVE.y = pTransferGate[ParentIndex].pos.y;
-
-					pPlayer2->move = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-
-					EscapeRot_Player.y = 0.0f;
-					EscapeRot_Camera.y = D3DX_PI;
-				}
-
-
-				SetGameFade(1, ESCAPEMOVE, EscapeRot_Camera,EscapeRot_Player);
-
-				if (pTransferGate[ParentIndex].bCompulsionTrans == true)
-				{//プレイヤー1も転移
-					SetGameFade(0, ESCAPEMOVE, EscapeRot_Camera,EscapeRot_Player);
-				}
-			}
-		}
-	}
-	else if (pTransferGate[ParentIndex].bActiomTrans == true)
-	{//アクションで転移
-
-		//1Pのとき
-		if (PlayerIndex == 0)
-		{
-			//接触したか
-			bool bHit = false;
-
-			Player* pPlayer;
-			pPlayer = GetPlayer();
-
-			if (GateMin.x<=pPlayer->pos.x&&pPlayer->pos.x<=GateMax.x)
-			{
-				if (GateMin.y <=( pPlayer->pos.y + PlayerCenterCorre) && (pPlayer->pos.y + PlayerCenterCorre) <= GateMax.y)
-				{
-					if (GateMin.z <= pPlayer->pos.z && pPlayer->pos.z <= GateMax.z)
-					{
-						bHit = true;
+						pPlayer->move = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+						EscapeRot_Player.y = D3DX_PI * 0.5f;
+						EscapeRot_Camera.y = D3DX_PI * 0.5f;
 					}
 				}
-			}
-	
-			if (bHit == true)
-			{//接触判定時
+				//---------------------------------------Z方向
+				else if (PlayerMin.x < GateMax.x &&
+					PlayerMax.x > GateMin.x &&
+					PlayerMin.z - pPlayer->pos.z + pPlayer->oldPos.z >= GateMax.z &&
+					PlayerMin.z < GateMax.z &&
+					PlayerMin.y < GateMax.y &&
+					PlayerMax.y > GateMin.y)
+				{//+Z
+					bHit = true;
 
-				if (pPlayer->bAction == true)
-				{
+					if (pTransferGate[GateIndex].ParentTransAngle == TRANS_ANGLE_MAX)
+					{//初期値の時--進行方向に転移
+
+						ESCAPEMOVE.z = ParentGateMin.z - (PlayerMax.z - pPlayer->pos.z) - 0.1f;
+						ESCAPEMOVE.x = pTransferGate[ParentIndex].pos.x;
+						ESCAPEMOVE.y = pTransferGate[ParentIndex].pos.y;
+						EscapeRot_Player.y = D3DX_PI;
+						EscapeRot_Camera.y = 0.0f;
+
+						pPlayer->move = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+					}
+				}
+				else  if (PlayerMin.x < GateMax.x &&
+					PlayerMax.x > GateMin.x &&
+					PlayerMax.z - pPlayer->pos.z + pPlayer->oldPos.z <= GateMin.z &&
+					PlayerMax.z > GateMin.z &&
+					PlayerMin.y < GateMax.y &&
+					PlayerMax.y > GateMin.y)
+				{//-ｚ
+					bHit = true;
+
+					if (pTransferGate[GateIndex].ParentTransAngle == TRANS_ANGLE_MAX)
+					{//初期値の時--進行方向に転移
+						ESCAPEMOVE.z = ParentGateMax.z - (PlayerMin.z - pPlayer->pos.z) + 0.1f;
+						ESCAPEMOVE.x = pTransferGate[ParentIndex].pos.x;
+						ESCAPEMOVE.y = pTransferGate[ParentIndex].pos.y;
+
+						pPlayer->move = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+						EscapeRot_Player.y = 0.0f;
+						EscapeRot_Camera.y = D3DX_PI;
+					}
+				}
+
+				////------------------------------------Y方向
+				//if (PlayerMin.x < GateMax.x &&
+				//	PlayerMax.x > GateMin.x &&
+				//	PlayerMin.z < GateMax.z &&
+				//	PlayerMax.z > GateMin.z &&
+				//	PlayerMin.y - pPlayer->pos.y + pPlayer->oldPos.y >= GateMax.y &&
+				//	PlayerMin.y < GateMax.y)
+				//{
+				//	pPlayer->move.y = 0.0f;
+				//	pPlayer->pos.y = GateMax.y + (PlayerMin.y - pPlayer->pos.y);
+
+				//	if (pPlayer->NowMotionDOWN == MOTIONTYPE_1P_JUMP)
+				//	{
+				//		pPlayer->NowMotionDOWN = MOTIONTYPE_1P_RANDING;
+				//	}
+				//	else if (pPlayer->NowMotionDOWN == MOTIONTYPE_1P_MOVE)
+				//	{
+				//		pPlayer->NowMotionDOWN = MOTIONTYPE_1P_MOVE;
+				//	}
+
+				//	pPlayer->bLandingNow = true;
+				//}
+
+				if (bHit == true)
+				{//接触判定時
 					pPlayer->PlayerState = PLAYERSTATE_1P_TELEPOR;
+
+
 
 					if (pTransferGate[GateIndex].ParentTransAngle == TRANS_ANGLE_MAX_X)
 					{//+X
-
 						ESCAPEMOVE.x = ParentGateMax.x + (PlayerMax.x - pPlayer->pos.x) + 11.1f;
 						ESCAPEMOVE.y = pTransferGate[ParentIndex].pos.y;
 						ESCAPEMOVE.z = pTransferGate[ParentIndex].pos.z;
@@ -1989,20 +1788,17 @@ void BoxCollisionGate(D3DXVECTOR3 PlayerMin, D3DXVECTOR3 PlayerMax, D3DXVECTOR3 
 					}
 					else if (pTransferGate[GateIndex].ParentTransAngle == TRANS_ANGLE_MIN_X)
 					{//-X
-
 						ESCAPEMOVE.x = ParentGateMin.x + (PlayerMin.x - pPlayer->pos.x) - 11.1f;
 						ESCAPEMOVE.y = pTransferGate[ParentIndex].pos.y;
 						ESCAPEMOVE.z = pTransferGate[ParentIndex].pos.z;
 
 						pPlayer->move = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-						EscapeRot_Player.y = D3DX_PI*0.5f;
+						EscapeRot_Player.y = D3DX_PI * 0.5f;
 						EscapeRot_Camera.y = D3DX_PI * 0.5f;
 					}
 					else if (pTransferGate[GateIndex].ParentTransAngle == TRANS_ANGLE_MAX_Z)
 					{//+Z
-
 						ESCAPEMOVE.z = ParentGateMax.z - (PlayerMin.z - pPlayer->pos.z) + 11.1f;
-
 						ESCAPEMOVE.x = pTransferGate[ParentIndex].pos.x;
 						ESCAPEMOVE.y = pTransferGate[ParentIndex].pos.y;
 
@@ -2013,7 +1809,6 @@ void BoxCollisionGate(D3DXVECTOR3 PlayerMin, D3DXVECTOR3 PlayerMax, D3DXVECTOR3 
 					}
 					else if (pTransferGate[GateIndex].ParentTransAngle == TRANS_ANGLE_MIN_Z)
 					{//-Z
-
 						ESCAPEMOVE.z = ParentGateMin.z - (PlayerMax.z - pPlayer->pos.z) - 11.1f;
 						ESCAPEMOVE.x = pTransferGate[ParentIndex].pos.x;
 						ESCAPEMOVE.y = pTransferGate[ParentIndex].pos.y;
@@ -2031,32 +1826,129 @@ void BoxCollisionGate(D3DXVECTOR3 PlayerMin, D3DXVECTOR3 PlayerMax, D3DXVECTOR3 
 						SetGameFade(1, ESCAPEMOVE, EscapeRot_Camera, EscapeRot_Player);
 					}
 				}
+
 			}
-		}
-		else if (PlayerIndex == 1)
-		{//2Pの時
-			Player_2P* pPlayer2;
-			pPlayer2 = GetPlayer_2P();
+			else if (PlayerIndex == 1)
+			{//2Pの時
+				Player_2P* pPlayer2;
+				pPlayer2 = GetPlayer_2P();
 
-			//接触したか
-			bool bHit = false;
+				//接触したか
+				bool bHit = false;
 
-			if (GateMin.x <= pPlayer2->pos.x && pPlayer2->pos.x <= GateMax.x)
-			{
-				if (GateMin.y <= (pPlayer2->pos.y + PlayerCenterCorre) && (pPlayer2->pos.y + PlayerCenterCorre) <= GateMax.y)
+				//---------------------------------------X方向
+
+				if (PlayerMin.z < GateMax.z &&
+					PlayerMax.z > GateMin.z &&
+					PlayerMax.x - pPlayer2->pos.x + pPlayer2->oldPos.x <= GateMin.x &&
+					PlayerMax.x > GateMin.x &&
+					PlayerMin.y < GateMax.y &&
+					PlayerMax.y > GateMin.y)
 				{
-					if (GateMin.z <= pPlayer2->pos.z && pPlayer2->pos.z <= GateMax.z)
-					{
-						bHit = true;
+					bHit = true;
+
+					if (pTransferGate[GateIndex].ParentTransAngle == TRANS_ANGLE_MAX)
+					{//初期値の時--進行方向に転移
+
+						ESCAPEMOVE.x = ParentGateMax.x + (PlayerMax.x - pPlayer2->pos.x) + 0.1f;
+						ESCAPEMOVE.y = pTransferGate[ParentIndex].pos.y;
+						ESCAPEMOVE.z = pTransferGate[ParentIndex].pos.z;
+						pPlayer2->move = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+						EscapeRot_Player.y = -D3DX_PI * 0.5f;
+						EscapeRot_Camera.y = -D3DX_PI * 0.5f;
 					}
 				}
-			}
-
-			if (bHit == true)
-			{//接触判定時
-
-				if (pPlayer2->bAction == true)
+				else if (PlayerMin.z < GateMax.z &&
+					PlayerMax.z > GateMin.z &&
+					PlayerMin.x - pPlayer2->pos.x + pPlayer2->oldPos.x >= GateMax.x &&
+					PlayerMin.x < GateMax.x &&
+					PlayerMin.y < GateMax.y &&
+					PlayerMax.y > GateMin.y)
 				{
+
+					bHit = true;
+
+					if (pTransferGate[GateIndex].ParentTransAngle == TRANS_ANGLE_MAX)
+					{//初期値の時--進行方向に転移
+						ESCAPEMOVE.x = ParentGateMin.x + (PlayerMin.x - pPlayer2->pos.x) - 0.1f;
+						ESCAPEMOVE.y = pTransferGate[ParentIndex].pos.y;
+						ESCAPEMOVE.z = pTransferGate[ParentIndex].pos.z;
+
+						pPlayer2->move = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+						EscapeRot_Player.y = D3DX_PI * 0.5f;
+						EscapeRot_Camera.y = D3DX_PI * 0.5f;
+					}
+				}
+				//---------------------------------------Z方向
+				else if (PlayerMin.x < GateMax.x &&
+					PlayerMax.x > GateMin.x &&
+					PlayerMin.z - pPlayer2->pos.z + pPlayer2->oldPos.z >= GateMax.z &&
+					PlayerMin.z < GateMax.z &&
+					PlayerMin.y < GateMax.y &&
+					PlayerMax.y > GateMin.y)
+				{//+Z
+					bHit = true;
+
+					if (pTransferGate[GateIndex].ParentTransAngle == TRANS_ANGLE_MAX)
+					{//初期値の時--進行方向に転移
+						ESCAPEMOVE.z = ParentGateMin.z - (PlayerMax.z - pPlayer2->pos.z) - 0.1f;
+						ESCAPEMOVE.x = pTransferGate[ParentIndex].pos.x;
+						ESCAPEMOVE.y = pTransferGate[ParentIndex].pos.y;
+
+						EscapeRot_Player.y = D3DX_PI;
+						EscapeRot_Camera.y = 0.0f;
+
+						pPlayer2->move = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+					}
+				}
+				else if (PlayerMin.x < GateMax.x &&
+					PlayerMax.x > GateMin.x &&
+					PlayerMax.z - pPlayer2->pos.z + pPlayer2->oldPos.z <= GateMin.z &&
+					PlayerMax.z > GateMin.z &&
+					PlayerMin.y < GateMax.y &&
+					PlayerMax.y > GateMin.y)
+				{//-Z
+					bHit = true;
+
+					if (pTransferGate[GateIndex].ParentTransAngle == TRANS_ANGLE_MAX)
+					{//初期値の時--進行方向に転移
+						ESCAPEMOVE.z = ParentGateMax.z - (PlayerMin.z - pPlayer2->pos.z) + 0.1f;
+						ESCAPEMOVE.x = pTransferGate[ParentIndex].pos.x;
+						ESCAPEMOVE.y = pTransferGate[ParentIndex].pos.y;
+
+						EscapeRot_Player.y = 0.0f;
+						EscapeRot_Camera.y = D3DX_PI;
+
+						pPlayer2->move = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+					}
+				}
+
+				//------------------------------------Y方向
+				/*if (PlayerMin.x < GateMax.x &&
+					PlayerMax.x > GateMin.x &&
+					PlayerMin.z < GateMax.z &&
+					PlayerMax.z > GateMin.z &&
+					PlayerMin.y - pPlayer2->pos.y + pPlayer2->oldPos.y >= GateMax.y &&
+					PlayerMin.y < GateMax.y)
+				{
+					pPlayer2->move.y = 0.0f;
+					pPlayer2->pos.y = GateMax.y + (PlayerMin.y - pPlayer2->pos.y);
+
+					if (pPlayer2->NowMotionDOWN == MOTIONTYPE_2P_JUMP)
+					{
+						pPlayer2->NowMotionDOWN = MOTIONTYPE_2P_RANDING;
+					}
+					else if (pPlayer2->NowMotionDOWN == MOTIONTYPE_2P_MOVE)
+					{
+						pPlayer2->NowMotionDOWN = MOTIONTYPE_2P_MOVE;
+					}
+
+					pPlayer2->bLandingNow = true;
+				}*/
+
+				if (bHit == true)
+				{//接触判定時
+
 					pPlayer2->PlayerState = PLAYERSTATE_2P_TELEPOR;
 
 					if (pTransferGate[GateIndex].ParentTransAngle == TRANS_ANGLE_MAX_X)
@@ -2066,7 +1958,7 @@ void BoxCollisionGate(D3DXVECTOR3 PlayerMin, D3DXVECTOR3 PlayerMax, D3DXVECTOR3 
 						ESCAPEMOVE.z = pTransferGate[ParentIndex].pos.z;
 
 						pPlayer2->move = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-						EscapeRot_Player.y = -D3DX_PI*0.5f;
+						EscapeRot_Player.y = -D3DX_PI * 0.5f;
 						EscapeRot_Camera.y = -D3DX_PI * 0.5f;
 					}
 					else if (pTransferGate[GateIndex].ParentTransAngle == TRANS_ANGLE_MIN_X)
@@ -2076,7 +1968,7 @@ void BoxCollisionGate(D3DXVECTOR3 PlayerMin, D3DXVECTOR3 PlayerMax, D3DXVECTOR3 
 						ESCAPEMOVE.z = pTransferGate[ParentIndex].pos.z;
 
 						pPlayer2->move = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-						EscapeRot_Player.y = D3DX_PI*0.5f;
+						EscapeRot_Player.y = D3DX_PI * 0.5f;
 						EscapeRot_Camera.y = D3DX_PI * 0.5f;
 					}
 					else if (pTransferGate[GateIndex].ParentTransAngle == TRANS_ANGLE_MAX_Z)
@@ -2102,11 +1994,180 @@ void BoxCollisionGate(D3DXVECTOR3 PlayerMin, D3DXVECTOR3 PlayerMax, D3DXVECTOR3 
 						EscapeRot_Camera.y = D3DX_PI;
 					}
 
+
 					SetGameFade(1, ESCAPEMOVE, EscapeRot_Camera, EscapeRot_Player);
 
 					if (pTransferGate[ParentIndex].bCompulsionTrans == true)
 					{//プレイヤー1も転移
 						SetGameFade(0, ESCAPEMOVE, EscapeRot_Camera, EscapeRot_Player);
+					}
+				}
+			}
+		}
+		else if (pTransferGate[ParentIndex].bActiomTrans == true)
+		{//アクションで転移
+
+			//1Pのとき
+			if (PlayerIndex == 0)
+			{
+				//接触したか
+				bool bHit = false;
+
+				Player* pPlayer;
+				pPlayer = GetPlayer();
+
+				if (GateMin.x <= pPlayer->pos.x && pPlayer->pos.x <= GateMax.x)
+				{
+					if (GateMin.y <= (pPlayer->pos.y + PlayerCenterCorre) && (pPlayer->pos.y + PlayerCenterCorre) <= GateMax.y)
+					{
+						if (GateMin.z <= pPlayer->pos.z && pPlayer->pos.z <= GateMax.z)
+						{
+							bHit = true;
+						}
+					}
+				}
+
+				if (bHit == true)
+				{//接触判定時
+
+					if (pPlayer->bAction == true)
+					{
+						pPlayer->PlayerState = PLAYERSTATE_1P_TELEPOR;
+
+
+						if (pTransferGate[GateIndex].ParentTransAngle == TRANS_ANGLE_MAX_X)
+						{//+X
+
+							ESCAPEMOVE.x = ParentGateMax.x + (PlayerMax.x - pPlayer->pos.x) + 11.1f;
+							ESCAPEMOVE.y = pTransferGate[ParentIndex].pos.y;
+							ESCAPEMOVE.z = pTransferGate[ParentIndex].pos.z;
+
+							pPlayer->move = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+							EscapeRot_Player.y = -D3DX_PI * 0.5f;
+							EscapeRot_Camera.y = -D3DX_PI * 0.5f;
+						}
+						else if (pTransferGate[GateIndex].ParentTransAngle == TRANS_ANGLE_MIN_X)
+						{//-X
+
+							ESCAPEMOVE.x = ParentGateMin.x + (PlayerMin.x - pPlayer->pos.x) - 11.1f;
+							ESCAPEMOVE.y = pTransferGate[ParentIndex].pos.y;
+							ESCAPEMOVE.z = pTransferGate[ParentIndex].pos.z;
+
+							pPlayer->move = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+							EscapeRot_Player.y = D3DX_PI * 0.5f;
+							EscapeRot_Camera.y = D3DX_PI * 0.5f;
+						}
+						else if (pTransferGate[GateIndex].ParentTransAngle == TRANS_ANGLE_MAX_Z)
+						{//+Z
+
+							ESCAPEMOVE.z = ParentGateMax.z - (PlayerMin.z - pPlayer->pos.z) + 11.1f;
+
+							ESCAPEMOVE.x = pTransferGate[ParentIndex].pos.x;
+							ESCAPEMOVE.y = pTransferGate[ParentIndex].pos.y;
+
+							pPlayer->move = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+
+							EscapeRot_Player.y = D3DX_PI;
+							EscapeRot_Camera.y = 0.0f;
+						}
+						else if (pTransferGate[GateIndex].ParentTransAngle == TRANS_ANGLE_MIN_Z)
+						{//-Z
+
+							ESCAPEMOVE.z = ParentGateMin.z - (PlayerMax.z - pPlayer->pos.z) - 11.1f;
+							ESCAPEMOVE.x = pTransferGate[ParentIndex].pos.x;
+							ESCAPEMOVE.y = pTransferGate[ParentIndex].pos.y;
+
+							pPlayer->move = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+
+							EscapeRot_Player.y = 0.0f;
+							EscapeRot_Camera.y = D3DX_PI;
+						}
+
+						SetGameFade(0, ESCAPEMOVE, EscapeRot_Camera, EscapeRot_Player);
+
+						if (pTransferGate[ParentIndex].bCompulsionTrans == true)
+						{//プレイヤー２も転移
+							SetGameFade(1, ESCAPEMOVE, EscapeRot_Camera, EscapeRot_Player);
+						}
+					}
+				}
+			}
+			else if (PlayerIndex == 1)
+			{//2Pの時
+				Player_2P* pPlayer2;
+				pPlayer2 = GetPlayer_2P();
+
+				//接触したか
+				bool bHit = false;
+
+				if (GateMin.x <= pPlayer2->pos.x && pPlayer2->pos.x <= GateMax.x)
+				{
+					if (GateMin.y <= (pPlayer2->pos.y + PlayerCenterCorre) && (pPlayer2->pos.y + PlayerCenterCorre) <= GateMax.y)
+					{
+						if (GateMin.z <= pPlayer2->pos.z && pPlayer2->pos.z <= GateMax.z)
+						{
+							bHit = true;
+						}
+					}
+				}
+
+				if (bHit == true)
+				{//接触判定時
+
+					if (pPlayer2->bAction == true)
+					{
+						pPlayer2->PlayerState = PLAYERSTATE_2P_TELEPOR;
+
+
+						if (pTransferGate[GateIndex].ParentTransAngle == TRANS_ANGLE_MAX_X)
+						{//+X
+							ESCAPEMOVE.x = ParentGateMax.x + (PlayerMax.x - pPlayer2->pos.x) + 11.1f;
+							ESCAPEMOVE.y = pTransferGate[ParentIndex].pos.y;
+							ESCAPEMOVE.z = pTransferGate[ParentIndex].pos.z;
+
+							pPlayer2->move = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+							EscapeRot_Player.y = -D3DX_PI * 0.5f;
+							EscapeRot_Camera.y = -D3DX_PI * 0.5f;
+						}
+						else if (pTransferGate[GateIndex].ParentTransAngle == TRANS_ANGLE_MIN_X)
+						{//-X
+							ESCAPEMOVE.x = ParentGateMin.x + (PlayerMin.x - pPlayer2->pos.x) - 11.1f;
+							ESCAPEMOVE.y = pTransferGate[ParentIndex].pos.y;
+							ESCAPEMOVE.z = pTransferGate[ParentIndex].pos.z;
+
+							pPlayer2->move = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+							EscapeRot_Player.y = D3DX_PI * 0.5f;
+							EscapeRot_Camera.y = D3DX_PI * 0.5f;
+						}
+						else if (pTransferGate[GateIndex].ParentTransAngle == TRANS_ANGLE_MAX_Z)
+						{//+Z
+							ESCAPEMOVE.z = ParentGateMax.z - (PlayerMin.z - pPlayer2->pos.z) + 11.1f;
+							ESCAPEMOVE.x = pTransferGate[ParentIndex].pos.x;
+							ESCAPEMOVE.y = pTransferGate[ParentIndex].pos.y;
+
+							pPlayer2->move = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+
+							EscapeRot_Player.y = D3DX_PI;
+							EscapeRot_Camera.y = 0.0f;
+						}
+						else if (pTransferGate[GateIndex].ParentTransAngle == TRANS_ANGLE_MIN_Z)
+						{//-Z
+							ESCAPEMOVE.z = ParentGateMin.z - (PlayerMax.z - pPlayer2->pos.z) - 11.1f;
+							ESCAPEMOVE.x = pTransferGate[ParentIndex].pos.x;
+							ESCAPEMOVE.y = pTransferGate[ParentIndex].pos.y;
+
+							pPlayer2->move = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+
+							EscapeRot_Player.y = 0.0f;
+							EscapeRot_Camera.y = D3DX_PI;
+						}
+
+						SetGameFade(1, ESCAPEMOVE, EscapeRot_Camera, EscapeRot_Player);
+
+						if (pTransferGate[ParentIndex].bCompulsionTrans == true)
+						{//プレイヤー1も転移
+							SetGameFade(0, ESCAPEMOVE, EscapeRot_Camera, EscapeRot_Player);
+						}
 					}
 				}
 			}
