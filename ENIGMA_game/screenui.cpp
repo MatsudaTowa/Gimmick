@@ -23,7 +23,7 @@ ScreenUI g_ScreenUI[NUM_UI];//タイトルの情報
 SCREENUISTATE g_ScreenUIState;//フェード時の識別
 
 //=============================
-//タイトル画面の初期化処理
+//スクリーンUIの初期化処理
 //=============================
 void InitScreenUI(void)
 {
@@ -87,7 +87,7 @@ void InitScreenUI(void)
 	//PlaySound(SOUND_LABEL_BGM000);
 }
 //=============================
-//タイトル画面の終了処理
+//スクリーンUIの終了処理
 //=============================
 void UninitScreenUI(void)
 {
@@ -112,7 +112,7 @@ void UninitScreenUI(void)
 	}
 }
 //=============================
-//タイトル画面の更新処理
+//スクリーンUIの更新処理
 //=============================
 void UpdateScreenUI(void)
 {
@@ -172,7 +172,7 @@ void UpdateScreenUI(void)
 	g_pVtxBuffScreenUI->Unlock();
 }
 //=============================
-//タイトル画面の描画処理
+//スクリーンUIの描画処理
 //=============================
 void DrawScreenUI(void)
 {

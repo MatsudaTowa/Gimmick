@@ -155,11 +155,6 @@ void Model_DebugSet(void)
 			SetModel(g_MapObject_Escape[i].pos, g_MapObject_Escape[i].rot, g_MapObject_Escape[i].nType);
 		}
 	}
-
-	SetModel(D3DXVECTOR3(-2900.0f, 0.0f, -2900.0f), D3DXVECTOR3(0.0f, -1.57f, 0.0f), MODELTYPE_ESCAPEDOOR);
-	//SetActionZone(D3DXVECTOR3(200.0f, 50.0f, 300.0f),60,  ACTION_TYPE_ESCAPE,);
-
-
 }
 
 //=============================

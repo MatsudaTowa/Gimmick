@@ -20,7 +20,7 @@
 
 //#define MAPSIZE	(8.0f)//サイズ
 
-#define MAPSIZE2	(24.0f)//サイズ
+#define MAPPINSIZE2	(44.0f)//サイズ
 
 #define ADDMAP	(0.12f)//地図倍率
 
@@ -60,8 +60,9 @@ typedef struct
 {
 	D3DXVECTOR3 pos;	//位置
 	MAP_UI_TYPE UItype;//UIのタイプ
-	
-	
+	D3DXVECTOR3 rot;
+	float fLength;
+	float fAngle;
 
 	int PosNum;//アイテム本体の時限定、座標位置番号を格納、その他は-1
 

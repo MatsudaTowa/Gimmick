@@ -1,6 +1,6 @@
 //=========================================================
 //
-//弾発射処理関係で使う変数、宣言、構造体[bullet.h]
+//吹き出しUI使う変数、宣言、構造体[speechbubble.h]
 // Author seiya kagaya
 //
 //=========================================================
@@ -19,7 +19,8 @@
 #define ZOOMSPEED	(6)//拡大速度
 #define REDSPEED	(4)//縮小速度
 
-
+#define  XMAG (0.6f)
+#define  XMAG2 (0.4f)
 
 typedef enum
 {
@@ -27,13 +28,6 @@ typedef enum
 	SPEECHBUBBLETYPE_TRANCE,
 	SPEECHBUBBLETYPE_MAX,
 }SPEECHBUBBLETYPE;
-
-//typedef enum
-//{
-//	SPEECHBUBBLESTATE_ADD = 0,
-//	SPEECHBUBBLESTATE_STANDBY,
-//	SPEECHBUBBLESTATE_MAX,
-//}SPEECHBUBBLESTATE;
 
 
 //壁の構造体

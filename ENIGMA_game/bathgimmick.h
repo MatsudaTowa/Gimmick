@@ -27,6 +27,7 @@ typedef struct
 	int nSteamSpawnCnt; //湯気がスポーンするまでカウントする
 	float fWide;
 	float fDepth;
+	bool bKeySpawn;
 	bool bUse;
 	bool bRun; //お湯を流すか
 }BathWater;
@@ -40,6 +41,6 @@ void UpdateBathGimmick(void);
 void DrawBathGimmick(void);
 void SetBathWater(D3DXVECTOR3 pos, D3DXVECTOR3 rot, float fWide, float fDepth);
 void RunWater(int nPlayer);
-BathWater* GetBathGimmickPos(void);
+BathWater* GetBathGimmick(void);
 
 #endif // _POLYGON_H_ //定義されてなかったら

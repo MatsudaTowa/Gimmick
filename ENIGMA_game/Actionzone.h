@@ -40,7 +40,7 @@ typedef enum
 	ACTION_TYPE_KEY_3, //鍵ギミック
 	ACTION_TYPE_EYETRAP, //視界トラップ
 	ACTION_TYPE_ESCAPE,//移動
-	ACTION_TYPE_TV,//テレビギミック
+	ACTION_TYPE_TV, //TVギミック
 	ACTION_TYPE_MAX,//--進行方向に転移
 }ACTIONTYPE;
 

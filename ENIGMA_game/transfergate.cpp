@@ -67,7 +67,7 @@ void InitTransferGate(void)
     SetTransferGate(D3DXVECTOR3(-600.0f, 0.0f, -3880.0f), D3DXVECTOR3(-50.0f, 0.0f, -50.0f), D3DXVECTOR3(50.0f, 100.0f, 50.0f), 3, RONDOMTRANS_NUM, TRANS_ANGLE_RANDOM, D3DXCOLOR(1.0f, 1.0f, 0.0f, 0.7f), true, true);
 
 
-   //4Å`7Çè\éöòHÇ…
+   //4Å`8Çè\éöòHÇ…
 
     //--ëqå…ç∂
     SetTransferGate(D3DXVECTOR3(-10.0f, 0.0f, -930.0f), D3DXVECTOR3(-50.0f, 0.0f, -60.0f), D3DXVECTOR3(50.0f, 100.0f, 60.0f), 4, CROSSROAD_NUM, TRANS_ANGLE_MAX_X, D3DXCOLOR(1.0f, 0.0f, 0.0f, 0.7f), true, true);
@@ -81,6 +81,8 @@ void InitTransferGate(void)
     //óÅé∫
     SetTransferGate(D3DXVECTOR3(3000.0f, 0.0f, 40.0f), D3DXVECTOR3(-50.0f, 0.0f, -50.0f), D3DXVECTOR3(50.0f, 100.0f, 50.0f), 7, CROSSROAD_NUM, TRANS_ANGLE_MAX_Z, D3DXCOLOR(0.0f, 0.0f, 1.0f, 0.7f), true, true);
 
+    
+    SetTransferGate(D3DXVECTOR3(3250.0f, 104.0f, -1700.0f), D3DXVECTOR3(-50.0f, 0.0f, -50.0f), D3DXVECTOR3(50.0f, 100.0f, 50.0f), 8, CROSSROAD_NUM, TRANS_ANGLE_MAX_Z, D3DXCOLOR(0.0f, 0.0f, 1.0f, 0.7f), true, true);
 
     
 

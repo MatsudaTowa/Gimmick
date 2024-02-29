@@ -269,7 +269,7 @@ void SetSimpleModel(SIMPLEMOTIONMODEL SetUpName_Index,D3DXVECTOR3 pos,D3DXVECTOR
 //=============================
 //Œ®ƒXƒ|[ƒ“‚µ‚½‚©æ“¾
 //=============================
-bool GetSpawnKey(void)
+bool GetSpawnKey_Lever(void)
 {
 	return g_bKeyspawn;
 }

@@ -47,8 +47,8 @@ void InitMap(void)
 
 	//テクスチャの読み込み
 	D3DXCreateTextureFromFile(pDevice, "data\\TEXTURE\\PlayerPin.png", &g_pTextureMap[0]);//プレイヤーピン
-	D3DXCreateTextureFromFile(pDevice, "data\\TEXTURE\\TestMap2.png", &g_pTextureMap[1]);//地図
-	D3DXCreateTextureFromFile(pDevice, "data\\TEXTURE\\TestMap2.png", &g_pTextureMap[2]);//地図
+	D3DXCreateTextureFromFile(pDevice, "data\\TEXTURE\\TestMap3.png", &g_pTextureMap[1]);//地図
+	D3DXCreateTextureFromFile(pDevice, "data\\TEXTURE\\TestMap3.png", &g_pTextureMap[2]);//地図
 	//ここから隠すテクスチャを用意
 
 
@@ -57,8 +57,15 @@ void InitMap(void)
 	{
 		g_Map[nCntMap].pos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 		g_Map[nCntMap].UItype = MAP_UI_TYPE_MAX;
+		g_Map[nCntMap].rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 		g_Map[nCntMap].ScreenNum = -1;
 		g_Map[nCntMap].PosNum = -1;
+		//対角線の長さを算出
+		g_Map[nCntMap].fLength = sqrtf(MAPPINSIZE2 * MAPPINSIZE2 + MAPPINSIZE2 * MAPPINSIZE2) / 2.0f;//幅*幅+高さ*高さ
+
+		//対角線の角度を算出
+		g_Map[nCntMap].fAngle = atan2f(MAPPINSIZE2, MAPPINSIZE2);//高さ、幅
+
 		g_Map[nCntMap].bUse = false;//使用していない状態にする
 	}
 
@@ -69,6 +76,7 @@ void InitMap(void)
 
 	//頂点バッファをロックし、頂点情報へのポインタを取得
 	g_pVtxBuffMap->Lock(0, 0, (void**)&pVtx, 0);
+
 
 	for (nCntMap = 0; nCntMap < MAXMAP; nCntMap++)
 	{
@@ -102,17 +110,17 @@ void InitMap(void)
 	g_pVtxBuffMap->Unlock();
 
 	//地図
-	SetMap(D3DXVECTOR3(SCREEN_WIDE * 0.4f, SCREEN_HEIGHT * 0.77f, 0.0f), MAP_UI_TYPE_MAP1, 0);
+	SetMap(D3DXVECTOR3(SCREEN_WIDE * 0.4f, SCREEN_HEIGHT * 0.78f, 0.0f), MAP_UI_TYPE_MAP1, 0);
 	//地図
-	SetMap(D3DXVECTOR3(SCREEN_WIDE * 0.9f, SCREEN_HEIGHT * 0.77f, 0.0f), MAP_UI_TYPE_MAP1, 1);
+	SetMap(D3DXVECTOR3(SCREEN_WIDE * 0.9f, SCREEN_HEIGHT * 0.78f, 0.0f), MAP_UI_TYPE_MAP1, 1);
 
 	//左
-	SetMap(D3DXVECTOR3(SCREEN_WIDE * 0.9f, SCREEN_HEIGHT * 0.77f, 0.0f), MAP_UI_TYPE_PLAYERPIN_2P_0, 0);
-	SetMap(D3DXVECTOR3(SCREEN_WIDE * 0.4f, SCREEN_HEIGHT * 0.77f, 0.0f), MAP_UI_TYPE_PLAYERPIN_1P_0, 0);
+//	SetMap(D3DXVECTOR3(SCREEN_WIDE * 0.9f, SCREEN_HEIGHT * 0.78f, 0.0f), MAP_UI_TYPE_PLAYERPIN_2P_0, 0);
+	SetMap(D3DXVECTOR3(SCREEN_WIDE * 0.4f, SCREEN_HEIGHT * 0.78f, 0.0f), MAP_UI_TYPE_PLAYERPIN_1P_0, 0);
 
 	//右
-	SetMap(D3DXVECTOR3(SCREEN_WIDE * 0.4f, SCREEN_HEIGHT * 0.77f, 0.0f), MAP_UI_TYPE_PLAYERPIN_1P_1, 1);
-	SetMap(D3DXVECTOR3(SCREEN_WIDE * 0.9f, SCREEN_HEIGHT * 0.77f, 0.0f), MAP_UI_TYPE_PLAYERPIN_2P_1, 1);
+//	SetMap(D3DXVECTOR3(SCREEN_WIDE * 0.4f, SCREEN_HEIGHT * 0.78f, 0.0f), MAP_UI_TYPE_PLAYERPIN_1P_1, 1);
+	SetMap(D3DXVECTOR3(SCREEN_WIDE * 0.9f, SCREEN_HEIGHT * 0.78f, 0.0f), MAP_UI_TYPE_PLAYERPIN_2P_1, 1);
 }
 //=============================
 //マップUIの終了処理
@@ -367,18 +375,28 @@ void SetMap(D3DXVECTOR3 pos, MAP_UI_TYPE MAPType,int ScreenNum)
 				switch (MAPType)
 				{
 				case MAP_UI_TYPE_PLAYERPIN_1P_0:
-
 					//頂点座標の更新-----------------------------------
-					pVtx[0].pos = D3DXVECTOR3(g_Map[nCntMap].pos.x - MAPSIZE2, g_Map[nCntMap].pos.y - MAPSIZE2, 0.0f);
-					pVtx[1].pos = D3DXVECTOR3(g_Map[nCntMap].pos.x + MAPSIZE2, g_Map[nCntMap].pos.y - MAPSIZE2, 0.0f);
-					pVtx[2].pos = D3DXVECTOR3(g_Map[nCntMap].pos.x - MAPSIZE2, g_Map[nCntMap].pos.y + MAPSIZE2, 0.0f);
-					pVtx[3].pos = D3DXVECTOR3(g_Map[nCntMap].pos.x + MAPSIZE2, g_Map[nCntMap].pos.y + MAPSIZE2, 0.0f);
+					pVtx[0].pos.x = g_Map[nCntMap].pos.x - sinf(g_Map[nCntMap].fAngle + D3DX_PI * g_Map[nCntMap].rot.z) * g_Map[nCntMap].fLength;//左上
+					pVtx[0].pos.y = g_Map[nCntMap].pos.y - cosf(g_Map[nCntMap].fAngle + D3DX_PI * g_Map[nCntMap].rot.z) * g_Map[nCntMap].fLength;//左上
+					pVtx[0].pos.z = 0.0f;
+
+					pVtx[1].pos.x = g_Map[nCntMap].pos.x + sinf(g_Map[nCntMap].fAngle - D3DX_PI * g_Map[nCntMap].rot.z) * g_Map[nCntMap].fLength;//右上
+					pVtx[1].pos.y = g_Map[nCntMap].pos.y - cosf(g_Map[nCntMap].fAngle - D3DX_PI * g_Map[nCntMap].rot.z) * g_Map[nCntMap].fLength;//右上
+					pVtx[1].pos.z = 0.0f;
+
+					pVtx[2].pos.x = g_Map[nCntMap].pos.x - sinf(g_Map[nCntMap].fAngle - D3DX_PI * g_Map[nCntMap].rot.z) * g_Map[nCntMap].fLength;//左下
+					pVtx[2].pos.y = g_Map[nCntMap].pos.y + cosf(g_Map[nCntMap].fAngle - D3DX_PI * g_Map[nCntMap].rot.z) * g_Map[nCntMap].fLength;//左下
+					pVtx[2].pos.z = 0.0f;
+
+					pVtx[3].pos.x = g_Map[nCntMap].pos.x + sinf(g_Map[nCntMap].fAngle + D3DX_PI * g_Map[nCntMap].rot.z) * g_Map[nCntMap].fLength;//右下
+					pVtx[3].pos.y = g_Map[nCntMap].pos.y + cosf(g_Map[nCntMap].fAngle + D3DX_PI * g_Map[nCntMap].rot.z) * g_Map[nCntMap].fLength;//右下
+					pVtx[3].pos.z = 0.0f;
 
 					//頂点カラーの設定
-					pVtx[0].col = D3DCOLOR_RGBA(255, 0, 0, 100);
-					pVtx[1].col = D3DCOLOR_RGBA(255, 0, 0, 100);
-					pVtx[2].col = D3DCOLOR_RGBA(255, 0, 0, 100);
-					pVtx[3].col = D3DCOLOR_RGBA(255, 0, 0, 100);
+					pVtx[0].col = D3DCOLOR_RGBA(255, 0, 0, 255);
+					pVtx[1].col = D3DCOLOR_RGBA(255, 0, 0, 255);
+					pVtx[2].col = D3DCOLOR_RGBA(255, 0, 0, 255);
+					pVtx[3].col = D3DCOLOR_RGBA(255, 0, 0, 255);
 
 					//テクスチャ座標を設定
 					pVtx[0].tex = D3DXVECTOR2(0.0f, 0.0f);//左上
@@ -391,16 +409,27 @@ void SetMap(D3DXVECTOR3 pos, MAP_UI_TYPE MAPType,int ScreenNum)
 				case MAP_UI_TYPE_PLAYERPIN_2P_0:
 					
 					//頂点座標の更新-----------------------------------
-					pVtx[0].pos = D3DXVECTOR3(g_Map[nCntMap].pos.x - MAPSIZE2, g_Map[nCntMap].pos.y - MAPSIZE2, 0.0f);
-					pVtx[1].pos = D3DXVECTOR3(g_Map[nCntMap].pos.x + MAPSIZE2, g_Map[nCntMap].pos.y - MAPSIZE2, 0.0f);
-					pVtx[2].pos = D3DXVECTOR3(g_Map[nCntMap].pos.x - MAPSIZE2, g_Map[nCntMap].pos.y + MAPSIZE2, 0.0f);
-					pVtx[3].pos = D3DXVECTOR3(g_Map[nCntMap].pos.x + MAPSIZE2, g_Map[nCntMap].pos.y + MAPSIZE2, 0.0f);
+					pVtx[0].pos.x = g_Map[nCntMap].pos.x - sinf(g_Map[nCntMap].fAngle + D3DX_PI * g_Map[nCntMap].rot.z) * g_Map[nCntMap].fLength;//左上
+					pVtx[0].pos.y = g_Map[nCntMap].pos.y - cosf(g_Map[nCntMap].fAngle + D3DX_PI * g_Map[nCntMap].rot.z) * g_Map[nCntMap].fLength;//左上
+					pVtx[0].pos.z = 0.0f;
+
+					pVtx[1].pos.x = g_Map[nCntMap].pos.x + sinf(g_Map[nCntMap].fAngle - D3DX_PI * g_Map[nCntMap].rot.z) * g_Map[nCntMap].fLength;//右上
+					pVtx[1].pos.y = g_Map[nCntMap].pos.y - cosf(g_Map[nCntMap].fAngle - D3DX_PI * g_Map[nCntMap].rot.z) * g_Map[nCntMap].fLength;//右上
+					pVtx[1].pos.z = 0.0f;
+
+					pVtx[2].pos.x = g_Map[nCntMap].pos.x - sinf(g_Map[nCntMap].fAngle - D3DX_PI * g_Map[nCntMap].rot.z) * g_Map[nCntMap].fLength;//左下
+					pVtx[2].pos.y = g_Map[nCntMap].pos.y + cosf(g_Map[nCntMap].fAngle - D3DX_PI * g_Map[nCntMap].rot.z) * g_Map[nCntMap].fLength;//左下
+					pVtx[2].pos.z = 0.0f;
+
+					pVtx[3].pos.x = g_Map[nCntMap].pos.x + sinf(g_Map[nCntMap].fAngle + D3DX_PI * g_Map[nCntMap].rot.z) * g_Map[nCntMap].fLength;//右下
+					pVtx[3].pos.y = g_Map[nCntMap].pos.y + cosf(g_Map[nCntMap].fAngle + D3DX_PI * g_Map[nCntMap].rot.z) * g_Map[nCntMap].fLength;//右下
+					pVtx[3].pos.z = 0.0f;
 
 					//頂点カラーの設定
-					pVtx[0].col = D3DCOLOR_RGBA(0, 0, 255, 100);
-					pVtx[1].col = D3DCOLOR_RGBA(0, 0, 255, 100);
-					pVtx[2].col = D3DCOLOR_RGBA(0, 0, 255, 100);
-					pVtx[3].col = D3DCOLOR_RGBA(0, 0, 255, 100);
+					pVtx[0].col = D3DCOLOR_RGBA(0, 0, 255, 150);
+					pVtx[1].col = D3DCOLOR_RGBA(0, 0, 255, 150);
+					pVtx[2].col = D3DCOLOR_RGBA(0, 0, 255, 150);
+					pVtx[3].col = D3DCOLOR_RGBA(0, 0, 255, 150);
 
 					//テクスチャ座標を設定
 					pVtx[0].tex = D3DXVECTOR2(0.0f, 0.0f);//左上
@@ -414,16 +443,27 @@ void SetMap(D3DXVECTOR3 pos, MAP_UI_TYPE MAPType,int ScreenNum)
 				case MAP_UI_TYPE_PLAYERPIN_1P_1:
 
 					//頂点座標の更新-----------------------------------
-					pVtx[0].pos = D3DXVECTOR3(g_Map[nCntMap].pos.x - MAPSIZE2, g_Map[nCntMap].pos.y - MAPSIZE2, 0.0f);
-					pVtx[1].pos = D3DXVECTOR3(g_Map[nCntMap].pos.x + MAPSIZE2, g_Map[nCntMap].pos.y - MAPSIZE2, 0.0f);
-					pVtx[2].pos = D3DXVECTOR3(g_Map[nCntMap].pos.x - MAPSIZE2, g_Map[nCntMap].pos.y + MAPSIZE2, 0.0f);
-					pVtx[3].pos = D3DXVECTOR3(g_Map[nCntMap].pos.x + MAPSIZE2, g_Map[nCntMap].pos.y + MAPSIZE2, 0.0f);
+					pVtx[0].pos.x = g_Map[nCntMap].pos.x - sinf(g_Map[nCntMap].fAngle + D3DX_PI * g_Map[nCntMap].rot.z) * g_Map[nCntMap].fLength;//左上
+					pVtx[0].pos.y = g_Map[nCntMap].pos.y - cosf(g_Map[nCntMap].fAngle + D3DX_PI * g_Map[nCntMap].rot.z) * g_Map[nCntMap].fLength;//左上
+					pVtx[0].pos.z = 0.0f;
+
+					pVtx[1].pos.x = g_Map[nCntMap].pos.x + sinf(g_Map[nCntMap].fAngle - D3DX_PI * g_Map[nCntMap].rot.z) * g_Map[nCntMap].fLength;//右上
+					pVtx[1].pos.y = g_Map[nCntMap].pos.y - cosf(g_Map[nCntMap].fAngle - D3DX_PI * g_Map[nCntMap].rot.z) * g_Map[nCntMap].fLength;//右上
+					pVtx[1].pos.z = 0.0f;
+
+					pVtx[2].pos.x = g_Map[nCntMap].pos.x - sinf(g_Map[nCntMap].fAngle - D3DX_PI * g_Map[nCntMap].rot.z) * g_Map[nCntMap].fLength;//左下
+					pVtx[2].pos.y = g_Map[nCntMap].pos.y + cosf(g_Map[nCntMap].fAngle - D3DX_PI * g_Map[nCntMap].rot.z) * g_Map[nCntMap].fLength;//左下
+					pVtx[2].pos.z = 0.0f;
+
+					pVtx[3].pos.x = g_Map[nCntMap].pos.x + sinf(g_Map[nCntMap].fAngle + D3DX_PI * g_Map[nCntMap].rot.z) * g_Map[nCntMap].fLength;//右下
+					pVtx[3].pos.y = g_Map[nCntMap].pos.y + cosf(g_Map[nCntMap].fAngle + D3DX_PI * g_Map[nCntMap].rot.z) * g_Map[nCntMap].fLength;//右下
+					pVtx[3].pos.z = 0.0f;
 
 					//頂点カラーの設定
-					pVtx[0].col = D3DCOLOR_RGBA(255, 0, 0, 100);
-					pVtx[1].col = D3DCOLOR_RGBA(255, 0, 0, 100);
-					pVtx[2].col = D3DCOLOR_RGBA(255, 0, 0, 100);
-					pVtx[3].col = D3DCOLOR_RGBA(255, 0, 0, 100);
+					pVtx[0].col = D3DCOLOR_RGBA(255, 0, 0, 150);
+					pVtx[1].col = D3DCOLOR_RGBA(255, 0, 0, 150);
+					pVtx[2].col = D3DCOLOR_RGBA(255, 0, 0, 150);
+					pVtx[3].col = D3DCOLOR_RGBA(255, 0, 0, 150);
 
 					//テクスチャ座標を設定
 					pVtx[0].tex = D3DXVECTOR2(0.0f, 0.0f);//左上
@@ -436,16 +476,27 @@ void SetMap(D3DXVECTOR3 pos, MAP_UI_TYPE MAPType,int ScreenNum)
 				case MAP_UI_TYPE_PLAYERPIN_2P_1:
 
 					//頂点座標の更新-----------------------------------
-					pVtx[0].pos = D3DXVECTOR3(g_Map[nCntMap].pos.x - MAPSIZE2, g_Map[nCntMap].pos.y - MAPSIZE2, 0.0f);
-					pVtx[1].pos = D3DXVECTOR3(g_Map[nCntMap].pos.x + MAPSIZE2, g_Map[nCntMap].pos.y - MAPSIZE2, 0.0f);
-					pVtx[2].pos = D3DXVECTOR3(g_Map[nCntMap].pos.x - MAPSIZE2, g_Map[nCntMap].pos.y + MAPSIZE2, 0.0f);
-					pVtx[3].pos = D3DXVECTOR3(g_Map[nCntMap].pos.x + MAPSIZE2, g_Map[nCntMap].pos.y + MAPSIZE2, 0.0f);
+					pVtx[0].pos.x = g_Map[nCntMap].pos.x - sinf(g_Map[nCntMap].fAngle + D3DX_PI * g_Map[nCntMap].rot.z) * g_Map[nCntMap].fLength;//左上
+					pVtx[0].pos.y = g_Map[nCntMap].pos.y - cosf(g_Map[nCntMap].fAngle + D3DX_PI * g_Map[nCntMap].rot.z) * g_Map[nCntMap].fLength;//左上
+					pVtx[0].pos.z = 0.0f;
+
+					pVtx[1].pos.x = g_Map[nCntMap].pos.x + sinf(g_Map[nCntMap].fAngle - D3DX_PI * g_Map[nCntMap].rot.z) * g_Map[nCntMap].fLength;//右上
+					pVtx[1].pos.y = g_Map[nCntMap].pos.y - cosf(g_Map[nCntMap].fAngle - D3DX_PI * g_Map[nCntMap].rot.z) * g_Map[nCntMap].fLength;//右上
+					pVtx[1].pos.z = 0.0f;
+
+					pVtx[2].pos.x = g_Map[nCntMap].pos.x - sinf(g_Map[nCntMap].fAngle - D3DX_PI * g_Map[nCntMap].rot.z) * g_Map[nCntMap].fLength;//左下
+					pVtx[2].pos.y = g_Map[nCntMap].pos.y + cosf(g_Map[nCntMap].fAngle - D3DX_PI * g_Map[nCntMap].rot.z) * g_Map[nCntMap].fLength;//左下
+					pVtx[2].pos.z = 0.0f;
+
+					pVtx[3].pos.x = g_Map[nCntMap].pos.x + sinf(g_Map[nCntMap].fAngle + D3DX_PI * g_Map[nCntMap].rot.z) * g_Map[nCntMap].fLength;//右下
+					pVtx[3].pos.y = g_Map[nCntMap].pos.y + cosf(g_Map[nCntMap].fAngle + D3DX_PI * g_Map[nCntMap].rot.z) * g_Map[nCntMap].fLength;//右下
+					pVtx[3].pos.z = 0.0f;
 
 					//頂点カラーの設定
-					pVtx[0].col = D3DCOLOR_RGBA(0, 0, 255, 100);
-					pVtx[1].col = D3DCOLOR_RGBA(0, 0, 255, 100);
-					pVtx[2].col = D3DCOLOR_RGBA(0, 0, 255, 100);
-					pVtx[3].col = D3DCOLOR_RGBA(0, 0, 255, 100);
+					pVtx[0].col = D3DCOLOR_RGBA(0, 0, 255, 255);
+					pVtx[1].col = D3DCOLOR_RGBA(0, 0, 255, 255);
+					pVtx[2].col = D3DCOLOR_RGBA(0, 0, 255, 255);
+					pVtx[3].col = D3DCOLOR_RGBA(0, 0, 255, 255);
 
 					//テクスチャ座標を設定
 					pVtx[0].tex = D3DXVECTOR2(0.0f, 0.0f);//左上

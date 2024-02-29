@@ -118,7 +118,7 @@ void InitItem_UI(void)
 
 	SetItem_UI(D3DXVECTOR3(ITEMUISIZE + 10.0f, 460.0f, 0), ITEM_UI_TYPE_POINTER, ITEMTYPE_MAX, -1, 1);//ポインター初期位置
 
-	SetItem_UI(D3DXVECTOR3(ITEMUISIZE + 640.0f, 460.0f, 0), ITEM_UI_TYPE_POINTER, ITEMTYPE_MAX, -1, 2);//ポインター初期位置
+	SetItem_UI(D3DXVECTOR3(ITEMUISIZE + 640.0f+10.0f, 460.0f, 0), ITEM_UI_TYPE_POINTER, ITEMTYPE_MAX, -1, 2);//ポインター初期位置
 
 		//表示場所の設定
 	for (int SetCnt = 0; SetCnt < MAXGETITEM; SetCnt++)
@@ -128,7 +128,7 @@ void InitItem_UI(void)
 	//表示場所の設定
 	for (int SetCnt2 = 0; SetCnt2 < MAXGETITEM; SetCnt2++)
 	{
-		SetItem_UI(D3DXVECTOR3(ITEMUISIZE + 640.0f + (ITEMUISIZE * 2.1f * SetCnt2), 460.0f, 0), ITEM_UI_TYPE_FRAME, ITEMTYPE_MAX, -1, 2);//枠
+		SetItem_UI(D3DXVECTOR3(ITEMUISIZE + 640.0f + (ITEMUISIZE * 2.1f * SetCnt2)+10.0f, 460.0f, 0), ITEM_UI_TYPE_FRAME, ITEMTYPE_MAX, -1, 2);//枠
 	}
 
 
@@ -383,10 +383,10 @@ void UpdateItem_UI(bool Player1InputOK, bool Player2InputOK)
 		else if (g_ItemUI[nCntItem_UI].UItype == ITEM_UI_TYPE_KEYUI)
 		{
 			//頂点座標の更新-----------------------------------
-			pVtx[0].pos = D3DXVECTOR3(g_ItemUI[nCntItem_UI].pos.x - ITEMUISIZE2, g_ItemUI[nCntItem_UI].pos.y - ITEMUISIZE2, 0.0f);
-			pVtx[1].pos = D3DXVECTOR3(g_ItemUI[nCntItem_UI].pos.x + ITEMUISIZE2, g_ItemUI[nCntItem_UI].pos.y - ITEMUISIZE2, 0.0f);
-			pVtx[2].pos = D3DXVECTOR3(g_ItemUI[nCntItem_UI].pos.x - ITEMUISIZE2, g_ItemUI[nCntItem_UI].pos.y + ITEMUISIZE2, 0.0f);
-			pVtx[3].pos = D3DXVECTOR3(g_ItemUI[nCntItem_UI].pos.x + ITEMUISIZE2, g_ItemUI[nCntItem_UI].pos.y + ITEMUISIZE2, 0.0f);
+			pVtx[0].pos = D3DXVECTOR3(g_ItemUI[nCntItem_UI].pos.x - ITEMUISIZE2 - 10.0f, g_ItemUI[nCntItem_UI].pos.y - ITEMUISIZE2 - 10.0f, 0.0f);
+			pVtx[1].pos = D3DXVECTOR3(g_ItemUI[nCntItem_UI].pos.x + ITEMUISIZE2 - 10.0f, g_ItemUI[nCntItem_UI].pos.y - ITEMUISIZE2 - 10.0f, 0.0f);
+			pVtx[2].pos = D3DXVECTOR3(g_ItemUI[nCntItem_UI].pos.x - ITEMUISIZE2 - 10.0f, g_ItemUI[nCntItem_UI].pos.y + ITEMUISIZE2 - 10.0f, 0.0f);
+			pVtx[3].pos = D3DXVECTOR3(g_ItemUI[nCntItem_UI].pos.x + ITEMUISIZE2 - 10.0f, g_ItemUI[nCntItem_UI].pos.y + ITEMUISIZE2 - 10.0f, 0.0f);
 		}
 		else
 		{
@@ -541,7 +541,7 @@ void SetItem_UI(D3DXVECTOR3 pos, ITEM_UI_TYPE ItemUIType, ITEMTYPE ItemType, int
 //=============================
 void DrawHaveKey(int nHaveKey)
 {
-	DrawTextSet(D3DXVECTOR3(SCREEN_WIDE - 70.0f, -5.0f, 0), 85, FONT_AKABARASINDELERA, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), "%d", nHaveKey);
+	DrawTextSet(D3DXVECTOR3(SCREEN_WIDE - 85.0f, -5.0f, 0), 65, FONT_AKABARASINDELERA, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), "%d", nHaveKey);
 }
 
 //=============================

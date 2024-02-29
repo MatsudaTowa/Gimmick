@@ -51,6 +51,6 @@ void SpawnKey(void);
 
 //ŠÈˆÕƒ‚[ƒVƒ‡ƒ“ƒ‚ƒfƒ‹İ’èˆ—
 void SetSimpleModel(SIMPLEMOTIONMODEL SetUpName_Index, D3DXVECTOR3 pos, D3DXVECTOR3 rot);
-bool GetSpawnKey(void);
+bool GetSpawnKey_Lever(void);
 
 #endif // !_PLAYER_H_

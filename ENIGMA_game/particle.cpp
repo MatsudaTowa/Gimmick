@@ -1,6 +1,6 @@
 //=========================================================
 //
-//バレットを表示する処理[billboard.cpp]
+//パーティクルを表示する処理[particle.cpp]
 // Author seiya kagaya
 //
 //=========================================================
@@ -27,7 +27,7 @@ Particle g_Particle[MAX_PARTICLE];//制作中　構造体
 
 
 //=============================
-//バレットの初期化処理
+//パーティクルの初期化処理
 //=============================
 void InitParticle(void)
 {
@@ -98,7 +98,7 @@ void InitParticle(void)
 
 }
 //=============================
-//バレットの終了処理
+//パーティクルの終了処理
 //=============================
 void UninitParticle(void)
 {
@@ -121,7 +121,7 @@ void UninitParticle(void)
 	}
 }
 //=============================
-//バレットの更新処理
+//パーティクルの更新処理
 //=============================
 void UpdateParticle(void)
 {
@@ -178,7 +178,7 @@ void UpdateParticle(void)
 
 }
 //=============================
-//バレットの描画処理
+//パーティクルの描画処理
 //=============================
 void DrawParticle(void)
 {
@@ -252,7 +252,7 @@ void DrawParticle(void)
 			pDevice->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_ONE);
 
 
-			//バレットの描画
+			//パーティクルの描画
 			pDevice->DrawPrimitive(D3DPT_TRIANGLESTRIP,//プリミティブの種類
 				nParticle * 4,//描画する最初の頂点インデックス
 				2);//描画するプリミティブ数
@@ -279,7 +279,7 @@ void DrawParticle(void)
 	}
 }
 //=============================
-//バレットの取得処理
+//パーティクルの取得処理
 //=============================
 
 Particle* GetParticle(void)
@@ -288,7 +288,7 @@ Particle* GetParticle(void)
 }
 
 //=============================
-//バレットの設定処理
+//パーティクルの設定処理
 //=============================
 void SetParticle(D3DXVECTOR3 Pos,float fRadius,int nLife, PARTICLETYPE Type, D3DXCOLOR Color)
 {

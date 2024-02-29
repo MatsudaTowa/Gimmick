@@ -1,6 +1,6 @@
 //=========================================================
 //
-//バレットを表示する処理[billboard.cpp]
+//吹き出しUIを表示する処理[speechbubble.cpp]
 // Author seiya kagaya
 //
 //=========================================================
@@ -26,7 +26,7 @@ SPEECHBUBBLE g_SpeechBubble[NUMSPEECHBUBBLE];//制作中　構造体
 int g_nldShadow3 = -1;
 
 //=============================
-//バレットの初期化処理
+//吹き出しUIの初期化処理
 //=============================
 void InitSpeechBubble(void)
 {
@@ -85,7 +85,7 @@ void InitSpeechBubble(void)
 
 }
 //=============================
-//バレットの終了処理
+//吹き出しUIの終了処理
 //=============================
 void UninitSpeechBubble(void)
 {
@@ -107,7 +107,7 @@ void UninitSpeechBubble(void)
 	}
 }
 //=============================
-//バレットの更新処理
+//吹き出しUIの更新処理
 //=============================
 void UpdateSpeechBubble(void)
 {
@@ -121,14 +121,12 @@ void UpdateSpeechBubble(void)
 	{
 		if (g_SpeechBubble[nSpeechBubble].bUse == true)
 		{
-			float Test = 0.9f;
-			float Test2 = 0.7f;
 
 			//頂点座標の設定
-			pVtx[0].pos = D3DXVECTOR3(-(g_SpeechBubble[nSpeechBubble].nBubbleCnt) * Test, g_SpeechBubble[nSpeechBubble].nBubbleCnt* Test2, 0.0f);
-			pVtx[1].pos = D3DXVECTOR3(g_SpeechBubble[nSpeechBubble].nBubbleCnt * Test, g_SpeechBubble[nSpeechBubble].nBubbleCnt* Test2, 0.0f);
-			pVtx[2].pos = D3DXVECTOR3(-(g_SpeechBubble[nSpeechBubble].nBubbleCnt) * Test, -(g_SpeechBubble[nSpeechBubble].nBubbleCnt* Test2), 0.0f);
-			pVtx[3].pos = D3DXVECTOR3(g_SpeechBubble[nSpeechBubble].nBubbleCnt * Test, -(g_SpeechBubble[nSpeechBubble].nBubbleCnt* Test2), 0.0f);
+			pVtx[0].pos = D3DXVECTOR3(-(g_SpeechBubble[nSpeechBubble].nBubbleCnt) * XMAG, g_SpeechBubble[nSpeechBubble].nBubbleCnt* XMAG2, 0.0f);
+			pVtx[1].pos = D3DXVECTOR3(g_SpeechBubble[nSpeechBubble].nBubbleCnt * XMAG, g_SpeechBubble[nSpeechBubble].nBubbleCnt* XMAG2, 0.0f);
+			pVtx[2].pos = D3DXVECTOR3(-(g_SpeechBubble[nSpeechBubble].nBubbleCnt) * XMAG, -(g_SpeechBubble[nSpeechBubble].nBubbleCnt* XMAG2), 0.0f);
+			pVtx[3].pos = D3DXVECTOR3(g_SpeechBubble[nSpeechBubble].nBubbleCnt * XMAG, -(g_SpeechBubble[nSpeechBubble].nBubbleCnt* XMAG2), 0.0f);
 
 			//頂点座標の設定
 			//pVtx[0].pos = D3DXVECTOR3(-10.0f, 10.0f, 0.0f);
@@ -145,7 +143,7 @@ void UpdateSpeechBubble(void)
 
 }
 //=============================
-//バレットの描画処理
+//吹き出しUIの描画処理
 //=============================
 void DrawSpeechBubble(void)
 {
@@ -206,7 +204,7 @@ void DrawSpeechBubble(void)
 			//テクスチャの設定
 			pDevice->SetTexture(0, g_pTextureSpeechBubble);
 
-			//バレットの描画
+			//吹き出しUIの描画
 			pDevice->DrawPrimitive(D3DPT_TRIANGLESTRIP,//プリミティブの種類
 				nSpeechBubble * 4,//描画する最初の頂点インデックス
 				2);//描画するプリミティブ数
@@ -226,7 +224,7 @@ void DrawSpeechBubble(void)
 	}
 }
 //=============================
-//バレットの取得処理
+//吹き出しUIの取得処理
 //=============================
 
 SPEECHBUBBLE* GetSpeechBubble(void)
@@ -235,64 +233,40 @@ SPEECHBUBBLE* GetSpeechBubble(void)
 }
 
 //=============================
-//バレットの設定処理
+//吹き出しUIの設定処理
 //=============================
-void SetSpeechBubble(D3DXVECTOR3 Pos,int ActionIndex,int SetType, D3DXVECTOR3 CorrectionValue, SPEECHBUBBLETYPE UI_TYPE)
+void SetSpeechBubble(D3DXVECTOR3 Pos, int ActionIndex, int SetType, D3DXVECTOR3 CorrectionValue, SPEECHBUBBLETYPE UI_TYPE)
 {//壁の設定-------------------------------SetNum[登録番号--かぶらぬように]---[SetType-0が出現、１が縮小]
 
-//	VERTEX_3D* pVtx;//頂点情報へのポインタ
-
-	//頂点バッファをロックし、頂点情報へのポインタを取得
-//	g_pVtxBuffSpeechBubble->Lock(0, 0, (void**)&pVtx, 0);
-
-
-	//if (g_SpeechBubble[SetNum].bUse == false)
-	//{
 	g_SpeechBubble[ActionIndex].pos = D3DXVECTOR3(Pos.x, Pos.y, Pos.z);//位置
 	g_SpeechBubble[ActionIndex].pos += CorrectionValue;
 	g_SpeechBubble[ActionIndex].BubbleSType = UI_TYPE;
 
 
-		
-		int test = g_SpeechBubble[ActionIndex].nBubbleCnt;
+	if (g_SpeechBubble[ActionIndex].bOK == false)
+	{
+		if (SetType == 0)
+		{//拡大
+			g_SpeechBubble[ActionIndex].bUse = true;
 
-		test = test;
+			g_SpeechBubble[ActionIndex].nBubbleCnt += ZOOMSPEED;
+			g_SpeechBubble[ActionIndex].bOK = true;
 
-		if (g_SpeechBubble[ActionIndex].bOK == false)
-		{
-			if (SetType == 0)
-			{//拡大
-				g_SpeechBubble[ActionIndex].bUse = true;
-
-				g_SpeechBubble[ActionIndex].nBubbleCnt+= ZOOMSPEED;
-				g_SpeechBubble[ActionIndex].bOK = true;
-
-			}
-			else if (SetType == 1)
-			{//縮小
-				g_SpeechBubble[ActionIndex].nBubbleCnt-= REDSPEED;
-			}
 		}
-
-		if (g_SpeechBubble[ActionIndex].nBubbleCnt<0)
-		{
-			g_SpeechBubble[ActionIndex].nBubbleCnt = 0;
-		//	g_SpeechBubble[ActionIndex].bUse = false;
+		else if (SetType == 1)
+		{//縮小
+			g_SpeechBubble[ActionIndex].nBubbleCnt -= REDSPEED;
 		}
-	
-		
-		if (g_SpeechBubble[ActionIndex].nBubbleCnt > 30)
-		{
-			g_SpeechBubble[ActionIndex].nBubbleCnt = 30;
-		}
+	}
 
-
-
-
-
-	//pVtx += 4;
-	//頂点バッファのアンロック
-//	g_pVtxBuffSpeechBubble->Unlock();
+	if (g_SpeechBubble[ActionIndex].nBubbleCnt < 0)
+	{
+		g_SpeechBubble[ActionIndex].nBubbleCnt = 0;
+	}
+	if (g_SpeechBubble[ActionIndex].nBubbleCnt > 30)
+	{
+		g_SpeechBubble[ActionIndex].nBubbleCnt = 30;
+	}
 }
 
 

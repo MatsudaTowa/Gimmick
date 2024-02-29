@@ -60,7 +60,7 @@ void InitCamera(void)
 
 		if (nCnt == 0)
 		{//左上
-			g_camera[nCnt].viewport.Width = SCREEN_WIDE / 2.0f;//ビューポートの幅
+			g_camera[nCnt].viewport.Width = (SCREEN_WIDE / 2.0f)-10.0f;//ビューポートの幅
 			g_camera[nCnt].viewport.Height = (SCREEN_HEIGHT / 2.0f) + 20.0f;//ビューポートの高さ
 
 	//		g_camera[nCnt].viewport.Height = SCREEN_HEIGHT / 2.0f;//ビューポートの高さ------------------------------------------------------------
@@ -76,7 +76,7 @@ void InitCamera(void)
 		}
 		else if(nCnt == 1)
 		{//右上
-			g_camera[nCnt].viewport.Width = SCREEN_WIDE / 2.0f;//ビューポートの幅
+			g_camera[nCnt].viewport.Width = (SCREEN_WIDE / 2.0f)-10.0f;//ビューポートの幅
 			g_camera[nCnt].viewport.Height = (SCREEN_HEIGHT / 2.0f) + 20.0f;//ビューポートの高さ
 		
 
@@ -84,7 +84,7 @@ void InitCamera(void)
 
 
 
-			g_camera[nCnt].viewport.X = SCREEN_WIDE/2.0f;//ビューポートの開始位置-X
+			g_camera[nCnt].viewport.X = (SCREEN_WIDE/2.0f)+10.0f;//ビューポートの開始位置-X
 			g_camera[nCnt].viewport.Y = 50.0f;//ビューポートの開始位置-Y
 
 					//ビューポートの深度設定

@@ -21,9 +21,9 @@
 #include "moneybox.h"
 #include "moneyboxdigit.h"
 #include "bathgimmick.h"
-#include "TV.h"
 #include "steam.h"
 #include "password.h"
+#include "TV.h"
 
 #include "shadow.h"
 #include "meshfield.h"
@@ -83,14 +83,15 @@
 	//ゲームループを一度でもしたか
 	bool GameLoopSave = false;
 
+//	bool KeyGetAll3 = false;//３つ揃うとtrue
+	bool SetEscapeGate = false;//セットしたかどうか
+
 //=============================
 //ゲーム画面の初期化処理
 //=============================
 void InitGame(void)
 {
-
 	g_EndGameFrame = GAME_END_DELAY;//クリアからゲーム終了までの余韻
-
 
 	g_nLoopCnt = 0;//ゲームループリセット
 
@@ -106,7 +107,7 @@ void InitGame(void)
 
 	g_bLever1 = false; //レバーオフ
 	g_bLever2 = false; //レバーオフ
-
+	SetEscapeGate = false;
 
 
 	InitPause();
@@ -123,11 +124,11 @@ void InitGame(void)
 	InitAdvancedModel();
 
 	InitShadow();
+	InitTV();
 	InitMoneybox();
 	InitMoneyboxDigit();
 	InitPassword();
 	InitBathGimmick();
-	InitTV();
 	InitSteam();
 
 	InitPlayer();
@@ -290,10 +291,10 @@ void UninitGame(void)
 	UninitEnemy_View();
 	UninitSteam();//
 	UninitBathGimmick();//
+	UninitTV();
 	UninitPassword();//
 	UninitMoneyboxDigit();//
 	UninitMoneybox();//
-	UninitTV();
 	UninitShadow();//
 	UninitAdvancedModel();//
 	UninitStage();//
@@ -342,6 +343,24 @@ void UpdateGame(void)
 
 	bool bPlayer1inOK = false;
 	bool bPlayer2inOK = false;
+
+	if (g_nHaveKey >= 3)
+	{
+		if (SetEscapeGate == false)
+		{
+			SetModel(D3DXVECTOR3(2980.0f, 103.0f, -2525.0f), D3DXVECTOR3(0.0f, D3DX_PI, 0.0f), MODELTYPE_ESCAPEDOOR);
+			SetEscapeGate = true;
+		}
+	}
+
+	if (GetkeyboardTrigger(DIK_Q) == true)
+	{//Qキー(ポーズ)が押された
+		SetModel(pPlayer->pos, D3DXVECTOR3(0.0f, 0.0f, 0.0f), MODELTYPE_KEY1);
+
+		SetModel(pPlayer->pos, D3DXVECTOR3(0.0f, 0.0f, 0.0f), MODELTYPE_KEY2);
+
+		SetModel(pPlayer->pos, D3DXVECTOR3(0.0f, 0.0f, 0.0f), MODELTYPE_KEY3);
+	}
 
 	if (GetkeyboardTrigger(DIK_P) == true)
 	{//Pキー(ポーズ)が押された
@@ -449,7 +468,7 @@ void UpdateGame(void)
 #endif
 		
 		UpdateItem();
-
+		UpdateTV();
 		UpdatePlayer();
 		UpdatePlayer_2P();
 		UpdateEnemy_View();
@@ -492,7 +511,6 @@ void UpdateGame(void)
 
 		UpdateBathGimmick();
 		UpdateSteam();
-		UpdateTV();
 
 		UpdateTransferGate();
 		UpdateActionZone();
@@ -555,8 +573,8 @@ void DrawGame(void)
 		DrawShadow();
 		
 		DrawBathGimmick();
-		DrawTV();
 		DrawSteam();
+		DrawTV();
 		DrawModel();
 		DrawSimpleModel();
 		DrawStage();
@@ -623,13 +641,11 @@ void DrawGame(void)
 	DrawGameFade();
 	DrawLimitTime();
 	DrawScreenUI();
-
 	
 	DrawMap();
 
 	DrawEyeTrap();
 	DrawHaveKey(g_nHaveKey);
-
 	if ((pPlayer->bMoneyBoxGimmick == true || pPlayer2->bMoneyBoxGimmick == true))
 	{
 		DrawMoneybox();
@@ -1625,7 +1641,7 @@ void BoxCollisionGate(D3DXVECTOR3 PlayerMin, D3DXVECTOR3 PlayerMax, D3DXVECTOR3 
 	}
 	else if (pTransferGate[GateIndex].nParentIndex == RONDOMTRANS_NUM)
 	{//転移先番号がランダム転移のとき
-		nEscapeIndex = (((rand() % 4) + 4));//4～7----増えたら変動
+		nEscapeIndex = (((rand() % 4) + 5));//4～8----増えたら変動
 
 		//決まった転移先番号を使用し転移(転移方向はifでマニュアル入力
 		switch (nEscapeIndex)
@@ -1645,6 +1661,10 @@ void BoxCollisionGate(D3DXVECTOR3 PlayerMin, D3DXVECTOR3 PlayerMax, D3DXVECTOR3 
 		case 7:
 			pTransferGate[GateIndex].ParentTransAngle = TRANS_ANGLE_MIN_Z;
 			break;
+		case 8:
+			pTransferGate[GateIndex].ParentTransAngle = TRANS_ANGLE_MAX_Z;
+			break;
+
 		}
 		ParentIndex = nEscapeIndex;
 	}
@@ -2201,6 +2221,28 @@ void SphereCollisionZone(D3DXVECTOR3 PlayerPos, int PlayerIndex, int ZoneIndex)
 	ACTIONZONE* pActionZone;
 	pActionZone = GetActionZone();
 
+	D3DXVECTOR3 PosMag = D3DXVECTOR3(0.0f,0.0f,0.0f);//補正値
+
+	if (pActionZone[ZoneIndex].ActionType== ACTION_TYPE_BATH)
+	{
+		PosMag = D3DXVECTOR3(0.0f, 40.0f, 0.0f);//補正値
+	}
+	else if (pActionZone[ZoneIndex].ActionType == ACTION_TYPE_MONEYBOX)
+	{
+		PosMag = D3DXVECTOR3(0.0f, 45.0f, 0.0f);//補正値
+	}
+	else if (pActionZone[ZoneIndex].ActionType == ACTION_TYPE_LEVER_1|| pActionZone[ZoneIndex].ActionType == ACTION_TYPE_LEVER_2)
+	{
+		PosMag = D3DXVECTOR3(0.0f, -65.0f, 0.0f);//補正値
+	}	
+	else if (pActionZone[ZoneIndex].ActionType == ACTION_TYPE_KEY_1|| pActionZone[ZoneIndex].ActionType == ACTION_TYPE_KEY_2|| pActionZone[ZoneIndex].ActionType == ACTION_TYPE_KEY_3)
+	{
+		PosMag = D3DXVECTOR3(0.0f, 15.0f, 0.0f);//補正値
+	}
+	else if (pActionZone[ZoneIndex].ActionType == ACTION_TYPE_ESCAPE)
+	{
+
+	}
 
 	float PlayerCenterCorre = 45.0f;
 
@@ -2243,15 +2285,14 @@ void SphereCollisionZone(D3DXVECTOR3 PlayerPos, int PlayerIndex, int ZoneIndex)
 
 		if (bIn == true)
 		{//接触判定時
-
 					//動作ごとに分岐
 			if (pActionZone[ZoneIndex].ActionType == ACTION_TYPE_ESCAPE)
 			{//
-				SetSpeechBubble(pActionZone[ZoneIndex].pos, ZoneIndex, 0, D3DXVECTOR3(0.0f, 80.0f, 0.0f),SPEECHBUBBLETYPE_TRANCE);
+				SetSpeechBubble(pActionZone[ZoneIndex].pos + PosMag, ZoneIndex, 0, D3DXVECTOR3(0.0f, 80.0f, 0.0f),SPEECHBUBBLETYPE_TRANCE);
 			}
 			else/* if (pActionZone[ZoneIndex].ActionType == ACTION_TYPE_MAX)*/
 			{//
-				SetSpeechBubble(pActionZone[ZoneIndex].pos, ZoneIndex, 0, D3DXVECTOR3(0.0f, 30.0f, 0.0f), SPEECHBUBBLETYPE_ACTION);
+				SetSpeechBubble(pActionZone[ZoneIndex].pos + PosMag, ZoneIndex, 0, D3DXVECTOR3(0.0f, 30.0f, 0.0f), SPEECHBUBBLETYPE_ACTION);
 			}
 		}
 		else
@@ -2259,11 +2300,11 @@ void SphereCollisionZone(D3DXVECTOR3 PlayerPos, int PlayerIndex, int ZoneIndex)
 			//動作ごとに分岐
 			if (pActionZone[ZoneIndex].ActionType == ACTION_TYPE_ESCAPE)
 			{//
-				SetSpeechBubble(pActionZone[ZoneIndex].pos, ZoneIndex, 1, D3DXVECTOR3(0.0f, 80.0f, 0.0f), SPEECHBUBBLETYPE_TRANCE);
+				SetSpeechBubble(pActionZone[ZoneIndex].pos + PosMag, ZoneIndex, 1, D3DXVECTOR3(0.0f, 80.0f, 0.0f), SPEECHBUBBLETYPE_TRANCE);
 			}
 			else/* if (pActionZone[ZoneIndex].ActionType == ACTION_TYPE_MAX)*/
 			{//
-				SetSpeechBubble(pActionZone[ZoneIndex].pos, ZoneIndex, 1, D3DXVECTOR3(0.0f, 30.0f, 0.0f), SPEECHBUBBLETYPE_ACTION);
+				SetSpeechBubble(pActionZone[ZoneIndex].pos + PosMag, ZoneIndex, 1, D3DXVECTOR3(0.0f, 30.0f, 0.0f), SPEECHBUBBLETYPE_ACTION);
 			}
 		}
 
@@ -2312,19 +2353,27 @@ void SphereCollisionZone(D3DXVECTOR3 PlayerPos, int PlayerIndex, int ZoneIndex)
 				TVController();
 			}
 		}
+
+		BathWater* pBathWater = GetBathGimmick();
+		SPEECHBUBBLE* pSpeachBubble = GetSpeechBubble();
 		if (pActionZone[ZoneIndex].ActionType == ACTION_TYPE_BATH && bIn == true)
 		{//お風呂のギミック（1P）
 			if (GetJoypadTrigger(JOYKEY_X, 0) == true)
 			{//お風呂のギミック作動
 				RunWater(0);
+				if (pBathWater->bKeySpawn == true)
+				{//鍵がスポーンしたら削除
+					pActionZone[ZoneIndex].bUse = false;
+					pSpeachBubble[ZoneIndex].bUse = false;
+				}
 			}
 		}
-		bool pSpawnKey = GetSpawnKey();
-		SPEECHBUBBLE* pSpeachBubble = GetSpeechBubble();
+
+		bool pSpawnKey_Lever = GetSpawnKey_Lever();
 
 		if ((pActionZone[ZoneIndex].ActionType == ACTION_TYPE_LEVER_1
 			|| pActionZone[ZoneIndex].ActionType == ACTION_TYPE_LEVER_2)
-			&& pSpawnKey == true)
+			&& pSpawnKey_Lever == true)
 		{//鍵がスポーンしたら削除
 			pActionZone[ZoneIndex].bUse = false;
 			pSpeachBubble[ZoneIndex].bUse = false;
@@ -2434,7 +2483,7 @@ void SphereCollisionZone(D3DXVECTOR3 PlayerPos, int PlayerIndex, int ZoneIndex)
 				RunWater(1);
 			}
 		}
-		bool pSpawnKey = GetSpawnKey();
+		bool pSpawnKey = GetSpawnKey_Lever();
 		SPEECHBUBBLE* pSpeachBubble = GetSpeechBubble();
 
 		if ((pActionZone[ZoneIndex].ActionType == ACTION_TYPE_LEVER_1

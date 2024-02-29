@@ -40,6 +40,7 @@ void InitBathGimmick(void)
 	g_BathWater.nSteamSpawnCnt = 0;
 	g_BathWater.fWide = BATHWATER_WIDE;
 	g_BathWater.fDepth = BATHWATER_DEPTH;
+	g_BathWater.bKeySpawn = false;
 	g_BathWater.bUse = false;
 	g_BathWater.bRun = false;
 
@@ -140,6 +141,8 @@ void UpdateBathGimmick(void)
 			else
 			{
 				g_BathWater.bUse = false;
+				g_BathWater.bKeySpawn = true;
+				SetModel(g_BathWater.pos, g_BathWater.rot, MODELTYPE_KEY3);
 				//“’‹C‚ğƒIƒt‚É
 				OffSteam();
 			}
@@ -223,7 +226,7 @@ void RunWater(int nPlayer)
 //=============================================
 //‚¨“’‚Ìî•ñæ“¾
 //=============================================
-BathWater* GetBathGimmickPos(void)
+BathWater* GetBathGimmick(void)
 {
 	return &g_BathWater;
 }
