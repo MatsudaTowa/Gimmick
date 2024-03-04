@@ -20,7 +20,7 @@
 
 #define MAXCAMERA	(3)//ƒJƒƒ‰‚Ì‘ä”--1‘½‚¢‚Ì‚ÍŒã‚ë‚Éˆê‚Â‘S‰æ–Ê‚Å“®‚¢‚Ä‚é
 
-#define CAMERALENGTH (72.0f)//’ÊíŽž‚Ì‘ÎÛ‚Æ‚Ì‹——£--1
+#define CAMERALENGTH (150.0f)//’ÊíŽž‚Ì‘ÎÛ‚Æ‚Ì‹——£--1
 //#define CAMERALENGTH2 (75.0f)//’ÊíŽž‚Ì‘ÎÛ‚Æ‚Ì‹——£-2
 
 
