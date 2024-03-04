@@ -159,6 +159,7 @@
     <ClCompile Include="eyetrap.cpp" />
     <ClCompile Include="Film.cpp" />
     <ClCompile Include="hitcollision_mistake_prevention.cpp" />
+    <ClCompile Include="Icon.cpp" />
     <ClCompile Include="map.cpp" />
     <ClCompile Include="menu.cpp" />
     <ClCompile Include="MenuFrame.cpp" />
@@ -210,6 +211,7 @@
     <ClInclude Include="eyetrap.h" />
     <ClInclude Include="Film.h" />
     <ClInclude Include="hitcollision_mistake_prevention.h" />
+    <ClInclude Include="Icon.h" />
     <ClInclude Include="map.h" />
     <ClInclude Include="menu.h" />
     <ClInclude Include="MenuFrame.h" />

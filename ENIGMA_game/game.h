@@ -19,7 +19,7 @@
 //#define NUM_MODEL	(26) //モデルの種類
 #define MAX_FIELD	(256) //床の最大数
 #define MAX_WALL	(256) //壁の最大数
-#define GAME_END_DELAY	(180)//余韻
+#define GAME_END_DELAY	(60)//余韻
 #define MODEL_FILE	"data\\Model.bin" //モデルファイル
 #define FIELD_FILE	"data\\Field.bin" //床ファイル
 #define WALL_FILE	"data\\Wall.bin" //壁ファイル

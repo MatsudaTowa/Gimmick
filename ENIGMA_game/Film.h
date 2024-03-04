@@ -24,6 +24,7 @@ typedef struct
 	D3DXVECTOR3 pos;
 	D3DXVECTOR3 rot;
 	D3DXVECTOR3 move;
+	float texX;
 	bool bUse;
 }FILM;
 
@@ -32,7 +33,7 @@ void InitFILM(void);
 void UninitFILM(void);
 void UpdateFILM(void);
 void DrawFILM(void);
-void SetFILM(D3DXVECTOR3 pos,D3DXVECTOR3 rot);
+void SetFILM(D3DXVECTOR3 pos, D3DXVECTOR3 rot, float texX);
 
 #endif
 

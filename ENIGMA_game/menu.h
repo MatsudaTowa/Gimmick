@@ -14,7 +14,8 @@
 
 typedef enum
 {
-	START_MENU_GAME = 1,	//ゲームに行く
+	START_MENU_BG = 0,
+	START_MENU_GAME,	//ゲームに行く
 	START_MENU_TUTORIAL,	//チュートリアルに行く
 	START_MENU_TITLE,		//タイトル画面に戻る
 	START_MENU_MAX

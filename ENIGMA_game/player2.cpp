@@ -1120,6 +1120,8 @@ void InputKeyAttack_2P(void)
 		g_Player_2P.NowMotionDOWN = MOTIONTYPE_2P_ATTACK;
 		g_test2 = true;
 	}
+#if _DEBUG
+
 
 	//ジャンプ
 	if (GetkeyboardPress(DIK_RETURN) || GetJoypadPress(JOYKEY_A,1) == true)
@@ -1132,7 +1134,7 @@ void InputKeyAttack_2P(void)
 
 		g_Player_2P.move.y += 2.0f;
 	}
-
+#endif
 	//アクション
 	if (GetJoypadTrigger(JOYKEY_X, 1) == true)
 	{

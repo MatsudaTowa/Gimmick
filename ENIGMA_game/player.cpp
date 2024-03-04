@@ -1132,7 +1132,7 @@ void InputKeyAttack(void)
 		g_Player.NowMotionDOWN = MOTIONTYPE_1P_ATTACK;
 
 	}
-
+#if _DEBUG
 	//ジャンプ
 	if (GetkeyboardPress(DIK_RETURN) || GetJoypadPress(JOYKEY_A,0) == true)
 	{//スペースがおされた(スペース)
@@ -1147,6 +1147,10 @@ void InputKeyAttack(void)
 		g_test = true;
 	}
 
+
+
+
+#endif
 	//アクション
 	if (GetJoypadTrigger(JOYKEY_X, 0) == true)
 	{

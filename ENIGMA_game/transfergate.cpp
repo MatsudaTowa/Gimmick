@@ -174,6 +174,15 @@ void DrawTransferGate(void)
     {
         if (g_TransferGate[nCntGate].bUse == true)
         {
+            if (nCntGate== CLEAR_NUM)
+            {
+                break;
+            }
+            if (nCntGate == TRANSGATE_NUM)
+            {
+                break;
+            }
+
             ////ライトを無効にする
             //pDevice->SetRenderState(D3DRS_LIGHTING, FALSE);
 
@@ -267,31 +276,31 @@ void SetTransferGate(D3DXVECTOR3 Pos, D3DXVECTOR3 GateMin, D3DXVECTOR3 GateMax, 
     //デバイスの取得
     LPDIRECT3DDEVICE9 pDevice = GetDevice();//----------------書き換え済み
 
-    for (int nCntGate = 0; nCntGate < MAXGATE; nCntGate++)
-    {
-        if (g_TransferGate[nCntGate].bUse == false)
+ //   for (int nCntGate = 0; nCntGate < MAXGATE; nCntGate++)
+  //  {
+        if (g_TransferGate[nGateIndex].bUse == false)
         {
       
-            g_TransferGate[nCntGate].pos = Pos;
-            g_TransferGate[nCntGate].GateMin = GateMin;
-            g_TransferGate[nCntGate].GateMax = GateMax;
-            g_TransferGate[nCntGate].GateColor = GateColor;
-            g_TransferGate[nCntGate].bActiomTrans = bActionTrans;
+            g_TransferGate[nGateIndex].pos = Pos;
+            g_TransferGate[nGateIndex].GateMin = GateMin;
+            g_TransferGate[nGateIndex].GateMax = GateMax;
+            g_TransferGate[nGateIndex].GateColor = GateColor;
+            g_TransferGate[nGateIndex].bActiomTrans = bActionTrans;
 
             //サイズ変動
-             g_TransferGate[nCntGate].SizeMag.x = g_TransferGate[nCntGate].GateMax.x / 10.0f;
-             g_TransferGate[nCntGate].SizeMag.y = g_TransferGate[nCntGate].GateMax.y / 20.0f;
-             g_TransferGate[nCntGate].SizeMag.z = g_TransferGate[nCntGate].GateMax.z / 10.0f;
+             g_TransferGate[nGateIndex].SizeMag.x = g_TransferGate[nGateIndex].GateMax.x / 10.0f;
+             g_TransferGate[nGateIndex].SizeMag.y = g_TransferGate[nGateIndex].GateMax.y / 20.0f;
+             g_TransferGate[nGateIndex].SizeMag.z = g_TransferGate[nGateIndex].GateMax.z / 10.0f;
 
 
 
-            g_TransferGate[nCntGate].nGateIndex = nGateIndex;//自分の番号
-            g_TransferGate[nCntGate].nParentIndex = nParentIndex;//転移先の番号
-            g_TransferGate[nCntGate].ParentTransAngle = ParentTransAngle;//転移先転移方向
-            g_TransferGate[nCntGate].bCompulsionTrans = bCompulsionTrans;//矯正転移か
+            g_TransferGate[nGateIndex].nGateIndex = nGateIndex;//自分の番号
+            g_TransferGate[nGateIndex].nParentIndex = nParentIndex;//転移先の番号
+            g_TransferGate[nGateIndex].ParentTransAngle = ParentTransAngle;//転移先転移方向
+            g_TransferGate[nGateIndex].bCompulsionTrans = bCompulsionTrans;//矯正転移か
 
-            g_TransferGate[nCntGate].bPossibility = true;//---------------------------------とりあえず
-            g_TransferGate[nCntGate].bUse = true;
+            g_TransferGate[nGateIndex].bPossibility = true;//---------------------------------とりあえず
+            g_TransferGate[nGateIndex].bUse = true;
 
 
             //ファイルの読み込み
@@ -299,14 +308,14 @@ void SetTransferGate(D3DXVECTOR3 Pos, D3DXVECTOR3 GateMin, D3DXVECTOR3 GateMax, 
                 D3DXMESH_SYSTEMMEM,
                 pDevice,
                 NULL,
-                &g_pBuffMatGate[nCntGate],
+                &g_pBuffMatGate[nGateIndex],
                 NULL,
                 &g_dwNumMatGate,
-                &g_pMeshGate[nCntGate]);
+                &g_pMeshGate[nGateIndex]);
 
 
-            break;
+         //   break;
         }
-    }
+ //   }
 }
 

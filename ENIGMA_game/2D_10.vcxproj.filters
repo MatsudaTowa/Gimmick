@@ -79,9 +79,6 @@
     <Filter Include="ソース ファイル\--++|    GAME   |++--\//Stage%28Arrangements%29//\ACTION ZONE">
       <UniqueIdentifier>{e633de0b-43a7-49e5-89ae-1dc82e3c2b25}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ソース ファイル\--++|    GAME   |++--\//GAME_SYSTEM//\GAMEFADE">
-      <UniqueIdentifier>{eaa5573c-d492-4b48-a97d-344ef6707d92}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ソース ファイル\--++|    GAME   |++--\//GAME_SYSTEM//\LIMITTIME">
       <UniqueIdentifier>{d6885f0e-984c-4607-bd0d-19b57fc44676}</UniqueIdentifier>
     </Filter>
@@ -144,6 +141,12 @@
     </Filter>
     <Filter Include="ソース ファイル\--++|    GAME   |++--\//3D_Model//\ENEMY">
       <UniqueIdentifier>{80e06431-54ab-4a6e-ae5f-9409b59064c4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\--++|    GAME   |++--\//GAME_SYSTEM//\%2aGAMEFADE%2a">
+      <UniqueIdentifier>{eaa5573c-d492-4b48-a97d-344ef6707d92}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\--++|    MENU   |++--\Icon">
+      <UniqueIdentifier>{51bfd7ba-338a-46a4-8221-90dadcccb6f8}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -208,7 +211,7 @@
       <Filter>ソース ファイル\--++|    GAME   |++--\//Stage%28Arrangements%29//\ACTION ZONE</Filter>
     </ClCompile>
     <ClCompile Include="gamefade.cpp">
-      <Filter>ソース ファイル\--++|    GAME   |++--\//GAME_SYSTEM//\GAMEFADE</Filter>
+      <Filter>ソース ファイル\--++|    GAME   |++--\//GAME_SYSTEM//\%2aGAMEFADE%2a</Filter>
     </ClCompile>
     <ClCompile Include="limittime.cpp">
       <Filter>ソース ファイル\--++|    GAME   |++--\//GAME_SYSTEM//\LIMITTIME</Filter>
@@ -294,6 +297,9 @@
     <ClCompile Include="TV.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
+    <ClCompile Include="Icon.cpp">
+      <Filter>ソース ファイル\--++|    MENU   |++--\Icon</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="input.h">
@@ -360,7 +366,7 @@
       <Filter>ソース ファイル\--++|    GAME   |++--\//Stage%28Arrangements%29//\ACTION ZONE</Filter>
     </ClInclude>
     <ClInclude Include="gamefade.h">
-      <Filter>ソース ファイル\--++|    GAME   |++--\//GAME_SYSTEM//\GAMEFADE</Filter>
+      <Filter>ソース ファイル\--++|    GAME   |++--\//GAME_SYSTEM//\%2aGAMEFADE%2a</Filter>
     </ClInclude>
     <ClInclude Include="limittime.h">
       <Filter>ソース ファイル\--++|    GAME   |++--\//GAME_SYSTEM//\LIMITTIME</Filter>
@@ -442,6 +448,9 @@
     </ClInclude>
     <ClInclude Include="TV.h">
       <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Icon.h">
+      <Filter>ソース ファイル\--++|    MENU   |++--\Icon</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

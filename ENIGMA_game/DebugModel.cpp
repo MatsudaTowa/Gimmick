@@ -419,11 +419,11 @@ void DrawDebugModel(void)
 void DrawDebugDelComment(void)
 {
 
-    DrawTextSet(D3DXVECTOR3(550.0f, 570.0f, 0.0f), 20, FONT_SOUKOUMINCHO, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), "1,2でモデル切り替え、\nDeleteでモデル削除" );
+   /* DrawTextSet(D3DXVECTOR3(550.0f, 570.0f, 0.0f), 20, FONT_SOUKOUMINCHO, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), "1,2でモデル切り替え、\nDeleteでモデル削除" );
     DrawTextSet(D3DXVECTOR3(550.0f, 600.0f, 0.0f), 20, FONT_SOUKOUMINCHO, D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f), "モデル%d/%d", g_SelectNum, g_NUM_Model);
 
     DrawTextSet(D3DXVECTOR3(550.0f, 430.0f, 0.0f), 20, FONT_SOUKOUMINCHO, D3DXCOLOR(1.0f, 0.5f, 1.0f, 1.0f), "1,2で壁床切り替え");
-    DrawTextSet(D3DXVECTOR3(550.0f, 460.0f, 0.0f), 20, FONT_SOUKOUMINCHO, D3DXCOLOR(1.0f, 0.5f, 1.0f, 1.0f), "壁床%d/%d", g_SelectNumStage, g_NUM_Stage);
+    DrawTextSet(D3DXVECTOR3(550.0f, 460.0f, 0.0f), 20, FONT_SOUKOUMINCHO, D3DXCOLOR(1.0f, 0.5f, 1.0f, 1.0f), "壁床%d/%d", g_SelectNumStage, g_NUM_Stage);*/
 }
 
 

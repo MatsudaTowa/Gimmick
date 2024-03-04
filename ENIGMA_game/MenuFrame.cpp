@@ -10,6 +10,7 @@
 #include "menu.h"
 #include "Film.h"
 #include "corkboard.h"
+#include "Icon.h"
 
 // ƒ}ƒNƒ’è‹`
 #define NUM_MENUFRAME	(1)// ”wŒi‚Ì”
@@ -24,9 +25,12 @@ void InitMenuFrame(void)
 	// ”wŒi‚Ì‰Šú‰»ˆ—
 	InitFILM();
 
+	InitIcon();
+
 	InitMenu();
 
 	InitCorkboard();
+
 
 	LPDIRECT3DDEVICE9 pDevice;
 	int nCntMenuFrame;
@@ -85,9 +89,12 @@ void UninitMenuFrame(void)
 	// ”wŒi‚ÌI—¹ˆ—
 	UninitFILM();
 
+	UninitIcon();
+
 	UninitMenu();
 
 	UninitCorkboard();
+
 
 	int nCount;
 
@@ -114,9 +121,12 @@ void UpdateMenuFrame(void)
 {
 	UpdateFILM();
 
+	UpdateIcon();
+
 	UpdateMenu();
 
 	UpdateCorkboard();
+
 }
 
 // ”wŒi‚Ì•`‰æˆ—
@@ -149,7 +159,10 @@ void DrawMenuFrame(void)
 	// ”wŒi‚Ì•`‰æˆ—
 	DrawFILM();
 
+	DrawIcon();
+
 	DrawMenu();
 
 	DrawCorkboard();
+
 }

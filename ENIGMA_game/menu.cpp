@@ -13,17 +13,23 @@
 #include "Film.h"
 #include "MenuFrame.h"
 
-#define NUM_MENUUI (4)//メニューの表示ポリゴンの数
-#define NUM_SELECTUI	(3)//選択肢の数
-#define MAX_WIDE				(216)//横幅
-#define MAX_HEIGH				(30)//縦幅
+#define NUM_MENUTEXTURE	(3)			//メニューのテクスチャ数
+#define NUM_MENUUI		(4)			//メニューの表示ポリゴンの数
+#define NUM_SELECTUI	(3)			//選択肢の数
+#define MAX_WIDE		(200)		//横幅
+#define MAX_HEIGH		(30)		//縦幅
+#define MAX_MAG			(1.3f)		//選択時の最大倍率
+#define MIN_MAG			(1.2f)		//選択時の最小倍率
+#define CHANGEVALUE		(0.001f)	//選択時の拡縮倍率
 
 //グローバル変数
-LPDIRECT3DTEXTURE9 g_pTextureMenu[NUM_MENUUI] = {};//テクスチャへのポインタ
+LPDIRECT3DTEXTURE9 g_pTextureMenu[NUM_MENUTEXTURE] = {};//テクスチャへのポインタ
 LPDIRECT3DVERTEXBUFFER9 g_pVtxBuffMenu = NULL;//頂点バッファへのポリゴン
 MENU g_aMenu[NUM_MENUUI];	//メニュー構造体の情報
 
 int g_Menu = 0;//メニュー情報
+bool bMagColor = false;
+float fChangeColor = 1.0f;
 
 //=============================
 //メニュー初期化処理
@@ -46,10 +52,8 @@ void InitMenu(void)
 	g_Menu = START_MENU_GAME;
 
 	//テクスチャの読み込み
-	D3DXCreateTextureFromFile(pDevice, "data\\TEXTURE\\Menuframe001.png", &g_pTextureMenu[0]);//--------書き換え済み//とりあえず
-	D3DXCreateTextureFromFile(pDevice, "data\\TEXTURE\\Menu000.png", &g_pTextureMenu[1]);//--------書き換え済み
-	D3DXCreateTextureFromFile(pDevice, "data\\TEXTURE\\Menu001.png", &g_pTextureMenu[2]);//--------書き換え済み
-	D3DXCreateTextureFromFile(pDevice, "data\\TEXTURE\\Menu002.png", &g_pTextureMenu[3]);//--------書き換え済み
+	D3DXCreateTextureFromFile(pDevice, "data\\TEXTURE\\MenuFrameBG.png", &g_pTextureMenu[0]);//--------書き換え済み//とりあえず
+	D3DXCreateTextureFromFile(pDevice, "data\\TEXTURE\\MenuSpell.png", &g_pTextureMenu[1]);//--------書き換え済み
 
 	//頂点バッファの生成
 	pDevice->CreateVertexBuffer(sizeof(VERTEX_2D) * 4 * NUM_MENUUI, D3DUSAGE_WRITEONLY, FVF_VERTEX_2D, D3DPOOL_MANAGED, &g_pVtxBuffMenu, NULL);
@@ -78,10 +82,10 @@ void InitMenu(void)
 		pVtx[3].rhw = 1.0f;
 
 		//頂点カラーの設定
-		pVtx[0].col = D3DCOLOR_RGBA(255, 55, 55, 255);
-		pVtx[1].col = D3DCOLOR_RGBA(255, 55, 55, 255);
-		pVtx[2].col = D3DCOLOR_RGBA(255, 55, 55, 255);
-		pVtx[3].col = D3DCOLOR_RGBA(255, 55, 55, 255);
+		pVtx[0].col = D3DCOLOR_RGBA(255, 255, 255, 255);
+		pVtx[1].col = D3DCOLOR_RGBA(255, 255, 255, 255);
+		pVtx[2].col = D3DCOLOR_RGBA(255, 255, 255, 255);
+		pVtx[3].col = D3DCOLOR_RGBA(255, 255, 255, 255);
 
 		//テキスチャの座標設定
 		pVtx[0].tex = D3DXVECTOR2(0.0f, 0.0f);
@@ -106,7 +110,7 @@ void UninitMenu(void)
 
 	int nCountMenu = 0;
 
-	for (nCountMenu = 0; nCountMenu < NUM_MENUUI; nCountMenu++)
+	for (nCountMenu = 0; nCountMenu < NUM_MENUTEXTURE; nCountMenu++)
 	{
 		//テクスチャの破棄
 		if (g_pTextureMenu[nCountMenu] != NULL)
@@ -196,14 +200,7 @@ void UpdateMenu(void)
 
 	for (nCountMenu = 0; nCountMenu < NUM_MENUUI; nCountMenu++)
 	{
-
-		//頂点カラーの設定--全体
-		pVtx[0].col = D3DCOLOR_RGBA(255, 255, 255, 240);
-		pVtx[1].col = D3DCOLOR_RGBA(255, 255, 255, 240);
-		pVtx[2].col = D3DCOLOR_RGBA(255, 255, 255, 240);
-		pVtx[3].col = D3DCOLOR_RGBA(255, 255, 255, 240);
-
-		if (nCountMenu == 0)
+		if (nCountMenu == START_MENU_BG)
 		{
 			g_aMenu[nCountMenu].pos = D3DXVECTOR3(SCREEN_WIDE / 2, SCREEN_HEIGHT / 2, 0.0f);
 
@@ -222,6 +219,13 @@ void UpdateMenu(void)
 			pVtx[1].pos = D3DXVECTOR3(g_aMenu[nCountMenu].pos.x + (MAX_WIDE * 1), g_aMenu[nCountMenu].pos.y - (MAX_HEIGH * 1), 0.0f);
 			pVtx[2].pos = D3DXVECTOR3(g_aMenu[nCountMenu].pos.x - (MAX_WIDE * 1), g_aMenu[nCountMenu].pos.y + (MAX_HEIGH * 1), 0.0f);
 			pVtx[3].pos = D3DXVECTOR3(g_aMenu[nCountMenu].pos.x + (MAX_WIDE * 1), g_aMenu[nCountMenu].pos.y + (MAX_HEIGH * 1), 0.0f);
+
+			//テキスチャの座標設定
+			pVtx[0].tex = D3DXVECTOR2(0.0f, 0.00f);
+			pVtx[1].tex = D3DXVECTOR2(1.0f, 0.00f);
+			pVtx[2].tex = D3DXVECTOR2(0.0f, 0.25f);
+			pVtx[3].tex = D3DXVECTOR2(1.0f, 0.25f);
+
 		}
 		else if (nCountMenu == START_MENU_TUTORIAL)
 		{
@@ -232,6 +236,12 @@ void UpdateMenu(void)
 			pVtx[1].pos = D3DXVECTOR3(g_aMenu[nCountMenu].pos.x + (MAX_WIDE * 1), g_aMenu[nCountMenu].pos.y - (MAX_HEIGH * 1), 0.0f);
 			pVtx[2].pos = D3DXVECTOR3(g_aMenu[nCountMenu].pos.x - (MAX_WIDE * 1), g_aMenu[nCountMenu].pos.y + (MAX_HEIGH * 1), 0.0f);
 			pVtx[3].pos = D3DXVECTOR3(g_aMenu[nCountMenu].pos.x + (MAX_WIDE * 1), g_aMenu[nCountMenu].pos.y + (MAX_HEIGH * 1), 0.0f);
+
+			//テキスチャの座標設定
+			pVtx[0].tex = D3DXVECTOR2(0.0f, 0.25f);
+			pVtx[1].tex = D3DXVECTOR2(1.0f, 0.25f);
+			pVtx[2].tex = D3DXVECTOR2(0.0f, 0.50f);
+			pVtx[3].tex = D3DXVECTOR2(1.0f, 0.50f);
 		}
 		else if (nCountMenu == START_MENU_TITLE)
 		{
@@ -242,15 +252,56 @@ void UpdateMenu(void)
 			pVtx[1].pos = D3DXVECTOR3(g_aMenu[nCountMenu].pos.x + (MAX_WIDE * 1), g_aMenu[nCountMenu].pos.y - (MAX_HEIGH * 1), 0.0f);
 			pVtx[2].pos = D3DXVECTOR3(g_aMenu[nCountMenu].pos.x - (MAX_WIDE * 1), g_aMenu[nCountMenu].pos.y + (MAX_HEIGH * 1), 0.0f);
 			pVtx[3].pos = D3DXVECTOR3(g_aMenu[nCountMenu].pos.x + (MAX_WIDE * 1), g_aMenu[nCountMenu].pos.y + (MAX_HEIGH * 1), 0.0f);
+
+			//テキスチャの座標設定
+			pVtx[0].tex = D3DXVECTOR2(0.0f, 0.50f);
+			pVtx[1].tex = D3DXVECTOR2(1.0f, 0.50f);
+			pVtx[2].tex = D3DXVECTOR2(0.0f, 0.75f);
+			pVtx[3].tex = D3DXVECTOR2(1.0f, 0.75f);
+
+		}
+
+		if (bMagColor == false)
+		{
+			fChangeColor += CHANGEVALUE;
+			if (fChangeColor >= MAX_MAG)
+			{
+				bMagColor = true;
+			}
+		}
+		else
+		{
+			fChangeColor -= CHANGEVALUE;
+			if (fChangeColor <= MIN_MAG)
+			{
+				bMagColor = false;
+			}
 		}
 
 		if (nCountMenu == g_Menu)
 		{//対象のとき
 			//頂点カラーの設定
-			pVtx[0].col = D3DCOLOR_RGBA(255, 55, 255, 255);
-			pVtx[1].col = D3DCOLOR_RGBA(255, 55, 255, 255);
-			pVtx[2].col = D3DCOLOR_RGBA(255, 55, 255, 255);
-			pVtx[3].col = D3DCOLOR_RGBA(255, 55, 255, 255);
+			pVtx[0].col = D3DCOLOR_RGBA(180, 180, 180, 255);
+			pVtx[1].col = D3DCOLOR_RGBA(180, 180, 180, 255);
+			pVtx[2].col = D3DCOLOR_RGBA(180, 180, 180, 255);
+			pVtx[3].col = D3DCOLOR_RGBA(180, 180, 180, 255);
+
+			//頂点座標の設定
+			pVtx[0].pos = D3DXVECTOR3(g_aMenu[nCountMenu].pos.x - (MAX_WIDE * fChangeColor), g_aMenu[nCountMenu].pos.y - (MAX_HEIGH * fChangeColor), 0.0f);
+			pVtx[1].pos = D3DXVECTOR3(g_aMenu[nCountMenu].pos.x + (MAX_WIDE * fChangeColor), g_aMenu[nCountMenu].pos.y - (MAX_HEIGH * fChangeColor), 0.0f);
+			pVtx[2].pos = D3DXVECTOR3(g_aMenu[nCountMenu].pos.x - (MAX_WIDE * fChangeColor), g_aMenu[nCountMenu].pos.y + (MAX_HEIGH * fChangeColor), 0.0f);
+			pVtx[3].pos = D3DXVECTOR3(g_aMenu[nCountMenu].pos.x + (MAX_WIDE * fChangeColor), g_aMenu[nCountMenu].pos.y + (MAX_HEIGH * fChangeColor), 0.0f);
+		}
+		else
+		{
+			if (nCountMenu != START_MENU_BG)
+			{
+				//頂点カラーの設定--全体
+				pVtx[0].col = D3DCOLOR_RGBA(130, 80, 80, 255);
+				pVtx[1].col = D3DCOLOR_RGBA(130, 80, 80, 255);
+				pVtx[2].col = D3DCOLOR_RGBA(130, 80, 80, 255);
+				pVtx[3].col = D3DCOLOR_RGBA(130, 80, 80, 255);
+			}
 		}
 
 		//決定キー(ENTER)が押されたかどうか
@@ -295,8 +346,17 @@ void DrawMenu(void)
 
 	for (nCountMenu = 0; nCountMenu < NUM_MENUUI; nCountMenu++)
 	{
-		//テクスチャの設定
-		pDevice->SetTexture(0, g_pTextureMenu[nCountMenu]);//---------書き換え済み
+		switch (nCountMenu)
+		{
+		case START_MENU_BG:
+			//テクスチャの設定
+			pDevice->SetTexture(0, g_pTextureMenu[0]);//---------書き換え済み
+			break;
+		default:
+			//テクスチャの設定
+			pDevice->SetTexture(0, g_pTextureMenu[1]);//---------書き換え済み
+			break;
+		}
 
 		//ポリゴンの描画
 		pDevice->DrawPrimitive(D3DPT_TRIANGLESTRIP,//プリミティブの種類//----------書き換え済み

@@ -22,6 +22,8 @@
 #define MAXGATE	(30)//“]ˆÚ–åÅ‘å”
 
 //“]ˆÚæˆÃ†
+#define CLEAR_NUM	(MAXGATE - 5)
+#define TRANSGATE_NUM	(MAXGATE - 4)
 #define CROSSROAD_NUM	(MAXGATE - 3)
 #define RONDOMTRANS_NUM	(MAXGATE - 2)
 
@@ -41,6 +43,7 @@ typedef enum
 	TRANS_ANGLE_MIN_Z,
 	TRANS_ANGLE_MAX_Z,
 	TRANS_ANGLE_RANDOM,
+	TRANS_ANGLE_CLEAR,
 	TRANS_ANGLE_MAX,//--is•ûŒü‚É“]ˆÚ
 }TRANSANGLE;
 

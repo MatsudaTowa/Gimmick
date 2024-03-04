@@ -63,6 +63,7 @@ void InitFILM(void)
 		g_aFilm[nCntFILM].pos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 		g_aFilm[nCntFILM].rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 		g_aFilm[nCntFILM].move = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+		g_aFilm[nCntFILM].texX = 0.0f;
 		g_aFilm[nCntFILM].bUse = false;
 
 
@@ -96,10 +97,9 @@ void InitFILM(void)
 	// 頂点バッファをアンロックする
 	g_pVtxBuffFILM->Unlock();
 
-	SetFILM(D3DXVECTOR3(SCREEN_WIDE * 0.5, SCREEN_HEIGHT * 0.3, 0.0f), D3DXVECTOR3(0.0f, 0.0f, (D3DX_PI * +0.05)));
-	SetFILM(D3DXVECTOR3(SCREEN_WIDE * 0.3, SCREEN_HEIGHT * 0.8, 0.0f), D3DXVECTOR3(0.0f, 0.0f, (D3DX_PI * +0.80)));
-	SetFILM(D3DXVECTOR3(SCREEN_WIDE * 0.6, SCREEN_HEIGHT * 0.8, 0.0f), D3DXVECTOR3(0.0f, 0.0f, (D3DX_PI * +0.60)));
-	SetFILM(D3DXVECTOR3(SCREEN_WIDE * 0.5, SCREEN_HEIGHT * 0.5, 0.0f), D3DXVECTOR3(0.0f, 0.0f, (D3DX_PI * -0.10)));
+	SetFILM(D3DXVECTOR3(SCREEN_WIDE * 0.8, SCREEN_HEIGHT * 0.2, 0.0f), D3DXVECTOR3(0.0f, 0.0f, (D3DX_PI * -0.25)), -0.001f);
+	SetFILM(D3DXVECTOR3(SCREEN_WIDE * 0.9, SCREEN_HEIGHT * 0.2, 0.0f), D3DXVECTOR3(0.0f, 0.0f, (D3DX_PI * +0.40)), -0.001f);
+	SetFILM(D3DXVECTOR3(SCREEN_WIDE * 0.1, SCREEN_HEIGHT * 0.9, 0.0f), D3DXVECTOR3(0.0f, 0.0f, (D3DX_PI * -0.25)), +0.001f);
 
 }
 
@@ -141,12 +141,7 @@ void UpdateFILM(void)
 
 	for (nCntFILM = 0; nCntFILM < NUM_FILM; nCntFILM++)
 	{
-		g_aPosTexU[nCntFILM] += -0.005f;
-
-		//pVtx[0].pos = D3DXVECTOR3(g_aFilm[nCntFILM].pos.x - (SCREEN_WIDE * 0.5) - 50.0f, g_aFilm[nCntFILM].pos.y - TATE_FILM, 0.0f);
-		//pVtx[1].pos = D3DXVECTOR3(g_aFilm[nCntFILM].pos.x + (SCREEN_WIDE * 0.5) + 50.0f, g_aFilm[nCntFILM].pos.y - TATE_FILM, 0.0f);
-		//pVtx[2].pos = D3DXVECTOR3(g_aFilm[nCntFILM].pos.x - (SCREEN_WIDE * 0.5) - 50.0f, g_aFilm[nCntFILM].pos.y + TATE_FILM, 0.0f);
-		//pVtx[3].pos = D3DXVECTOR3(g_aFilm[nCntFILM].pos.x + (SCREEN_WIDE * 0.5) + 50.0f, g_aFilm[nCntFILM].pos.y + TATE_FILM, 0.0f);
+		g_aPosTexU[nCntFILM] += g_aFilm[nCntFILM].texX;
 
 		pVtx[0].pos.x = g_aFilm[nCntFILM].pos.x + sinf(g_aFilm[nCntFILM].rot.z - (D3DX_PI - g_fAngleFilm)) * g_fLengthFilm;
 		pVtx[0].pos.y = g_aFilm[nCntFILM].pos.y + cosf(g_aFilm[nCntFILM].rot.z - (D3DX_PI - g_fAngleFilm)) * g_fLengthFilm;
@@ -158,10 +153,10 @@ void UpdateFILM(void)
 		pVtx[3].pos.y = g_aFilm[nCntFILM].pos.y + cosf(g_aFilm[nCntFILM].rot.z + g_fAngleFilm) * g_fLengthFilm;
 
 
-		pVtx[0].tex = D3DXVECTOR2(g_aPosTexU[nCntFILM],			0.0f);
-		pVtx[1].tex = D3DXVECTOR2(g_aPosTexU[nCntFILM] + 1.0f,	0.0f);
-		pVtx[2].tex = D3DXVECTOR2(g_aPosTexU[nCntFILM],			1.0f);
-		pVtx[3].tex = D3DXVECTOR2(g_aPosTexU[nCntFILM] + 1.0f,	1.0f);
+		pVtx[0].tex = D3DXVECTOR2(g_aPosTexU[nCntFILM], 0.0f);
+		pVtx[1].tex = D3DXVECTOR2(g_aPosTexU[nCntFILM] + 1.0f, 0.0f);
+		pVtx[2].tex = D3DXVECTOR2(g_aPosTexU[nCntFILM], 1.0f);
+		pVtx[3].tex = D3DXVECTOR2(g_aPosTexU[nCntFILM] + 1.0f, 1.0f);
 
 		g_aFilm[nCntFILM].pos += g_aFilm[nCntFILM].move;
 
@@ -206,7 +201,7 @@ void DrawFILM(void)
 //=======================================
 //フィルムの設定処理
 //=======================================
-void SetFILM(D3DXVECTOR3 pos, D3DXVECTOR3 rot)
+void SetFILM(D3DXVECTOR3 pos, D3DXVECTOR3 rot, float texX)
 {
 	VERTEX_3D* pVtx;//頂点情報へのポインタ
 
@@ -219,6 +214,7 @@ void SetFILM(D3DXVECTOR3 pos, D3DXVECTOR3 rot)
 		{
 			g_aFilm[nFilm].pos = pos;	//位置
 			g_aFilm[nFilm].rot = rot;	//向き
+			g_aFilm[nFilm].texX = texX;
 			g_aFilm[nFilm].bUse = true;
 			break;
 		}

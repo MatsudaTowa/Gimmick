@@ -26,6 +26,9 @@ D3DXVECTOR3 g_EscapeRot_Player[MAXGAMEFADE];
 
 bool g_PlayerBlack = false;
 bool g_Player2Black = false;
+
+bool g_GameClear = false;
+
 //=============================
 //ゲーム内フェードの初期化処理
 //=============================
@@ -168,42 +171,54 @@ void UpdateGameFade(void)
 			{//ゲーム内フェードアウト状態
 				g_colorGameFade[FadeCnt].a += 0.07f;	//ポリゴンを不透明にしていく
 
-				if (g_colorGameFade[FadeCnt].a >= 1.0f)
+				if (g_GameClear == false)
 				{
-					g_colorGameFade[FadeCnt].a = 1.0f;
-
-				//	g_GameFadeCnt[FadeCnt]++;//モード移行カウンター
-
-					if (FadeCnt==0)
+					if (g_colorGameFade[FadeCnt].a >= 1.0f)
 					{
-						pPlayer->pos = g_EscapeMove[FadeCnt];
-						pCamera[0].rot.x = 0.0f;
-						pCamera[0].rot.z = 0.0f;
+						g_colorGameFade[FadeCnt].a = 1.0f;
 
-						pCamera[0].rot.y = g_EscapeRot_Camera[FadeCnt].y;
+						//	g_GameFadeCnt[FadeCnt]++;//モード移行カウンター
+
+						if (FadeCnt == 0)
+						{
+							pPlayer->pos = g_EscapeMove[FadeCnt];
+							pCamera[0].rot.x = 0.0f;
+							pCamera[0].rot.z = 0.0f;
+
+							pCamera[0].rot.y = g_EscapeRot_Camera[FadeCnt].y;
 
 
-						pPlayer->rot = g_EscapeRot_Player[FadeCnt];
+							pPlayer->rot = g_EscapeRot_Player[FadeCnt];
 
-						pPlayer->PlayerState = PLAYERSTATE_1P_NOMAL;
+							pPlayer->PlayerState = PLAYERSTATE_1P_NOMAL;
 
+						}
+						else if (FadeCnt == 1)
+						{
+							pPlayer2->pos = g_EscapeMove[FadeCnt];
+							pCamera[1].rot.x = 0.0f;
+							pCamera[1].rot.z = 0.0f;
+							pCamera[1].rot.y = g_EscapeRot_Camera[FadeCnt].y;
+
+							pPlayer2->rot = g_EscapeRot_Player[FadeCnt];
+
+
+							pPlayer2->PlayerState = PLAYERSTATE_2P_NOMAL;
+							//pPlayer2->rot = g_EscapeRot[FadeCnt];
+						}
+
+
+						g_GameFade[FadeCnt] = GAMEFADE_IN;	//ゲーム内フェードイン状態
 					}
-					else if(FadeCnt == 1)
+				}
+				else
+				{
+					if (g_colorGameFade[FadeCnt].a >= 1.0f)
 					{
-						pPlayer2->pos = g_EscapeMove[FadeCnt];
-						pCamera[1].rot.x = 0.0f;
-						pCamera[1].rot.z = 0.0f;
-						pCamera[1].rot.y = g_EscapeRot_Camera[FadeCnt].y;
-						
-						pPlayer2->rot = g_EscapeRot_Player[FadeCnt];
-
-
-						pPlayer2->PlayerState = PLAYERSTATE_2P_NOMAL;
-						//pPlayer2->rot = g_EscapeRot[FadeCnt];
+						//gameClearに
+						g_GameFade[FadeCnt] = GAMEFADE_NONE;	//何もしていない状態
+						GameClear();
 					}
-
-
-					g_GameFade[FadeCnt] = GAMEFADE_IN;	//ゲーム内フェードイン状態
 				}
 			}
 
@@ -235,7 +250,7 @@ void UpdateGameFade(void)
 
 
 			}
-		
+
 
 			//頂点カラーの設定
 			pVtx[0].col = D3DXCOLOR(0.0f, 0.0f, 0.0f, g_colorGameFade[FadeCnt].a);
@@ -285,23 +300,24 @@ void DrawGameFade(void)
 //=============================
 //ゲーム内フェードの設定処理
 //=============================
-void SetGameFade(int PlayerNum, D3DXVECTOR3 ESCAPEMOVE, D3DXVECTOR3 EscapeRot_Camera, D3DXVECTOR3 EscapeRot_Player)
+void SetGameFade(int PlayerNum, D3DXVECTOR3 ESCAPEMOVE, D3DXVECTOR3 EscapeRot_Camera, D3DXVECTOR3 EscapeRot_Player, bool GameClear)
 {
-//	for (int FadeCnt = 0; FadeCnt < MAXGAMEFADE; FadeCnt++)
-	//{
-		if (g_GameFade[PlayerNum] == GAMEFADE_NONE)
-		{
+	if (g_GameFade[PlayerNum] == GAMEFADE_NONE)
+	{
 		//	g_colorGameFade[PlayerNum].a = 0.0f;
 		//	g_GameFadeCnt[PlayerNum] = 0;
-			g_colorGameFade[PlayerNum] = D3DXCOLOR(0.0f, 0.0f, 0.0f, 0.0f);			//黒いポリゴン(透明)にしておく
-			g_GameFade[PlayerNum] = GAMEFADE_OUT;											//ゲーム内フェードアウト状態に
-			g_EscapeMove[PlayerNum]= ESCAPEMOVE;//移動量
-			g_EscapeRot_Camera[PlayerNum] = EscapeRot_Camera;
-			g_EscapeRot_Player[PlayerNum] = EscapeRot_Player;
+		g_colorGameFade[PlayerNum] = D3DXCOLOR(0.0f, 0.0f, 0.0f, 0.0f);			//黒いポリゴン(透明)にしておく
+		g_GameFade[PlayerNum] = GAMEFADE_OUT;											//ゲーム内フェードアウト状態に
+		g_EscapeMove[PlayerNum] = ESCAPEMOVE;//移動量
+		g_EscapeRot_Camera[PlayerNum] = EscapeRot_Camera;
+		g_EscapeRot_Player[PlayerNum] = EscapeRot_Player;
 		//	g_ModeNext = mode_next;										//次の画面(モード)を設定
 
-		}
-//	}
+	}
+	if (GameClear == true)
+	{
+		g_GameClear = GameClear;
+	}
 }
 //=============================
 //ゲーム内フェードの取得処理

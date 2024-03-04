@@ -35,8 +35,7 @@ LPD3DXFONT g_pFont = NULL;//フォントへのポインタ
 //MODE g_mode = MODE_TITLE;//現在のモード(初期にtitle画面を使用)
 
 MODE g_mode = MODE_TITLE;//現在のモード(初期にゲーム画面を使用)-----------------------------デバッグ仕様
-MODE g_OldMode = MODE_TITLE;//過去のモード(初期にゲーム画面を使用)-----------------------------デバッグ仕様
-
+MODE g_OldMode = MODE_TITLE;//過去のモード(初期にゲーム画面を使用)------
 bool g_mesh = false;								//ワイヤーフレーム切り替え用
 float g_fFogDensity;	//フォグ密度指定用
 
@@ -691,7 +690,7 @@ void Draw(void)
 		DrawDebugText();
 
 		
-		DrawTextSet(D3DXVECTOR3(900.0f, 0.0f, 0.0f), 30, FONT_DOKIDOKI, D3DXCOLOR(1.0f, 1.0f, 0.5f, 1.0f),"テストーFPS%d", g_nCountFPS);
+	//	DrawTextSet(D3DXVECTOR3(900.0f, 0.0f, 0.0f), 30, FONT_DOKIDOKI, D3DXCOLOR(1.0f, 1.0f, 0.5f, 1.0f),"テストーFPS%d", g_nCountFPS);
 
 
 		
@@ -733,7 +732,6 @@ void Setmode(MODE g_ModeNext)
 		break;
 
 	}
-
 	g_OldMode = g_mode;
 	g_mode = g_ModeNext;//現在の画面(モード)を切り替える
 
@@ -781,7 +779,7 @@ MODE GetMode(void)
 	return g_mode;
 }
 //=============================
-//過去モードの取得
+//モードの取得
 //=============================
 MODE GetOldMode(void)
 {
@@ -838,7 +836,7 @@ double GetDeltaTimer(void)
 //=============================
 void DrawDebugText(void)
 {
-	RECT rect = { 0,40,SCREEN_WIDE,SCREEN_HEIGHT};
+	RECT rect = { 0,0,SCREEN_WIDE,SCREEN_HEIGHT};
 	char aStr[1024];
 
 	Camera* pCamera;
@@ -867,15 +865,15 @@ void DrawDebugText(void)
 	//wsprintf(&aStr[0], "F4-メッシュ表示\n\nカメラ角度:%d\nプレイヤー座標\nX:%d/Y:%d/Z:%d\nプレイヤーの角度:%d\n++カメラ座標++\nX座標:%d\nY座標:%d\nZ座標:%d\n+---------+\n--プレイヤー操作--\n左スティック--移動\n右スティック--カメラ操作\nAボタン--飛翔\n\nP:デバッグ用ポーズ\nO:Resultへ", CameraRot, Xpos, Ypos, Zpos, yRot, fXdate, fYdate, fZdate);
 
 	//文字列に代入
-	wsprintf(&aStr[0],"フレーム--%d\n\nキー %d", pPlayer->NowFrameCntDOWN,pPlayer->NowKeyCntDOWN);
+	wsprintf(&aStr[0],"フレーム--%d\nキー %d", pPlayer->NowFrameCntDOWN,pPlayer->NowKeyCntDOWN);
 
 	//テキストの描画
 	g_pFont->DrawText(NULL, &aStr[0], -1, &rect, DT_LEFT, D3DCOLOR_RGBA(255, 55, 55, 255));
 
 
 
-	DrawTextSet(D3DXVECTOR3(750.0f, 0.0f, 0.0f), 0, FONT_AKABARASINDELERA, D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f), "フレーム--%d", pPlayer->NowFrameCntDOWN);
-	DrawTextSet(D3DXVECTOR3(950.0f, 670.0f, 0.0f), 0, FONT_AKABARASINDELERA, D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f), "１Pの位置--,%d,%d,%d", Xpos, Ypos, Zpos);
+	/*DrawTextSet(D3DXVECTOR3(750.0f, 0.0f, 0.0f), 0, FONT_AKABARASINDELERA, D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f), "フレーム--%d", pPlayer->NowFrameCntDOWN);
+	DrawTextSet(D3DXVECTOR3(950.0f, 670.0f, 0.0f), 0, FONT_AKABARASINDELERA, D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f), "１Pの位置--,%d,%d,%d", Xpos, Ypos, Zpos);*/
 
 }
 

@@ -11,7 +11,7 @@
 
 //グローバル変数宣言
 LPDIRECT3DVERTEXBUFFER9 g_pVtxBuffSpeechBubble = NULL; //頂点バッファへのポインタ
-LPDIRECT3DTEXTURE9 g_pTextureSpeechBubble = NULL;       //テクスチャへのポインタ
+LPDIRECT3DTEXTURE9 g_pTextureSpeechBubble[TEXNUM] = {};       //テクスチャへのポインタ
 
 
 
@@ -33,9 +33,11 @@ void InitSpeechBubble(void)
 	LPDIRECT3DDEVICE9 pDevice = GetDevice();
 
 	//テクスチャの読み込み
-	D3DXCreateTextureFromFile(pDevice, "data\\TEXTURE\\UI000.png", &g_pTextureSpeechBubble);
-
-
+	D3DXCreateTextureFromFile(pDevice, "data\\TEXTURE\\UI000.png", &g_pTextureSpeechBubble[0]);
+	D3DXCreateTextureFromFile(pDevice, "data\\TEXTURE\\UI001.png", &g_pTextureSpeechBubble[1]);
+	D3DXCreateTextureFromFile(pDevice, "data\\TEXTURE\\UI002.png", &g_pTextureSpeechBubble[2]);
+	D3DXCreateTextureFromFile(pDevice, "data\\TEXTURE\\UI003.png", &g_pTextureSpeechBubble[3]);
+	D3DXCreateTextureFromFile(pDevice, "data\\TEXTURE\\UI000.png", &g_pTextureSpeechBubble[4]);
 	//頂点バッファの生成
 	pDevice->CreateVertexBuffer(sizeof(VERTEX_3D) * 4 * NUMSPEECHBUBBLE, D3DUSAGE_WRITEONLY, FVF_VERTEX_3D, D3DPOOL_MANAGED, &g_pVtxBuffSpeechBubble, NULL);
 
@@ -66,10 +68,10 @@ void InitSpeechBubble(void)
 		pVtx[3].nor = D3DXVECTOR3(0.0f, 0.0f, -1.0f);
 
 		//頂点カラーの設定
-		pVtx[0].col = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
-		pVtx[1].col = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
-		pVtx[2].col = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
-		pVtx[3].col = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
+		pVtx[0].col = D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.85f);
+		pVtx[1].col = D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.85f);
+		pVtx[2].col = D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.85f);
+		pVtx[3].col = D3DXCOLOR(1.0f, 1.0f, 1.0f, 0.85f);
 
 		//テクスチャ座標を設定
 		pVtx[0].tex = D3DXVECTOR2(0.0f, 0.0f);//左上
@@ -91,14 +93,15 @@ void UninitSpeechBubble(void)
 {
 	//StopSound(SOUND_LABEL_SE_SHOT);
 	//StopSound(SOUND_LABEL_SE_EXPLOSIONBOMB);
-	
-	//テクスチャの破棄
-	if (g_pTextureSpeechBubble != NULL)
+	for (int i = 0; i < TEXNUM; i++)
 	{
-		g_pTextureSpeechBubble->Release();
-		g_pTextureSpeechBubble = NULL;
+		//テクスチャの破棄
+		if (g_pTextureSpeechBubble[i] != NULL)
+		{
+			g_pTextureSpeechBubble[i]->Release();
+			g_pTextureSpeechBubble[i] = NULL;
+		}
 	}
-
 	//頂点バッファの破棄
 	if (g_pVtxBuffSpeechBubble != NULL)
 	{
@@ -200,10 +203,14 @@ void DrawSpeechBubble(void)
 			//頂点フォーマットの設定
 			pDevice->SetFVF(FVF_VERTEX_3D);
 
+			int Escape = static_cast<int>(g_SpeechBubble[nSpeechBubble].BubbleSType);
 
 			//テクスチャの設定
-			pDevice->SetTexture(0, g_pTextureSpeechBubble);
+			pDevice->SetTexture(0, g_pTextureSpeechBubble[Escape]);
 
+			//テクスチャの設定
+//			pDevice->SetTexture(0, NULL);
+			
 			//吹き出しUIの描画
 			pDevice->DrawPrimitive(D3DPT_TRIANGLESTRIP,//プリミティブの種類
 				nSpeechBubble * 4,//描画する最初の頂点インデックス

@@ -14,8 +14,8 @@
 #include "light.h"
 #include "stage.h"
 
-#include "player.h"//----------------------------------------------------------------------OK
-#include "player2.h"//---------------------------------------------------------------------NG
+#include "player.h"
+#include "player2.h"
 #include "enemy.h"
 #include "enemy_view.h"
 #include "moneybox.h"
@@ -64,7 +64,7 @@
 	int g_nHaveKey = 0; //鍵保有数
 
 	//制限時間代入
-	int g_EndFlame = 600;	//-----limittime.hのマクロも変える
+	int g_EndFlame = 600;
 
 	int g_nLoopCnt = 0;
 
@@ -91,7 +91,7 @@
 //=============================
 void InitGame(void)
 {
-	g_EndGameFrame = GAME_END_DELAY;//クリアからゲーム終了までの余韻 
+	g_EndGameFrame = GAME_END_DELAY;//クリアからゲーム終了までの余韻
 
 	g_nLoopCnt = 0;//ゲームループリセット
 
@@ -155,9 +155,9 @@ void InitGame(void)
 
 	
 
-	
+		InitMeshField();
 #if _DEBUG
-	InitMeshField();
+
 	if (GameLoopSave == false)
 	{
 	}
@@ -205,6 +205,7 @@ void InitGame(void)
 			SetActionZone(D3DXVECTOR3(pTransferGate[i].pos.x, pTransferGate[i].pos.y, pTransferGate[i].pos.z), 100, ACTION_TYPE_ESCAPE, D3DXCOLOR(0.0f, 1.0f, 0.0f, 0.4f));
 		}
 	}
+
 	//乱数の種を設定
 	srand((unsigned int)time(0));
 }
@@ -271,8 +272,9 @@ void UninitGame(void)
 #if _DEBUG
 	UninitLine();//
 
-	UninitMeshField();//
+
 #endif
+	UninitMeshField();//
 	UninitMap();//
 	UninitEyeTrap();//
 	UninitSimpleModel();//
@@ -349,9 +351,15 @@ void UpdateGame(void)
 		if (SetEscapeGate == false)
 		{
 			SetModel(D3DXVECTOR3(2980.0f, 103.0f, -2525.0f), D3DXVECTOR3(0.0f, D3DX_PI, 0.0f), MODELTYPE_ESCAPEDOOR);
+			SetTransferGate(D3DXVECTOR3(2980.0f, 103.0f, -2525.0f), D3DXVECTOR3(-80.0f, 0.0f, -80.0f), D3DXVECTOR3(80.0f, 100.0f, 80.0f), TRANSGATE_NUM, CLEAR_NUM, TRANS_ANGLE_CLEAR, D3DXCOLOR(0.0f, 0.0f, 1.0f, 0.7f), true, true);
+
+			SetActionZone(D3DXVECTOR3(2980.0f, 103.0f, -2525.0f), 230, ACTION_TYPE_ESCAPE, D3DXCOLOR(0.0f, 1.0f, 0.0f, 0.4f));
 			SetEscapeGate = true;
 		}
 	}
+
+
+
 
 	if (GetkeyboardTrigger(DIK_Q) == true)
 	{//Qキー(ポーズ)が押された
@@ -407,7 +415,14 @@ void UpdateGame(void)
 			}
 
 		}
-
+		MODE pOldMode = GetOldMode();
+		if (pOldMode == MODE_TUTORIAL)
+		{
+			if (g_nHaveKey == 3)
+			{
+				SetFade(MODE_MENU);
+		}
+	}
 		if (GetkeyboardPress(DIK_F1) == true)//トリガー
 		{//F1が押された(デバッグ用)
 
@@ -415,14 +430,7 @@ void UpdateGame(void)
 	//		DeleteCoveredModel();
 #endif
 		}
-		MODE pOldMode = GetOldMode();
-		if (pOldMode == MODE_TUTORIAL)
-		{
-			if (g_nHaveKey == 3)
-			{
-				SetFade(MODE_MENU);
-			}
-		}
+
 		if (g_ClearFlag == true)
 		{
 	
@@ -471,9 +479,9 @@ void UpdateGame(void)
 
 		UpdateStage();
 #if _DEBUG
-		UpdateMeshField();
+
 #endif
-		
+				UpdateMeshField();
 		UpdateItem();
 		UpdateTV();
 		UpdatePlayer();
@@ -573,8 +581,10 @@ void DrawGame(void)
 
 		
 #if _DEBUG
-		DrawMeshField();
+		
 #endif
+DrawMeshField();
+
 		DrawSky();
 
 		DrawShadow();
@@ -668,10 +678,10 @@ void DrawGame(void)
 
 
 
-	DrawTextSet(D3DXVECTOR3(550.0f, 490.0f, 0.0f), 20, FONT_AKABARASINDELERA, D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f), "F1で重なりモデルを削除(取扱注意)");
-	DrawTextSet(D3DXVECTOR3(550.0f, 660.0f, 0.0f), 20, FONT_AKABARASINDELERA, D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f), "F5キーでモデル配置をセーブ！一度のみ！");
-	DrawTextSet(D3DXVECTOR3(550.0f, 680.0f, 0.0f), 20, FONT_AKABARASINDELERA, D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f), "事故防止のためゲームループ後は無効！");
-	DrawTextSet(D3DXVECTOR3(550.0f, 700.0f, 0.0f), 20, FONT_AKABARASINDELERA, D3DXCOLOR(1.0f, 1.0f, 0.0f, 1.0f), "Xボタンでとりあえずアイテム出現");
+	//DrawTextSet(D3DXVECTOR3(550.0f, 490.0f, 0.0f), 20, FONT_AKABARASINDELERA, D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f), "F1で重なりモデルを削除(取扱注意)");
+	//DrawTextSet(D3DXVECTOR3(550.0f, 660.0f, 0.0f), 20, FONT_AKABARASINDELERA, D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f), "F5キーでモデル配置をセーブ！一度のみ！");
+	//DrawTextSet(D3DXVECTOR3(550.0f, 680.0f, 0.0f), 20, FONT_AKABARASINDELERA, D3DXCOLOR(1.0f, 0.0f, 0.0f, 1.0f), "事故防止のためゲームループ後は無効！");
+	//DrawTextSet(D3DXVECTOR3(550.0f, 700.0f, 0.0f), 20, FONT_AKABARASINDELERA, D3DXCOLOR(1.0f, 1.0f, 0.0f, 1.0f), "Xボタンでとりあえずアイテム出現");
 
 
 	DrawDebugDelComment();
@@ -686,6 +696,7 @@ void DrawGame(void)
 //===================================
 void GameClear(void)
 {
+	g_ClearFlag = true;
 }
 //===================================
 //ポーズ解除処理
@@ -1675,6 +1686,12 @@ void BoxCollisionGate(D3DXVECTOR3 PlayerMin, D3DXVECTOR3 PlayerMax, D3DXVECTOR3 
 		}
 		ParentIndex = nEscapeIndex;
 	}
+	else if (pTransferGate[GateIndex].nParentIndex == CLEAR_NUM)
+	{//CLEARのとき
+		pTransferGate[pTransferGate[GateIndex].nParentIndex].bUse = true;
+		pTransferGate[pTransferGate[GateIndex].nParentIndex].bActiomTrans = true;
+		pTransferGate[pTransferGate[GateIndex].nParentIndex].bCompulsionTrans = true;
+	}
 
 	ParentGateMin = D3DXVECTOR3(pTransferGate[ParentIndex].pos + pTransferGate[ParentIndex].GateMin);
 	ParentGateMax = D3DXVECTOR3(pTransferGate[ParentIndex].pos + pTransferGate[ParentIndex].GateMax);
@@ -1807,9 +1824,17 @@ void BoxCollisionGate(D3DXVECTOR3 PlayerMin, D3DXVECTOR3 PlayerMax, D3DXVECTOR3 
 				{//接触判定時
 					pPlayer->PlayerState = PLAYERSTATE_1P_TELEPOR;
 
+					if (pTransferGate[GateIndex].ParentTransAngle == TRANS_ANGLE_CLEAR)
+					{
+						SetGameFade(0, ESCAPEMOVE, EscapeRot_Camera, EscapeRot_Player,true);
 
+						if (pTransferGate[ParentIndex].bCompulsionTrans == true)
+						{//プレイヤー２も転移
+							SetGameFade(1, ESCAPEMOVE, EscapeRot_Camera, EscapeRot_Player,true);
+						}
+					}
 
-					if (pTransferGate[GateIndex].ParentTransAngle == TRANS_ANGLE_MAX_X)
+					else if (pTransferGate[GateIndex].ParentTransAngle == TRANS_ANGLE_MAX_X)
 					{//+X
 						ESCAPEMOVE.x = ParentGateMax.x + (PlayerMax.x - pPlayer->pos.x) + 11.1f;
 						ESCAPEMOVE.y = pTransferGate[ParentIndex].pos.y;
@@ -1852,11 +1877,11 @@ void BoxCollisionGate(D3DXVECTOR3 PlayerMin, D3DXVECTOR3 PlayerMax, D3DXVECTOR3 
 						EscapeRot_Camera.y = D3DX_PI;
 					}
 
-					SetGameFade(0, ESCAPEMOVE, EscapeRot_Camera, EscapeRot_Player);
+					SetGameFade(0, ESCAPEMOVE, EscapeRot_Camera, EscapeRot_Player,false);
 
 					if (pTransferGate[ParentIndex].bCompulsionTrans == true)
 					{//プレイヤー２も転移
-						SetGameFade(1, ESCAPEMOVE, EscapeRot_Camera, EscapeRot_Player);
+						SetGameFade(1, ESCAPEMOVE, EscapeRot_Camera, EscapeRot_Player,false);
 					}
 				}
 
@@ -1984,7 +2009,16 @@ void BoxCollisionGate(D3DXVECTOR3 PlayerMin, D3DXVECTOR3 PlayerMax, D3DXVECTOR3 
 
 					pPlayer2->PlayerState = PLAYERSTATE_2P_TELEPOR;
 
-					if (pTransferGate[GateIndex].ParentTransAngle == TRANS_ANGLE_MAX_X)
+					if (pTransferGate[GateIndex].ParentTransAngle == TRANS_ANGLE_CLEAR)
+					{
+						SetGameFade(1, ESCAPEMOVE, EscapeRot_Camera, EscapeRot_Player,true);
+
+						if (pTransferGate[ParentIndex].bCompulsionTrans == true)
+						{//プレイヤー２も転移
+							SetGameFade(0, ESCAPEMOVE, EscapeRot_Camera, EscapeRot_Player,true);
+						}
+					}
+					else if (pTransferGate[GateIndex].ParentTransAngle == TRANS_ANGLE_MAX_X)
 					{//+X
 						ESCAPEMOVE.x = ParentGateMax.x + (PlayerMax.x - pPlayer2->pos.x) + 11.1f;
 						ESCAPEMOVE.y = pTransferGate[ParentIndex].pos.y;
@@ -2028,11 +2062,11 @@ void BoxCollisionGate(D3DXVECTOR3 PlayerMin, D3DXVECTOR3 PlayerMax, D3DXVECTOR3 
 					}
 
 
-					SetGameFade(1, ESCAPEMOVE, EscapeRot_Camera, EscapeRot_Player);
+					SetGameFade(1, ESCAPEMOVE, EscapeRot_Camera, EscapeRot_Player,false);
 
 					if (pTransferGate[ParentIndex].bCompulsionTrans == true)
 					{//プレイヤー1も転移
-						SetGameFade(0, ESCAPEMOVE, EscapeRot_Camera, EscapeRot_Player);
+						SetGameFade(0, ESCAPEMOVE, EscapeRot_Camera, EscapeRot_Player,false);
 					}
 				}
 			}
@@ -2067,8 +2101,16 @@ void BoxCollisionGate(D3DXVECTOR3 PlayerMin, D3DXVECTOR3 PlayerMax, D3DXVECTOR3 
 					{
 						pPlayer->PlayerState = PLAYERSTATE_1P_TELEPOR;
 
+						if (pTransferGate[GateIndex].ParentTransAngle == TRANS_ANGLE_CLEAR)
+						{
+							SetGameFade(0, ESCAPEMOVE, EscapeRot_Camera, EscapeRot_Player,true);
 
-						if (pTransferGate[GateIndex].ParentTransAngle == TRANS_ANGLE_MAX_X)
+							if (pTransferGate[ParentIndex].bCompulsionTrans == true)
+							{//プレイヤー２も転移
+								SetGameFade(1, ESCAPEMOVE, EscapeRot_Camera, EscapeRot_Player,true);
+							}
+						}
+						else if (pTransferGate[GateIndex].ParentTransAngle == TRANS_ANGLE_MAX_X)
 						{//+X
 
 							ESCAPEMOVE.x = ParentGateMax.x + (PlayerMax.x - pPlayer->pos.x) + 11.1f;
@@ -2116,11 +2158,11 @@ void BoxCollisionGate(D3DXVECTOR3 PlayerMin, D3DXVECTOR3 PlayerMax, D3DXVECTOR3 
 							EscapeRot_Camera.y = D3DX_PI;
 						}
 
-						SetGameFade(0, ESCAPEMOVE, EscapeRot_Camera, EscapeRot_Player);
+						SetGameFade(0, ESCAPEMOVE, EscapeRot_Camera, EscapeRot_Player,false);
 
 						if (pTransferGate[ParentIndex].bCompulsionTrans == true)
 						{//プレイヤー２も転移
-							SetGameFade(1, ESCAPEMOVE, EscapeRot_Camera, EscapeRot_Player);
+							SetGameFade(1, ESCAPEMOVE, EscapeRot_Camera, EscapeRot_Player,false);
 						}
 					}
 				}
@@ -2151,8 +2193,16 @@ void BoxCollisionGate(D3DXVECTOR3 PlayerMin, D3DXVECTOR3 PlayerMax, D3DXVECTOR3 
 					{
 						pPlayer2->PlayerState = PLAYERSTATE_2P_TELEPOR;
 
+						if (pTransferGate[GateIndex].ParentTransAngle == TRANS_ANGLE_CLEAR)
+						{
+							SetGameFade(1, ESCAPEMOVE, EscapeRot_Camera, EscapeRot_Player,true);
 
-						if (pTransferGate[GateIndex].ParentTransAngle == TRANS_ANGLE_MAX_X)
+							if (pTransferGate[ParentIndex].bCompulsionTrans == true)
+							{//プレイヤー２も転移
+								SetGameFade(0, ESCAPEMOVE, EscapeRot_Camera, EscapeRot_Player,true);
+							}
+						}
+						else if (pTransferGate[GateIndex].ParentTransAngle == TRANS_ANGLE_MAX_X)
 						{//+X
 							ESCAPEMOVE.x = ParentGateMax.x + (PlayerMax.x - pPlayer2->pos.x) + 11.1f;
 							ESCAPEMOVE.y = pTransferGate[ParentIndex].pos.y;
@@ -2195,11 +2245,11 @@ void BoxCollisionGate(D3DXVECTOR3 PlayerMin, D3DXVECTOR3 PlayerMax, D3DXVECTOR3 
 							EscapeRot_Camera.y = D3DX_PI;
 						}
 
-						SetGameFade(1, ESCAPEMOVE, EscapeRot_Camera, EscapeRot_Player);
+						SetGameFade(1, ESCAPEMOVE, EscapeRot_Camera, EscapeRot_Player,false);
 
 						if (pTransferGate[ParentIndex].bCompulsionTrans == true)
 						{//プレイヤー1も転移
-							SetGameFade(0, ESCAPEMOVE, EscapeRot_Camera, EscapeRot_Player);
+							SetGameFade(0, ESCAPEMOVE, EscapeRot_Camera, EscapeRot_Player,false);
 						}
 					}
 				}
@@ -2229,27 +2279,44 @@ void SphereCollisionZone(D3DXVECTOR3 PlayerPos, int PlayerIndex, int ZoneIndex)
 	pActionZone = GetActionZone();
 
 	D3DXVECTOR3 PosMag = D3DXVECTOR3(0.0f,0.0f,0.0f);//補正値
+	SPEECHBUBBLETYPE BubbleType = SPEECHBUBBLETYPE_MAX;
 
 	if (pActionZone[ZoneIndex].ActionType== ACTION_TYPE_BATH)
 	{
 		PosMag = D3DXVECTOR3(0.0f, 40.0f, 0.0f);//補正値
+		BubbleType = SPEECHBUBBLETYPE_ACTION;
 	}
 	else if (pActionZone[ZoneIndex].ActionType == ACTION_TYPE_MONEYBOX)
 	{
 		PosMag = D3DXVECTOR3(0.0f, 45.0f, 0.0f);//補正値
+		BubbleType = SPEECHBUBBLETYPE_ACTION;
 	}
 	else if (pActionZone[ZoneIndex].ActionType == ACTION_TYPE_LEVER_1|| pActionZone[ZoneIndex].ActionType == ACTION_TYPE_LEVER_2)
 	{
 		PosMag = D3DXVECTOR3(0.0f, -65.0f, 0.0f);//補正値
-	}	
+		BubbleType = SPEECHBUBBLETYPE_LONGACTION;	}	
 	else if (pActionZone[ZoneIndex].ActionType == ACTION_TYPE_KEY_1|| pActionZone[ZoneIndex].ActionType == ACTION_TYPE_KEY_2|| pActionZone[ZoneIndex].ActionType == ACTION_TYPE_KEY_3)
 	{
 		PosMag = D3DXVECTOR3(0.0f, 15.0f, 0.0f);//補正値
+		BubbleType = SPEECHBUBBLETYPE_GET;
+	}
+	else if (pActionZone[ZoneIndex].ActionType == ACTION_TYPE_TV)
+	{
+		PosMag = D3DXVECTOR3(-30.0f, -20.0f, 0.0f);//補正値
+		BubbleType = SPEECHBUBBLETYPE_ACTION;
 	}
 	else if (pActionZone[ZoneIndex].ActionType == ACTION_TYPE_ESCAPE)
 	{
-
+		PosMag = D3DXVECTOR3(0.0f, -20.0f, 0.0f);//補正値
+		BubbleType = SPEECHBUBBLETYPE_TRANCE;
 	}
+	else if (pActionZone[ZoneIndex].ActionType == ACTION_TYPE_GAMECLEAR)
+	{
+		
+		PosMag = D3DXVECTOR3(0.0f, 150.0f, 20.0f);//補正値
+		BubbleType = SPEECHBUBBLETYPE_GAMECLEAR;
+	}
+
 
 	float PlayerCenterCorre = 45.0f;
 
@@ -2292,27 +2359,13 @@ void SphereCollisionZone(D3DXVECTOR3 PlayerPos, int PlayerIndex, int ZoneIndex)
 
 		if (bIn == true)
 		{//接触判定時
-					//動作ごとに分岐
-			if (pActionZone[ZoneIndex].ActionType == ACTION_TYPE_ESCAPE)
-			{//
-				SetSpeechBubble(pActionZone[ZoneIndex].pos + PosMag, ZoneIndex, 0, D3DXVECTOR3(0.0f, 80.0f, 0.0f),SPEECHBUBBLETYPE_TRANCE);
-			}
-			else/* if (pActionZone[ZoneIndex].ActionType == ACTION_TYPE_MAX)*/
-			{//
-				SetSpeechBubble(pActionZone[ZoneIndex].pos + PosMag, ZoneIndex, 0, D3DXVECTOR3(0.0f, 30.0f, 0.0f), SPEECHBUBBLETYPE_ACTION);
-			}
+				SetSpeechBubble(pActionZone[ZoneIndex].pos + PosMag, ZoneIndex, 0, D3DXVECTOR3(0.0f, 80.0f, 0.0f), BubbleType);
+	
 		}
 		else
 		{
-			//動作ごとに分岐
-			if (pActionZone[ZoneIndex].ActionType == ACTION_TYPE_ESCAPE)
-			{//
-				SetSpeechBubble(pActionZone[ZoneIndex].pos + PosMag, ZoneIndex, 1, D3DXVECTOR3(0.0f, 80.0f, 0.0f), SPEECHBUBBLETYPE_TRANCE);
-			}
-			else/* if (pActionZone[ZoneIndex].ActionType == ACTION_TYPE_MAX)*/
-			{//
-				SetSpeechBubble(pActionZone[ZoneIndex].pos + PosMag, ZoneIndex, 1, D3DXVECTOR3(0.0f, 30.0f, 0.0f), SPEECHBUBBLETYPE_ACTION);
-			}
+				SetSpeechBubble(pActionZone[ZoneIndex].pos + PosMag, ZoneIndex, 1, D3DXVECTOR3(0.0f, 80.0f, 0.0f), BubbleType);
+	
 		}
 
 	//1Pのとき
