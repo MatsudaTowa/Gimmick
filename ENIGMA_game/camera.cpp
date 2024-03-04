@@ -179,13 +179,13 @@ void UpdateCamera(void)
 
 			 g_camera[nCnt].rot.x += g_camera[nCnt].rotMove.x;
 
-			 if (g_camera[nCnt].rot.x > D3DX_PI * 0.35f)//ê˘âÒêßå¿
+			 if (g_camera[nCnt].rot.x > D3DX_PI * 0.1f)//ê˘âÒêßå¿
 			 {
-				 g_camera[nCnt].rot.x = D3DX_PI * 0.34999f;
+				 g_camera[nCnt].rot.x = D3DX_PI * 0.09999f;
 			 }
-			 if (g_camera[nCnt].rot.x < -D3DX_PI * 0.45f)
+			 if (g_camera[nCnt].rot.x < -D3DX_PI * 0.1f)
 			 {
-				 g_camera[nCnt].rot.x = -D3DX_PI * 0.44999f;
+				 g_camera[nCnt].rot.x = -D3DX_PI * 0.09999f;
 			 }
 
 			 g_camera[nCnt].rot.y += g_camera[nCnt].rotMove.y;
