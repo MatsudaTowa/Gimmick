@@ -193,8 +193,12 @@ void UpdateEnemy(void)
 			float fLength = sqrtf(PlayerLength_x * PlayerLength_x + PlayerLength_z * PlayerLength_z);
 			if (fLength > 800.0f)
 			{
-				VibrationLeft(0, g_Enemy.nPlayerIdx);
-				VibrationRight(0, g_Enemy.nPlayerIdx);
+				//振動ストップ
+				for (int nCnt = 0; nCnt < 2; nCnt++)
+				{
+					VibrationLeft(0, nCnt);
+					VibrationRight(0, nCnt);
+				}
 				ActionEnemy(ACTIONPATTERN_ENEMY_WALK, -1);
 			}
 			if (fLength < 20.0f)
@@ -215,8 +219,12 @@ void UpdateEnemy(void)
 			float fLength = sqrtf(PlayerLength_x * PlayerLength_x + PlayerLength_z * PlayerLength_z);
 			if (fLength > 800.0f)
 			{
-				VibrationLeft(0, g_Enemy.nPlayerIdx);
-				VibrationRight(0, g_Enemy.nPlayerIdx);
+				//振動ストップ
+				for (int nCnt = 0; nCnt < 2; nCnt++)
+				{
+					VibrationLeft(0, nCnt);
+					VibrationRight(0, nCnt);
+				}
 				ActionEnemy(ACTIONPATTERN_ENEMY_WALK, -1);
 			}
 			if (fLength < 20.0f)
@@ -392,6 +400,10 @@ void ActionEnemy(ACTIONPATTERN_ENEMY ActionPattern, int PlayerIdx)
 			g_Enemy.rot.y = (fAngle - (1.0f * D3DX_PI));
 			g_Enemy.move.x += sinf(fAngle) * 0.05f;
 			g_Enemy.move.z += cosf(fAngle) * 0.05f;
+			VibrationLeft(25535, 0);
+			VibrationRight(25535, 0);
+			VibrationLeft(0, 1);
+			VibrationRight(0, 1);
 		}
 		if (PlayerIdx == 1)
 		{
@@ -404,9 +416,13 @@ void ActionEnemy(ACTIONPATTERN_ENEMY ActionPattern, int PlayerIdx)
 			g_Enemy.rot.y = (fAngle - (1.0f * D3DX_PI));
 			g_Enemy.move.x += sinf(fAngle) * 0.05f;
 			g_Enemy.move.z += cosf(fAngle) * 0.05f;
+			VibrationLeft(0, 0);
+			VibrationRight(0, 0);
+			VibrationLeft(25535, 1);
+			VibrationRight(25535, 1);
 		}
-		VibrationLeft(25535, PlayerIdx);
-		VibrationRight(25535, PlayerIdx);
+
+
 
 		g_Enemy.NowMotionDOWN = MOTIONTYPE_ENEMY_MOVE;
 	}
