@@ -152,6 +152,7 @@
   <ItemGroup>
     <ClCompile Include="Actionzone.cpp" />
     <ClCompile Include="advanced_motion_model.cpp" />
+    <ClCompile Include="angleUI.cpp" />
     <ClCompile Include="bathgimmick.cpp" />
     <ClCompile Include="corkboard.cpp" />
     <ClCompile Include="enemy.cpp" />
@@ -204,6 +205,7 @@
   <ItemGroup>
     <ClInclude Include="Actionzone.h" />
     <ClInclude Include="advanced_motion_model.h" />
+    <ClInclude Include="angleUI.h" />
     <ClInclude Include="bathgimmick.h" />
     <ClInclude Include="corkboard.h" />
     <ClInclude Include="enemy.h" />

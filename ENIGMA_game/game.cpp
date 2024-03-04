@@ -35,6 +35,7 @@
 #include "screenui.h"
 #include "speechbubble.h"
 #include "text.h"
+#include "angleUI.h"
 
 #include"DebugModel.h"
 
@@ -148,6 +149,7 @@ void InitGame(void)
 	InitParticle();
 	InitSimpleModel();
 	InitEyeTrap();
+	InitAngleUI();
 	InitMap();
 
 	//仕方なく仮
@@ -277,6 +279,7 @@ void UninitGame(void)
 	UninitMeshField();//
 	UninitMap();//
 	UninitEyeTrap();//
+	UninitAngleUI();
 	UninitSimpleModel();//
 	UninitParticle();//
 
@@ -530,6 +533,7 @@ void UpdateGame(void)
 		UpdateTransferGate();
 		UpdateActionZone();
 		UpdateEyeTrap();
+		UpdateAngleUI();
 
 		UpdateShadow();
 #if _DEBUG
@@ -662,6 +666,7 @@ DrawMeshField();
 	DrawMap();
 
 	DrawEyeTrap();
+	DrawAngleUI();
 	DrawHaveKey(g_nHaveKey);
 	if ((pPlayer->bMoneyBoxGimmick == true || pPlayer2->bMoneyBoxGimmick == true))
 	{
