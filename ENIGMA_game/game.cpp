@@ -53,39 +53,39 @@
 #include <stdio.h>//ヘッダーファイルをインクルード
 #include <string.h>//文字列を扱う変数
 
-	//グローバル変数
-	LPDIRECT3DTEXTURE9 g_pTextureGame = NULL;//テクスチャへのポインタ
-	LPDIRECT3DVERTEXBUFFER9 g_pVtxBuffGame = NULL;//頂点バッファへのポリゴン
-	ModelInfo g_aModelInfo[MAX_MODEL];
-	WallInfo g_aWallInfo[MAX_WALL];
-	FieldInfo g_aFieldInfo[MAX_FIELD];
-	int g_nUseModel; //モデルの使用数読み込み
-	int g_nUseWall; //壁の使用数読み込み
-	int g_nUseField; //床の使用数読み込み
-	int g_nHaveKey = 0; //鍵保有数
+//グローバル変数
+LPDIRECT3DTEXTURE9 g_pTextureGame = NULL;//テクスチャへのポインタ
+LPDIRECT3DVERTEXBUFFER9 g_pVtxBuffGame = NULL;//頂点バッファへのポリゴン
+ModelInfo g_aModelInfo[MAX_MODEL];
+WallInfo g_aWallInfo[MAX_WALL];
+FieldInfo g_aFieldInfo[MAX_FIELD];
+int g_nUseModel; //モデルの使用数読み込み
+int g_nUseWall; //壁の使用数読み込み
+int g_nUseField; //床の使用数読み込み
+int g_nHaveKey = 0; //鍵保有数
 
-	//制限時間代入
-	int g_EndFlame = 600;
+//制限時間代入
+int g_EndFlame = 600;
 
-	int g_nLoopCnt = 0;
-
-
+int g_nLoopCnt = 0;
 
 
-	int g_EndGameFrame = GAME_END_DELAY;//ゲーム終了まで3秒
 
-	bool g_bPause = false;
-	bool g_ClearFlag = false;
-	bool g_MoneyboxPlayer = false; //どっちのプレイヤーが操作してるか false:1P,true2P
-	bool g_bClearMoneybox = false;
-	bool g_bLever1 = false;
-	bool g_bLever2 = false;
 
-	//ゲームループを一度でもしたか
-	bool GameLoopSave = false;
+int g_EndGameFrame = GAME_END_DELAY;//ゲーム終了まで3秒
+
+bool g_bPause = false;
+bool g_ClearFlag = false;
+bool g_MoneyboxPlayer = false; //どっちのプレイヤーが操作してるか false:1P,true2P
+bool g_bClearMoneybox = false;
+bool g_bLever1 = false;
+bool g_bLever2 = false;
+
+//ゲームループを一度でもしたか
+bool GameLoopSave = false;
 
 //	bool KeyGetAll3 = false;//３つ揃うとtrue
-	bool SetEscapeGate = false;//セットしたかどうか
+bool SetEscapeGate = false;//セットしたかどうか
 
 //=============================
 //ゲーム画面の初期化処理
@@ -109,7 +109,6 @@ void InitGame(void)
 	g_bLever1 = false; //レバーオフ
 	g_bLever2 = false; //レバーオフ
 	SetEscapeGate = false;
-
 
 	InitPause();
 	
@@ -149,7 +148,7 @@ void InitGame(void)
 	InitParticle();
 	InitSimpleModel();
 	InitEyeTrap();
-	InitAngleUI();
+	//InitAngleUI();
 	InitMap();
 
 	//仕方なく仮
@@ -279,7 +278,7 @@ void UninitGame(void)
 	UninitMeshField();//
 	UninitMap();//
 	UninitEyeTrap();//
-	UninitAngleUI();
+	//UninitAngleUI();
 	UninitSimpleModel();//
 	UninitParticle();//
 
@@ -533,7 +532,7 @@ void UpdateGame(void)
 		UpdateTransferGate();
 		UpdateActionZone();
 		UpdateEyeTrap();
-		UpdateAngleUI();
+		//UpdateAngleUI();
 
 		UpdateShadow();
 #if _DEBUG
@@ -666,7 +665,7 @@ DrawMeshField();
 	DrawMap();
 
 	DrawEyeTrap();
-	DrawAngleUI();
+	//DrawAngleUI();
 	DrawHaveKey(g_nHaveKey);
 	if ((pPlayer->bMoneyBoxGimmick == true || pPlayer2->bMoneyBoxGimmick == true))
 	{

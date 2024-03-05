@@ -249,9 +249,8 @@ void SetSpeechBubble(D3DXVECTOR3 Pos, int ActionIndex, int SetType, D3DXVECTOR3 
 	g_SpeechBubble[ActionIndex].pos += CorrectionValue;
 	g_SpeechBubble[ActionIndex].BubbleSType = UI_TYPE;
 
-
 	if (g_SpeechBubble[ActionIndex].bOK == false)
-	{
+	{//スピーチバブルが出現してないとき
 		if (SetType == 0)
 		{//拡大
 			g_SpeechBubble[ActionIndex].bUse = true;

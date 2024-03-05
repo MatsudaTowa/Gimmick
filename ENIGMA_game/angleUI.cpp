@@ -1,10 +1,14 @@
 //=============================================
 //
-//お風呂のギミック[AngleUI.cpp]
+//敵の方向示すUI[AngleUI.cpp]
 //Auther Matsuda Towa
 //
 //=============================================
 #include "angleUI.h"
+#include "enemy.h"
+#include "player.h"
+#include "player2.h"
+#include "camera.h"
 
 //=============================================
 //壁のテクスチャの種類
@@ -59,7 +63,7 @@ void InitAngleUI(void)
 
 		if (nCntTrap == 0)
 		{
-			g_AngleUI[nCntTrap].fAlpha = 0.7f;
+			g_AngleUI[nCntTrap].fAlpha = 0.5f;
 			g_AngleUI[nCntTrap].pos = D3DXVECTOR3(SCREEN_WIDE / 4.0f, SCREEN_HEIGHT / 3.0f, 0.0f);
 			g_AngleUI[nCntTrap].rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 			pVtx[0].pos = D3DXVECTOR3(g_AngleUI[nCntTrap].pos.x - SCREEN_WIDE / 4.0f, g_AngleUI[nCntTrap].pos.y - SCREEN_HEIGHT / 3.5f, 0.0f);
@@ -69,7 +73,7 @@ void InitAngleUI(void)
 		}
 		else if (nCntTrap == 1)
 		{
-			g_AngleUI[nCntTrap].fAlpha = 0.7f;
+			g_AngleUI[nCntTrap].fAlpha = 0.5f;
 			g_AngleUI[nCntTrap].pos = D3DXVECTOR3(SCREEN_WIDE / 1.35f, SCREEN_HEIGHT / 3.0f, 0.0f);
 			pVtx[0].pos = D3DXVECTOR3(g_AngleUI[nCntTrap].pos.x - SCREEN_WIDE / 4.0f, g_AngleUI[nCntTrap].pos.y - SCREEN_HEIGHT / 3.5f, 0.0f);
 			pVtx[1].pos = D3DXVECTOR3(g_AngleUI[nCntTrap].pos.x + SCREEN_WIDE / 4.0f, g_AngleUI[nCntTrap].pos.y - SCREEN_HEIGHT / 3.5f, 0.0f);
@@ -125,35 +129,51 @@ void UninitAngleUI(void)
 //=============================================
 void UpdateAngleUI(void)
 {
+	ENEMYMODEL* pEnemy = GetEnemy();
+	Player* pPlayer = GetPlayer();
+	Player_2P* pPlayer_2P = GetPlayer_2P();
+	Camera* pCamera = GetCamera();
+
 	VERTEX_2D* pVtx;//頂点情報のポインタ
 
 //頂点バッファをロックし、頂点情報へのポインタを取得
 	g_pVtxBuffEyeAngleUI->Lock(0, 0, (void**)&pVtx, 0);
 	for (int nCntTrap = 0; nCntTrap < NUM_ANGLEUI; nCntTrap++)
 	{
+		float fAngleEnemy = pPlayer->rot.y - pCamera[0].rot.y - (1.0f * D3DX_PI);
+		
 		//対角線の長さを算出
 		g_AngleUI[nCntTrap].fLength = sqrtf(SCREEN_WIDE / 4.0f * SCREEN_WIDE / 4.0f + SCREEN_HEIGHT / 3.0f * SCREEN_HEIGHT / 3.0f) * 0.5f;
 
 		//対角線の角度を算出
 		g_AngleUI[nCntTrap].fAngle = atan2f(SCREEN_WIDE / 4.0f, SCREEN_HEIGHT / 3.0f);
 
-		g_AngleUI[nCntTrap].rot.z += 0.1f;
+		g_AngleUI[nCntTrap].rot.z = fAngleEnemy;
+
+		if (g_AngleUI[nCntTrap].rot.z < -D3DX_PI)
+		{
+			g_AngleUI[nCntTrap].rot.z = D3DX_PI;
+		}
+		else if (g_AngleUI[nCntTrap].rot.z > D3DX_PI)
+		{
+			g_AngleUI[nCntTrap].rot.z = -D3DX_PI;
+		}
 		if (nCntTrap == 0)
 		{
-			g_AngleUI[nCntTrap].fAlpha = 0.7f;
+			g_AngleUI[nCntTrap].fAlpha = 0.5f;
 			g_AngleUI[nCntTrap].pos = D3DXVECTOR3(SCREEN_WIDE / 4.0f, SCREEN_HEIGHT / 3.0f, 0.0f);
-			pVtx[0].pos.x = g_AngleUI[nCntTrap].pos.x + sinf(g_AngleUI[nCntTrap].rot.z - (D3DX_PI - g_AngleUI[nCntTrap].fAngle)) * g_AngleUI[nCntTrap].fLength;
-			pVtx[0].pos.y = g_AngleUI[nCntTrap].pos.y + cosf(g_AngleUI[nCntTrap].rot.z - (D3DX_PI - g_AngleUI[nCntTrap].fAngle)) * g_AngleUI[nCntTrap].fLength;
-			pVtx[1].pos.x = g_AngleUI[nCntTrap].pos.x + sinf(g_AngleUI[nCntTrap].rot.z + (D3DX_PI - g_AngleUI[nCntTrap].fAngle)) * g_AngleUI[nCntTrap].fLength;
-			pVtx[1].pos.y = g_AngleUI[nCntTrap].pos.y + cosf(g_AngleUI[nCntTrap].rot.z + (D3DX_PI - g_AngleUI[nCntTrap].fAngle)) * g_AngleUI[nCntTrap].fLength;
-			pVtx[2].pos.x = g_AngleUI[nCntTrap].pos.x + sinf(g_AngleUI[nCntTrap].rot.z - g_AngleUI[nCntTrap].fAngle) * g_AngleUI[nCntTrap].fLength;
-			pVtx[2].pos.y = g_AngleUI[nCntTrap].pos.y + cosf(g_AngleUI[nCntTrap].rot.z - g_AngleUI[nCntTrap].fAngle) * g_AngleUI[nCntTrap].fLength;
-			pVtx[3].pos.x = g_AngleUI[nCntTrap].pos.x + sinf(g_AngleUI[nCntTrap].rot.z + g_AngleUI[nCntTrap].fAngle) * g_AngleUI[nCntTrap].fLength;
-			pVtx[3].pos.y = g_AngleUI[nCntTrap].pos.y + cosf(g_AngleUI[nCntTrap].rot.z + g_AngleUI[nCntTrap].fAngle) * g_AngleUI[nCntTrap].fLength;
+			pVtx[0].pos.x = g_AngleUI[nCntTrap].pos.x + sinf(-g_AngleUI[nCntTrap].rot.z - (D3DX_PI - g_AngleUI[nCntTrap].fAngle)) * g_AngleUI[nCntTrap].fLength;
+			pVtx[0].pos.y = g_AngleUI[nCntTrap].pos.y + cosf(-g_AngleUI[nCntTrap].rot.z - (D3DX_PI - g_AngleUI[nCntTrap].fAngle)) * g_AngleUI[nCntTrap].fLength;
+			pVtx[1].pos.x = g_AngleUI[nCntTrap].pos.x + sinf(-g_AngleUI[nCntTrap].rot.z + (D3DX_PI - g_AngleUI[nCntTrap].fAngle)) * g_AngleUI[nCntTrap].fLength;
+			pVtx[1].pos.y = g_AngleUI[nCntTrap].pos.y + cosf(-g_AngleUI[nCntTrap].rot.z + (D3DX_PI - g_AngleUI[nCntTrap].fAngle)) * g_AngleUI[nCntTrap].fLength;
+			pVtx[2].pos.x = g_AngleUI[nCntTrap].pos.x + sinf(-g_AngleUI[nCntTrap].rot.z - g_AngleUI[nCntTrap].fAngle) * g_AngleUI[nCntTrap].fLength;
+			pVtx[2].pos.y = g_AngleUI[nCntTrap].pos.y + cosf(-g_AngleUI[nCntTrap].rot.z - g_AngleUI[nCntTrap].fAngle) * g_AngleUI[nCntTrap].fLength;
+			pVtx[3].pos.x = g_AngleUI[nCntTrap].pos.x + sinf(-g_AngleUI[nCntTrap].rot.z + g_AngleUI[nCntTrap].fAngle) * g_AngleUI[nCntTrap].fLength;
+			pVtx[3].pos.y = g_AngleUI[nCntTrap].pos.y + cosf(-g_AngleUI[nCntTrap].rot.z + g_AngleUI[nCntTrap].fAngle) * g_AngleUI[nCntTrap].fLength;
 		}
 		else if (nCntTrap == 1)
 		{
-			g_AngleUI[nCntTrap].fAlpha = 0.7f;
+			g_AngleUI[nCntTrap].fAlpha = 0.5f;
 			g_AngleUI[nCntTrap].pos = D3DXVECTOR3(SCREEN_WIDE / 1.35f, SCREEN_HEIGHT / 3.0f, 0.0f);
 			pVtx[0].pos.x = g_AngleUI[nCntTrap].pos.x + sinf(g_AngleUI[nCntTrap].rot.z - (D3DX_PI - g_AngleUI[nCntTrap].fAngle)) * g_AngleUI[nCntTrap].fLength;
 			pVtx[0].pos.y = g_AngleUI[nCntTrap].pos.y + cosf(g_AngleUI[nCntTrap].rot.z - (D3DX_PI - g_AngleUI[nCntTrap].fAngle)) * g_AngleUI[nCntTrap].fLength;
@@ -164,23 +184,6 @@ void UpdateAngleUI(void)
 			pVtx[3].pos.x = g_AngleUI[nCntTrap].pos.x + sinf(g_AngleUI[nCntTrap].rot.z + g_AngleUI[nCntTrap].fAngle) * g_AngleUI[nCntTrap].fLength;
 			pVtx[3].pos.y = g_AngleUI[nCntTrap].pos.y + cosf(g_AngleUI[nCntTrap].rot.z + g_AngleUI[nCntTrap].fAngle) * g_AngleUI[nCntTrap].fLength;
 		}
-		//rhwの設定
-		pVtx[0].rhw = 1.0f;
-		pVtx[1].rhw = 1.0f;
-		pVtx[2].rhw = 1.0f;
-		pVtx[3].rhw = 1.0f;
-
-		//頂点カラーの設定
-		pVtx[0].col = D3DXCOLOR(1.0f, 1.0f, 1.0f, g_AngleUI[nCntTrap].fAlpha);
-		pVtx[1].col = D3DXCOLOR(1.0f, 1.0f, 1.0f, g_AngleUI[nCntTrap].fAlpha);
-		pVtx[2].col = D3DXCOLOR(1.0f, 1.0f, 1.0f, g_AngleUI[nCntTrap].fAlpha);
-		pVtx[3].col = D3DXCOLOR(1.0f, 1.0f, 1.0f, g_AngleUI[nCntTrap].fAlpha);
-
-		//テキスチャの座標設定
-		pVtx[0].tex = D3DXVECTOR2(0.0f, 0.0f);
-		pVtx[1].tex = D3DXVECTOR2(1.0f, 0.0f);
-		pVtx[2].tex = D3DXVECTOR2(0.0f, 1.0f);
-		pVtx[3].tex = D3DXVECTOR2(1.0f, 1.0f);
 
 		pVtx += 4;
 	}
